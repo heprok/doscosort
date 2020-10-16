@@ -19,13 +19,10 @@
 
     <v-list dense nav>
       <v-list-item>
-        <v-list-item-avatar class="align-self-center" color="white" contain>
-          <v-img
-            src="https://demos.creative-tim.com/vuetify-material-dashboard/favicon.ico"
-            max-height="30"
-          />
-        </v-list-item-avatar>
-<!-- 
+        <!-- <v-list-item-avatar class="align-self-center" color="white" contain> -->
+          <v-img :src="logotype" max-height="100" max-width="200" />
+        <!-- </v-list-item-avatar> -->
+        <!-- 
         <v-list-item-content>
           <v-list-item-title class="display-2" v-text="profile.title" />
         </v-list-item-content> -->
@@ -94,17 +91,17 @@ export default {
             icon: "mdi-clock-fast",
             title: "Простои",
             to: "downtimes",
-          },          
+          },
           {
             icon: "mdi-comment-alert-outline",
             title: "Аварии и сообщения",
             to: "alert",
-          },          
+          },
           {
             icon: "mdi-gesture-double-tap",
             title: "Действия",
             to: "action",
-          },          
+          },
         ],
       },
       {
@@ -116,17 +113,17 @@ export default {
             icon: "mdi-pine-tree",
             title: "Список пород",
             to: "species",
-          },          
+          },
           {
             icon: "mdi-account-group",
             title: "Люди",
             to: "people",
-          },           
+          },
           {
             icon: "mdi-camera-timer",
             title: "Простои",
             to: "downtime",
-          },          
+          },
           {
             icon: "mdi-comment-remove-outline",
             title: "Ошибки",
@@ -154,6 +151,12 @@ export default {
     },
     computedItems() {
       return this.items.map(this.mapItem);
+    },
+    logotype() {
+      const nameLogotype = "logotype283x103";
+      return this.$vuetify.theme.dark
+        ? "build/images/" + nameLogotype + "_black.png"
+        : "build/images/" + nameLogotype + "_white.png";
     },
     profile() {
       return {

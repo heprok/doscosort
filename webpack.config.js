@@ -74,6 +74,15 @@ Encore
           //to: 'images/[path][name].[hash:8].[ext]',
             // only copy files matching this pattern
           // pattern: /\.(png|jpg|jpeg|webp|)$/
+      })    
+      .copyFiles({
+          from: './front/assets/favicons',
+            // optional target path, relative to the output dir
+          to: 'favicons/[name].[ext]',
+            // if versioning is enabled, add the file hash too
+          //to: 'images/[path][name].[hash:8].[ext]',
+            // only copy files matching this pattern
+          // pattern: /\.(png|jpg|jpeg|webp|)$/
       })
     // uncomment if you use TypeScript
     //.enableTypeScriptLoader()
