@@ -1,0 +1,317 @@
+<template>
+  <base-material-card
+    color="success"
+    :icon="icon"
+    :title="title"
+    class="px-5 py-3"
+  >
+    <v-spacer></v-spacer>
+    <v-data-table
+      :headers="headers"
+      :search="search"
+      :loading="loading"
+      loading-text="Загрузка... Ждите"
+      :items="items"
+      class="elevation-1"
+    >
+      <template v-slot:top>
+        <v-toolbar flat>
+          <v-toolbar-title>
+            <v-row>
+              <v-col cols="3">
+                <v-btn
+                  color="primary"
+                  icon
+                  large
+                  :loading="loadingBtn"
+                  @click="update"
+                >
+                  <v-icon>mdi-cached</v-icon>
+                </v-btn>
+              </v-col>
+              <v-col cols="3">
+                <div v-if="isCrud">
+                  <v-dialog persistent width="500" v-model="dialogCheckPassword">
+                    <base-material-card icon="mdi-key" title="Потвердите права"> 
+                      <v-card-title>
+                      </v-card-title>
+                      <v-card-text>
+                        <v-row align-content="center">
+                          <v-text-field v-model="password"></v-text-field>
+                        </v-row>
+                      </v-card-text>
+                    </base-material-card>
+                  </v-dialog>
+                  <v-divider class="mx-1" inset vertical></v-divider>
+                  <v-dialog v-model="dialogAdded" max-width="700px">
+                    <template v-slot:activator="{ on, attrs }">
+                      <v-btn
+                        color="primary"
+                        large
+                        dark
+                        icon
+                        v-bind="attrs"
+                        v-on="on"
+                      >
+                        <v-icon>mdi-plus</v-icon>
+                      </v-btn>
+                    </template>
+                    <v-card>
+                      <v-card-title>
+                        <span class="headline">{{ formTitle }}</span>
+                      </v-card-title>
+
+                      <v-card-text>
+                        <v-container>
+                          <v-row>
+                            <v-col
+                              v-for="header in headers.filter(
+                                (header) => header.edited != false,
+                              )"
+                              :key="header.value"
+                            >
+                              <v-text-field
+                                v-model="editedItem[header.value]"
+                                :label="header.text"
+                              ></v-text-field>
+                            </v-col>
+                          </v-row>
+                        </v-container>
+                      </v-card-text>
+
+                      <v-card-actions>
+                        <v-spacer></v-spacer>
+                        <v-btn
+                          color="blue darken-1"
+                          text
+                          @click="closeAddedDialog"
+                        >
+                          Отмена
+                        </v-btn>
+                        <v-btn
+                          color="blue darken-1"
+                          :loading="loadingBtn"
+                          text
+                          @click="save"
+                        >
+                          Сохранить
+                        </v-btn>
+                      </v-card-actions>
+                    </v-card>
+                  </v-dialog>
+                  <v-dialog v-model="dialogDelete" max-width="500px">
+                    <v-card>
+                      <v-card-title class="headline">
+                        Вы уверены, что хотите удалить?
+                      </v-card-title>
+                      <v-card-actions>
+                        <v-spacer></v-spacer>
+                        <v-btn
+                          color="blue darken-1"
+                          text
+                          @click="closeDeleteDialog"
+                        >
+                          Нет
+                        </v-btn>
+                        <v-btn
+                          color="blue darken-1"
+                          :loading="loadingBtn"
+                          text
+                          @click="deleteItemConfirm"
+                        >
+                          Да
+                        </v-btn>
+                        <v-spacer></v-spacer>
+                      </v-card-actions>
+                    </v-card>
+                  </v-dialog>
+                </div>
+              </v-col>
+            </v-row>
+          </v-toolbar-title>
+          <v-spacer></v-spacer>
+          <v-card-title>
+            <v-text-field
+              v-model="search"
+              append-icon="mdi-magnify"
+              label="Поиск"
+              single-line
+              hide-details
+            ></v-text-field>
+          </v-card-title>
+        </v-toolbar>
+      </template>
+      <!-- CHECKBOX для boolean for fir and enabled -->
+      <template v-slot:item.fir="{ item }">
+        <v-simple-checkbox v-model="item.fir" disabled></v-simple-checkbox>
+      </template>
+      <template v-slot:item.enabled="{ item }">
+        <v-simple-checkbox v-model="item.enabled" disabled></v-simple-checkbox>
+      </template>
+      <template v-slot:item.actions="{ item }">
+        <v-icon small class="mr-2" @click="editItemAction(item)">
+          mdi-pencil
+        </v-icon>
+        <v-icon small @click="deleteItemAction(item)">mdi-delete</v-icon>
+      </template>
+      <template v-slot:no-data>
+        <v-btn color="primary" @click="update">Обновить</v-btn>
+      </template>
+    </v-data-table>
+  </base-material-card>
+</template>
+
+<script>
+import Axios from 'axios'
+
+export default {
+  name: 'CRUDTable',
+
+  data() {
+    return {
+      search: '',
+      items: [],
+      loading: false,
+      dialogAdded: false,
+      dialogDelete: false,
+      editedIndex: -1,
+      editedItem: {},
+      defaultItem: {},
+      loadingBtn: false,
+      dialogCheckPassword: true,
+      password: '',
+    }
+  },
+  watch: {
+    dialogAdded(val) {
+      val || this.closeAddedDialog()
+    },
+    dialogDelete(val) {
+      val || this.closeDeleteDialog()
+    },
+  },
+  computed: {
+    formTitle() {
+      return this.editedIndex === -1 ? 'Добавление' : 'Редактирование'
+    },
+  },
+  props: {
+    headers: {
+      type: Array,
+      required: true,
+    },
+    urlApi: {
+      type: String,
+      required: true,
+    },
+    title: {
+      type: String,
+      default: '',
+      required: true,
+    },
+    icon: {
+      type: String,
+      default: '',
+      required: true,
+    },
+    isCrud: {
+      type: Boolean,
+      default: false,
+    },
+  },
+  mounted() {
+    this.update()
+  },
+  methods: {
+    async update() {
+      this.loading = true
+      this.loadingBtn = true
+      await this.updateItems()
+      this.loadingBtn = false
+      this.loading = false
+    },
+
+    editItemAction(item) {
+      this.loadingBtn = false
+      this.editedIndex = this.items.indexOf(item)
+      this.editedItem = Object.assign({}, item)
+      this.dialogAdded = true
+    },
+
+    deleteItemAction(item) {
+      this.loadingBtn = false
+      this.editedIndex = this.items.indexOf(item)
+      this.editedItem = Object.assign({}, item)
+      this.dialogDelete = true
+    },
+
+    async deleteItemConfirm() {
+      this.loadingBtn = true
+      await this.deleteItem()
+      await this.update()
+      this.loadingBtn = false
+      this.closeDeleteDialog()
+    },
+
+    closeAddedDialog() {
+      this.dialogAdded = false
+      this.$nextTick(() => {
+        this.editedItem = Object.assign({}, this.defaultItem)
+        this.editedIndex = -1
+      })
+    },
+
+    closeDeleteDialog() {
+      this.dialogDelete = false
+      this.$nextTick(() => {
+        this.editedItem = Object.assign({}, this.defaultItem)
+        this.editedIndex = -1
+      })
+    },
+
+    async deleteItem() {
+      let request = await Axios.delete(this.editedItem['@id'])
+      return request
+    },
+    async editItem() {
+      let request = await Axios.put(this.editedItem['@id'], this.editedItem)
+      return request
+    },
+    async updateItems() {
+      this.items = []
+      const request = await Axios.get(this.urlApi)
+      this.items = request.data['hydra:member']
+      return request
+    },
+    async addItem() {
+      let request = await Axios.post(this.urlApi, this.editedItem)
+      return request
+    },
+
+    async checkPassword() {
+      this.dialogCheckPassword = true;
+      // return this.password === '111';
+    },
+    async save() {
+      this.loadingBtn = true
+      if (await this.checkPassword()) {
+
+        if (this.editedIndex > -1) {
+          Object.assign(this.items[this.editedIndex], this.editedItem)
+          await this.editItem()
+        } else {
+          await this.addItem()
+        }
+
+        await this.update()
+        this.loadingBtn = false
+        this.closeAddedDialog()
+      } else{
+        alert("Неправильй пароль");
+      }
+    },
+  },
+}
+</script>
+
+<style></style>
