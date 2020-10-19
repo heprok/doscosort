@@ -8,6 +8,7 @@ export default new Vuex.Store({
     barColor: 'rgba(0, 0, 0, .3), rgba(0, 0, 0, .7)',
     barImage: 'build/images/sidebar.jpg',
     drawer: null,
+    isAdmin: false,
   },
   mutations: {
     SET_BAR_IMAGE (state, payload) {
@@ -16,6 +17,14 @@ export default new Vuex.Store({
     SET_DRAWER (state, payload) {
       state.drawer = payload
     },
+    SET_ADMIN: (state, payload ) => {
+      state.isAdmin = payload;
+    },
+  },
+  getters: {
+    IS_ADMIN: state => {
+      return state.isAdmin;
+    }
   },
   actions: {
 

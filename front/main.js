@@ -20,11 +20,21 @@ import './plugins/chartist'
 import './plugins/vee-validate'
 import vuetify from './plugins/vuetify'
 import i18n from './i18n'
+import Snotify, { SnotifyPosition } from 'vue-snotify'
+
+const optionsNotification = {
+  toast: {
+    position: SnotifyPosition.rightTop
+  }
+}
+
+Vue.use(Snotify, optionsNotification);
 
 Vue.config.productionTip = false
 
 new Vue({
   router,
+  Snotify,
   store,
   vuetify,
   i18n,
