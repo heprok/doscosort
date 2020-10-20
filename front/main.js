@@ -21,6 +21,8 @@ import './plugins/vee-validate'
 import vuetify from './plugins/vuetify'
 import i18n from './i18n'
 import Snotify, { SnotifyPosition } from 'vue-snotify'
+import 'material-design-icons-iconfont/dist/material-design-icons.css'
+import 'vuetify/dist/vuetify.min.css'
 
 const optionsNotification = {
   toast: {

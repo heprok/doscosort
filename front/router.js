@@ -45,7 +45,7 @@ export default new Router({
         },       
         //reports 
         {
-          name: 'Простои',
+          name: 'Простои ',
           path: 'report/downtimes',
           component: () => import('@/views/dashboard/pages/report/Downtime'),
         },        
@@ -55,7 +55,7 @@ export default new Router({
           component: () => import('@/views/dashboard/pages/report/event/Alert'),
         },        
         {
-          name: 'Действия оператора',
+          name: 'Действия оператора ',
           path: 'report/action',
           component: () => import('@/views/dashboard/pages/report/event/Action'),
         },        
