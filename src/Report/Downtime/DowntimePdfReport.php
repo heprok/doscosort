@@ -44,7 +44,7 @@ final class DowntimePdfReport extends AbstractPdf
         $this->AddPage();
         $this->SetFont('dejavusans', '', 11);
         $this->SetXY(self::MARGIN_LEFT, self::MARGIN_TOP);
-        $this->coloredTable($this->report->getLabels(), $datasets);
+        $this->paintTable($this->report->getLabels(), $datasets);
 
         return $this->Output($this->getNameFile());
     }
@@ -56,7 +56,7 @@ final class DowntimePdfReport extends AbstractPdf
      * @param PdfDataset[] $data
      * @return void
      */
-    public function coloredTable(array $header, array $data)
+    protected function paintTable(array $header, array $data)
     {
         $count_dataset = count($data);
         $count_labels = count($this->report->getLabels());

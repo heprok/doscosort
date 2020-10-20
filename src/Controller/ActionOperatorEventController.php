@@ -4,8 +4,6 @@ declare(strict_types=1);
 
 namespace App\Controller;
 
-use App\Report\Event\ActionOperatorEventPdfReport;
-use App\Report\Event\AbstractEventReport;
 use App\Report\Event\ActionOperatorEventReport;
 use App\Report\Event\EventPdfReport;
 use App\Repository\EventRepository;
@@ -31,6 +29,7 @@ class ActionOperatorEventController extends AbstractController
         $report = new ActionOperatorEventReport($period, $eventRepository);
         $report->init();
         $pdf = new EventPdfReport($report);
-        $pdf->render();
+        $html = $this->renderView('pdf/index.html.twig');
+        return $pdf->returnPDFResponseFromHTML($html);
     }
 }

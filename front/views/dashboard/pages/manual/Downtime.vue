@@ -27,11 +27,11 @@
 
 <script>
 
-import crudTable from "@/components/CRUDTable.vue";
+
 
 export default {
   name: "manual_downtime_dashboard",
-  components: { crudTable },
+  
   data() {
     return {
       cause: {

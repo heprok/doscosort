@@ -3,7 +3,7 @@
     <v-row>
       <v-col cols="12"> 
         <shift-date-picker
-          urlReport="report/alert"
+          urlReport="report/event/alert"
         >
         </shift-date-picker>
          </v-col>
@@ -12,11 +12,11 @@
 </template>
 
 <script>
-import shiftDatePicker from "@/components/ShiftDatePicker.vue";
+
 
 export default {
   name: "report_event_alert_dashboard",
-  components: { shiftDatePicker },
+  
   data() {
     return {
 

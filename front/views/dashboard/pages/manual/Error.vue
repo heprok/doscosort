@@ -17,11 +17,11 @@
 
 <script>
 
-import crudTable from "@/components/CRUDTable.vue";
+
 
 export default {
   name: "manual_error_dashboard",
-  components: { crudTable },
+  
   data() {
     return {
       headers: [

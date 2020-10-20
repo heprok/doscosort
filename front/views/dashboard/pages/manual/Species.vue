@@ -16,11 +16,11 @@
 
 <script>
 
-import crudTable from "@/components/CRUDTable.vue";
+
 
 export default {
   name: "manual_species_dashboard",
-  components: { crudTable },
+  
   data() {
     return {
       headers: [

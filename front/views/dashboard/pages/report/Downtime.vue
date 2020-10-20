@@ -12,11 +12,11 @@
 </template>
 
 <script>
-import shiftDatePicker from "@/components/ShiftDatePicker.vue";
+
 
 export default {
   name: "report_downtimes_dashboard",
-  components: { shiftDatePicker },
+  
   data() {
     return {
       headers: [

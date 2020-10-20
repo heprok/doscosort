@@ -12,11 +12,10 @@
 </template>
 
 <script>
-import shiftDatePicker from "@/components/ShiftDatePicker.vue";
 
 export default {
   name: "report_event_action_dashboard",
-  components: { shiftDatePicker },
+  
   data() {
     return {
 
