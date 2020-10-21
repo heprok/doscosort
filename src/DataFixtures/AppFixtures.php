@@ -10,8 +10,8 @@ use Doctrine\Persistence\ObjectManager;
 
 class AppFixtures extends Fixture
 {
-    const startDate = '2020-10-01';
-    const endDate =  '2020-10-10';
+    const startDate = '2020-10-15';
+    const endDate =  '2020-10-21';
 
     public function load(ObjectManager $manager)
     {

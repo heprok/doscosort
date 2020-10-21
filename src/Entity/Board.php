@@ -46,29 +46,29 @@ class Board
     private $length;
 
     /**
-     * @ORM\ManyToOne(targetEntity=Thickness::class)
-     * @ORM\JoinColumn(nullable=false)
+     * @ORM\ManyToOne(targetEntity=Thickness::class, cascade={"persist", "refresh"})
+     * @ORM\JoinColumn(nullable=false, onDelete="SET NULL")
      * @ORM\Column(type="smallint", options={"comment":"Номинальная толщина доски, мм."})
      */
     private $nom_thickness;
 
     /**
-     * @ORM\ManyToOne(targetEntity=Width::class)
-     * @ORM\JoinColumn(nullable=false)
+     * @ORM\ManyToOne(targetEntity=Width::class, cascade={"persist", "refresh"})
+     * @ORM\JoinColumn(nullable=false, onDelete="SET NULL")
      * @ORM\Column(type="smallint", options={"comment":"Номинальная ширина доски, мм."})
      */
     private $nom_width;
 
     /**
-     * @ORM\ManyToOne(targetEntity=Length::class)
-     * @ORM\JoinColumn(nullable=false)
+     * @ORM\ManyToOne(targetEntity=Length::class, cascade={"persist", "refresh"})
+     * @ORM\JoinColumn(nullable=false, onDelete="SET NULL")
      * @ORM\Column(type="smallint", options={"comment":"Номинальная длина доски, мм."})
      */
     private $nom_length;
 
     /**
-     * @ORM\ManyToOne(targetEntity=QualityList::class)
-     * @ORM\JoinColumn(nullable=false)
+     * @ORM\ManyToOne(targetEntity=QualityList::class, cascade={"persist", "refresh"})
+     * @ORM\JoinColumn(nullable=false, onDelete="SET NULL")
      * @ORM\Column(type="smallint", options={"comment":"ID списка качеств"})
      */
     private $qual_list_id;
@@ -84,6 +84,12 @@ class Board
      *      options={"comment":"Карман"})
      */
     private $pocket;
+
+    /**
+     * @ORM\ManyToOne(targetEntity=Species::class, cascade={"persist", "refresh"})
+     * @ORM\JoinColumn(nullable=false, onDelete="SET NULL")
+     */
+    private $species;
 
     public function getDrec(): ?\DateTimeInterface
     {
@@ -226,5 +232,17 @@ class Board
         $connection = $entityManager->getConnection();
         $platform = $connection->getDatabasePlatform();
         $this->drec = \DateTime::createFromFormat($platform->getDateTimeTzFormatString(), $this->drecTimestampKey);
+    }
+
+    public function getSpecies(): ?Species
+    {
+        return $this->species;
+    }
+
+    public function setSpecies(?Species $species): self
+    {
+        $this->species = $species;
+
+        return $this;
     }
 }

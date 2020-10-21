@@ -70,6 +70,7 @@ final class Version20201014140752 extends AbstractMigration
                 qual_list_id SMALLINT NOT NULL REFERENCES ds."quality_list"( id ), 
                 qualities CHAR NOT NULL, 
                 pocket CHAR NOT NULL, 
+                species_id CHAR(2) NOT NULL REFERENCES dic.species (id) ON DELETE SET NULL NOT DEFERRABLE INITIALLY IMMEDIATE, 
         PRIMARY KEY(drec))');
 
     $this->addSql('COMMENT ON COLUMN ds.board.drec IS \'Дата записи\'');
