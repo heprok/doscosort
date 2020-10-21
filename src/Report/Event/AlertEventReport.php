@@ -8,7 +8,7 @@ final class AlertEventReport extends AbstractEventReport
 {
     public function getNameReport(): string
     {
-        return "Отчёт по по авариям и сообщениям";
+        return "Отчёт по авариям и сообщениям";
     }
 
     protected function getSourceId(): array

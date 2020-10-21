@@ -38,13 +38,6 @@ final class EventPdfReport extends AbstractPdf
 
     public function render()
     {
-        $datasets = $this->report->getDatasets();
-
-        $this->AddPage();
-        $this->SetFont('dejavusans', '', 11);
-        $this->SetXY(self::MARGIN_LEFT, self::MARGIN_TOP);
-        $this->paintTable($this->report->getLabels(), $datasets);
-
         return $this->Output($this->getNameFile());
     }
 

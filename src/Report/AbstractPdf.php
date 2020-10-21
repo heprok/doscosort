@@ -16,6 +16,7 @@ abstract class AbstractPdf extends TCPDF
     const MARGIN_LEFT = 20;
     const MARGIN_TOP = 20;
     const HEIGH_CELL = 10;
+    const WIDTH_LOGO = 14;
     
     abstract protected function getPuntForColumns();
     abstract protected function paintTable(array $header, array $data);
@@ -47,21 +48,15 @@ abstract class AbstractPdf extends TCPDF
         return $this->Output($this->getNameFile());
     }
 
-    public function returnPDFResponseFromHTML($html)
-    {
-        // $this->writeHTML($html);
-        $this->AddPage();
-        $this->writeHTMLCell($w = 0, $h = 0, $x = '', $y = '', $html, $border = 0, $ln = 1, $fill = 0, $reseth = true, $align = '', $autopadding = true);
-        return $this->render();
-    }
     public function header()
     {
         $package = new Package(new EmptyVersionStrategy());
         // dd($package->getUrl('build/logo.png'));
         $this->SetFont('dejavusans', '', 14);
-        $image_file = $package->getUrl('build/images/logotype137x56_white.png');
-        $this->Image($image_file, 0, 5, 50, 10, 'PNG', 'www.techno-les.com', 'L', false, false, 0, false);
-        $this->Cell(0, 20, $this->getNameReport(), 0, 0, 'C', 0, '',  0, false, 'М', 'М');
+        $image_file = $package->getUrl('build/images/logosmall.svg');
+        $this->ImageSVG($image_file, self::MARGIN_LEFT, 3, self::WIDTH_LOGO, 15, 'www.techno-les.com', 'L', false, 0, 0);
+        $this->setX(self::WIDTH_LOGO + self::MARGIN_LEFT + 15);
+        $this->Cell(0, 20, $this->getNameReport(), 0, 0, 'L', 0, '',  0, false, 'М', 'М');
         $this->Ln(10, true);
         $this->SetFont('dejavusans', '', 10);
         $this->SetY(self::MARGIN_TOP / 2 / 2, false);

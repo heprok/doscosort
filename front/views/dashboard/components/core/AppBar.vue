@@ -1,26 +1,9 @@
 <template>
-  <v-app-bar
-    id="app-bar"
-    absolute
-    app
-    color="transparent"
-    flat
-    height="75"
-  >
-    <v-btn
-      class="mr-3"
-      elevation="1"
-      fab
-      small
-      @click="setDrawer(!drawer)"
-    >
-      <v-icon v-if="value">
-        mdi-view-quilt
-      </v-icon>
+  <v-app-bar id="app-bar" absolute app color="transparent" flat height="75">
+    <v-btn class="mr-3" elevation="1" fab small @click="setDrawer(!drawer)">
+      <v-icon v-if="value"> mdi-view-quilt </v-icon>
 
-      <v-icon v-else>
-        mdi-dots-vertical
-      </v-icon>
+      <v-icon v-else> mdi-dots-vertical </v-icon>
     </v-btn>
 
     <v-toolbar-title
@@ -29,6 +12,14 @@
     />
 
     <v-spacer />
+    <v-switch
+      v-model="$vuetify.theme.dark"
+      @change="switchTheme"
+      class="ma-0 pa-0"
+      color="secondary"
+      hide-details
+      append-icon="mdi-brightness-4"
+    />
   </v-app-bar>
 </template>
 
@@ -78,22 +69,26 @@ export default {
       default: false,
     },
   },
-
   data: () => ({
-    notifications: [
-      "Mike John Responded to your email",
-      "You have 5 new tasks",
-      "You're now friends with Andrew",
-      "Another Notification",
-      "Another one",
-    ],
+    // notifications: [
+    //   "Mike John Responded to your email",
+    //   "You have 5 new tasks",
+    //   "You're now friends with Andrew",
+    //   "Another Notification",
+    //   "Another one",
+    // ],
   }),
 
   computed: {
     ...mapState(["drawer"]),
   },
-
+  mounted() {
+    this.$vuetify.theme.dark = localStorage.getItem("dark_theme") === 'true';
+  },
   methods: {
+    switchTheme(){
+      localStorage.setItem("dark_theme", this.$vuetify.theme.dark);
+    },
     ...mapMutations({
       setDrawer: "SET_DRAWER",
     }),
