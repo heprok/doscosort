@@ -34,6 +34,11 @@ class QualityList
      */
     private int $def;
 
+    public function __toString()
+    {
+        return strval($this->id);
+    }
+
     public function __construct(string $name)
     {
         $this->name = $name;

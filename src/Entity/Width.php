@@ -31,6 +31,11 @@ class Width
      */
     private int $max;
 
+    public function __toString()
+    {
+        return strval($this->nom);
+    }
+
     public function __construct(int $nom, int $min, int $max)
     {
         $this->nom = $nom;

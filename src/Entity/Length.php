@@ -21,6 +21,11 @@ class Length
      */
     private int $value;
 
+    public function __toString()
+    {
+        return strval($this->value);
+    }
+
     public function __construct(int $value)
     {
         $this->value = $value;

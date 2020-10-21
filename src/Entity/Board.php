@@ -6,22 +6,26 @@ namespace App\Entity;
 
 use ApiPlatform\Core\Annotation\ApiResource;
 use App\Repository\BoardRepository;
+use DateTime;
+use Doctrine\ORM\Event\LifecycleEventArgs;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
  * @ApiResource()
  * @ORM\Entity(repositoryClass=BoardRepository::class)
  * @ORM\Table(name="ds.board")
+ * @ORM\HasLifecycleCallbacks()
  */
 class Board
 {
+    private DateTime $drec;
 
     /**
      * @ORM\Id
-     * @ORM\Column(type="datetime", 
+     * @ORM\Column(name="drec", type="string",
      *      options={"comment":"Дата записи"})
      */
-    private $drec;
+    private $drecTimestampKey;
 
     /**
      * @ORM\Column(type="smallint", 
@@ -182,22 +186,45 @@ class Board
         return $this->qualities;
     }
 
-    public function setQualities(string $qualities): self
+    public function setQualities(int $qualities): self
     {
-        $this->qualities = $qualities;
+        $this->qualities = chr($qualities);
 
         return $this;
     }
 
-    public function getPocket(): ?string
+    public function getPocket(): int
     {
-        return $this->pocket;
+        return ord($this->pocket);
     }
 
-    public function setPocket(string $pocket): self
+    public function setPocket(int $pocket): self
     {
-        $this->pocket = $pocket;
+        $this->pocket = chr($pocket);
 
         return $this;
+    }
+
+    /**
+     * @ORM\PrePersist
+     * @ORM\PreUpdate
+     */
+    public function syncDrecTodrecTimestampKey(LifecycleEventArgs $event)
+    {
+        $entityManager = $event->getEntityManager();
+        $connection = $entityManager->getConnection();
+        $platform = $connection->getDatabasePlatform();
+        $this->drecTimestampKey = $this->drec->format($platform->getDateTimeFormatString());
+    }
+
+    /**
+     * @ORM\PostLoad
+     */
+    public function syncDrecTimestampKeyToDrec(LifecycleEventArgs $event)
+    {
+        $entityManager = $event->getEntityManager();
+        $connection = $entityManager->getConnection();
+        $platform = $connection->getDatabasePlatform();
+        $this->drec = \DateTime::createFromFormat($platform->getDateTimeTzFormatString(), $this->drecTimestampKey);
     }
 }

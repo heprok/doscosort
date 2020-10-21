@@ -29,9 +29,9 @@ class Event
     
     /**
      * @ORM\Id
-     * @ORM\Column(name="drec", type="string")
+     * @ORM\Column(name="drec", type="string",
+     *      options={"comment":"Время начала простоя"})
      * @ApiProperty(identifier=true)
-     *      options={"comment":"Время начала простоя", "default":NOW()}})
      * @Groups({"event:read"})
      */
     private $drecTimestampKey;

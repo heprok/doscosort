@@ -33,6 +33,11 @@ class Thickness
      *      options={"comment":"Максимальная толщина", "check":"min <= max"})
      */
     private int $max;
+    
+    public function __toString()
+    {
+        return strval($this->nom);
+    }
 
     public function __construct(int $nom, int $min, int $max)
     {
