@@ -47,29 +47,25 @@ class Board
 
     /**
      * @ORM\ManyToOne(targetEntity=Thickness::class, cascade={"persist", "refresh"})
-     * @ORM\JoinColumn(nullable=false, onDelete="SET NULL")
-     * @ORM\Column(type="smallint", options={"comment":"Номинальная толщина доски, мм."})
+     * @ORM\JoinColumn(referencedColumnName="nom", name="nom_thickness", nullable=false, onDelete="SET NULL")
      */
     private $nom_thickness;
 
     /**
      * @ORM\ManyToOne(targetEntity=Width::class, cascade={"persist", "refresh"})
-     * @ORM\JoinColumn(nullable=false, onDelete="SET NULL")
-     * @ORM\Column(type="smallint", options={"comment":"Номинальная ширина доски, мм."})
+     * @ORM\JoinColumn(referencedColumnName="nom", name="nom_width", nullable=false, onDelete="SET NULL")
      */
     private $nom_width;
 
     /**
      * @ORM\ManyToOne(targetEntity=Length::class, cascade={"persist", "refresh"})
-     * @ORM\JoinColumn(nullable=false, onDelete="SET NULL")
-     * @ORM\Column(type="smallint", options={"comment":"Номинальная длина доски, мм."})
+     * @ORM\JoinColumn(referencedColumnName="value", name="nom_length", nullable=false, onDelete="SET NULL")
      */
     private $nom_length;
 
     /**
      * @ORM\ManyToOne(targetEntity=QualityList::class, cascade={"persist", "refresh"})
-     * @ORM\JoinColumn(nullable=false, onDelete="SET NULL")
-     * @ORM\Column(type="smallint", options={"comment":"ID списка качеств"})
+     * @ORM\JoinColumn(nullable=false, name="qual_list_id", onDelete="SET NULL")
      */
     private $qual_list_id;
 

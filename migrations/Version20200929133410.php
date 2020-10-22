@@ -20,7 +20,6 @@ final class Version20200929133410 extends AbstractMigration
     public function up(Schema $schema) : void
     {
         // this up() migration is auto-generated, please modify it to your needs
-        $this->addSql('CREATE SEQUENCE ds.action_operator_id_seq INCREMENT BY 1 MINVALUE 1 START 1');
         $this->addSql('CREATE SEQUENCE ds.people_id_seq INCREMENT BY 1 MINVALUE 1 START 1');
         $this->addSql('CREATE TABLE ds.action_operator (id SMALLINT NOT NULL, name VARCHAR(128) NOT NULL, PRIMARY KEY(id))');
         $this->addSql('COMMENT ON TABLE ds.action_operator IS \'Действия оператора\'');
