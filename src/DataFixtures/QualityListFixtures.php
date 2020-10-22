@@ -15,7 +15,5 @@ class QualityListFixtures extends Fixture
         $arrayQualityList[] = $qualityList;
 
         $manager->flush();
-
-        $manager->flush();
     }
 }

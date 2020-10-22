@@ -21,6 +21,7 @@ final class Version20200929133410 extends AbstractMigration
     {
         // this up() migration is auto-generated, please modify it to your needs
         $this->addSql('CREATE SEQUENCE ds.people_id_seq INCREMENT BY 1 MINVALUE 1 START 1');
+        
         $this->addSql('CREATE TABLE ds.action_operator (id SMALLINT NOT NULL, name VARCHAR(128) NOT NULL, PRIMARY KEY(id))');
         $this->addSql('COMMENT ON TABLE ds.action_operator IS \'Действия оператора\'');
         $this->addSql('CREATE TABLE ds.people (id INT NOT NULL, fam VARCHAR(30) NOT NULL, nam VARCHAR(30) DEFAULT NULL, pat VARCHAR(30) DEFAULT NULL, PRIMARY KEY(id))');
