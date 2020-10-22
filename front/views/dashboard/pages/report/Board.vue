@@ -1,8 +1,8 @@
 <template>
-  <v-container id="report_event_alert_dashboard" fluid tag="section">
+  <v-container id="report_boards_dashboard" fluid tag="section">
     <v-row>
       <v-col cols="12">
-        <shift-date-picker urlReport="report/event/alert"> </shift-date-picker>
+        <shift-date-picker urlReport="report/boards"> </shift-date-picker>
       </v-col>
     </v-row>
   </v-container>
@@ -10,7 +10,7 @@
 
 <script>
 export default {
-  name: "report_event_alert_dashboard",
+  name: "report_boards_dashboard",
 
   data() {
     return {};
