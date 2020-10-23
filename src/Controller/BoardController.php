@@ -6,7 +6,7 @@ namespace App\Controller;
 
 use App\Report\Event\ActionOperatorEventReport;
 use App\Report\Event\EventPdfReport;
-use App\Repository\EventRepository;
+use App\Repository\BoardRepository;
 use DateInterval;
 use DatePeriod;
 use DateTime;
@@ -14,21 +14,22 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Routing\Annotation\Route;
 
 /**
- * @Route("report/event/action_operator", name="report_event_action_operator_")
+ * @Route("report/boards", name="report_boards")
  */
-class ActionOperatorEventController extends AbstractController
+class BoardController extends AbstractController
 {
     /**
      * @Route("/{start}...{end}/pdf", name="show_pdf")
      */
-    public function showPdf(string $start, string $end, EventRepository $eventRepository)
+    public function showPdf(string $start, string $end, BoardRepository $boardRepository)
     {   
         $startDate = new DateTime($start);
         $endDate = new DateTime($end);
         $period = new DatePeriod($startDate, new DateInterval('P1D'), $endDate); 
-        $report = new ActionOperatorEventReport($period, $eventRepository);
-        $report->init();
-        $pdf = new EventPdfReport($report);
-        return $pdf->render();
+        dd($boardRepository->findVolumeByPeriod($period));
+        // $report = new ActionOperatorEventReport($period, $boardRepository);
+        // $report->init();
+        // $pdf = new EventPdfReport($report);
+        // return $pdf->render();
     }
 }

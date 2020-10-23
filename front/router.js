@@ -58,13 +58,12 @@ export default new Router({
           name: 'Действия оператора ',
           path: 'report/action',
           component: () => import('@/views/dashboard/pages/report/event/Action'),
-        },        
-        // Upgrade
+        },          
         {
-          name: 'Upgrade',
-          path: 'upgrade',
-          component: () => import('@/views/dashboard/Upgrade'),
-        },
+          name: 'Доски',
+          path: 'report/board',
+          component: () => import('@/views/dashboard/pages/report/Board'),
+        },        
       ],
     },
   ],

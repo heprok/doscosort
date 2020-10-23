@@ -41,9 +41,9 @@ class BoardFixtures extends Fixture implements DependentFixtureInterface
             $board->setNomThickness($nomThickness[rand(0, count($nomThickness) - 1)]);
             $board->setNomWidth($nomWidths[rand(0, count($nomWidths) - 1)]);
             $board->setQualListId($qualityLists[rand(0, count($qualityLists) - 1)]);
-            $board->setQualities(rand(0, 127));
+            $board->setQualities(rand(0, 3));
             $board->setPocket(rand(0, 25));
-            $board->setSpecies($species[rand(0, count($species) - 1)]);
+            $board->setSpecies($species[rand(0, /* count($species) - 1 */ 2)]);
             $manager->persist($board);
         }
         $manager->flush();

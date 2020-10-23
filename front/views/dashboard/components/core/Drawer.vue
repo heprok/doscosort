@@ -101,6 +101,11 @@ export default {
             icon: "mdi-gesture-double-tap",
             title: "Действия",
             to: "action",
+          },          
+          {
+            icon: "mdi-color-helper",
+            title: "Доски",
+            to: "board",
           },
         ],
       },
