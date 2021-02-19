@@ -116,6 +116,9 @@
     "fig/link-util": {
         "version": "1.1.1"
     },
+    "friendsofphp/proxy-manager-lts": {
+        "version": "v1.0.3"
+    },
     "laminas/laminas-code": {
         "version": "3.4.1"
     },
@@ -472,6 +475,9 @@
     },
     "tecnickcom/tcpdf": {
         "version": "6.3.5"
+    },
+    "tlc/doctrineextensions": {
+        "version": "dev-master"
     },
     "twig/twig": {
         "version": "v3.0.5"

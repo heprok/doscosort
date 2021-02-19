@@ -1,9 +1,9 @@
 <script>
-  import CRUDTable from 'tlc-front-components/src/CRUDTable'
+  import InfoCard from 'tlc-front-components/src/InfoCard'
 
   export default {
-    name: 'CRUDTable',
-    extends: CRUDTable,
+    name: 'InfoCard',
+    extends: InfoCard,
     data(){
       return {
         entryPointApi: this.$store.state.apiEntryPoint,
