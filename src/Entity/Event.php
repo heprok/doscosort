@@ -7,6 +7,9 @@ use DateTime;
 use Doctrine\ORM\Mapping as ORM;
 use ApiPlatform\Core\Annotation\ApiResource;
 use ApiPlatform\Core\Annotation\ApiProperty;
+use ApiPlatform\Core\Annotation\ApiFilter;
+use ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\SearchFilter;
+use App\Filter\DateFilter;
 use Symfony\Component\Serializer\Annotation\Groups;
 use Doctrine\ORM\Event\LifecycleEventArgs;
 
@@ -18,19 +21,20 @@ use Doctrine\ORM\Event\LifecycleEventArgs;
  *      normalizationContext={"groups"={"event:read"}},
  *      denormalizationContext={"groups"={"event:write"}}
  * )
+ * @ApiFilter(SearchFilter::class, properties={"type": "partial", "source": "partial"})
+ * @ApiFilter(DateFilter::class, properties={"drecTimestampKey"})
  * @ORM\HasLifecycleCallbacks()
  * @ORM\Table(name="ds.event")
  */
 class Event
 {
-    const DATE_FORMAT_DB = 'Y-m-d\TH:i:sP';
 
     private DateTime $drec;
     
     /**
      * @ORM\Id
      * @ORM\Column(name="drec", type="string",
-     *      options={"comment":"Время начала простоя"})
+     *      options={"comment":"Начало события"})
      * @ApiProperty(identifier=true)
      * @Groups({"event:read"})
      */
@@ -65,12 +69,21 @@ class Event
     {
         return $this->drec;
     }
+
     /**
      * @Groups({"event:read"})
      */
     public function getStart(): ?string
     {
-        return $this->drec->format(self::DATE_FORMAT_DB);
+        return $this->drec->format(BaseEntity::DATETIME_FOR_FRONT);
+    }
+
+    /**
+     * @Groups({"event:read"})
+     */
+    public function getStartTime(): ?string
+    {
+        return $this->drec->format(BaseEntity::TIME_FOR_FRONT);
     }
 
     public function setDrec(\DateTimeInterface $drec): self
@@ -136,6 +149,8 @@ class Event
         $entityManager = $event->getEntityManager();
         $connection = $entityManager->getConnection();
         $platform = $connection->getDatabasePlatform();
-        $this->drec = \DateTime::createFromFormat($platform->getDateTimeTzFormatString(), $this->drecTimestampKey);
+        $this->drec = DateTime::createFromFormat($platform->getDateTimeTzFormatString(), $this->drecTimestampKey) ?: 
+            \DateTime::createFromFormat($platform->getDateTimeFormatString(), $this->drecTimestampKey) ?: 
+                \DateTime::createFromFormat(BaseEntity::DATE_SECOND_FORMAT_DB, $this->drecTimestampKey);
     }
 }

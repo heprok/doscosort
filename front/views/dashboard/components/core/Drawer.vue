@@ -48,7 +48,7 @@
       <!-- https://github.com/vuetifyjs/vuetify/pull/8574 -->
       <div />
     </v-list>
-
+<!-- 
     <template v-slot:append>
       <base-item
         :item="{
@@ -57,7 +57,7 @@
           to: '/settings',
         }"
       />
-    </template>
+    </template> -->
   </v-navigation-drawer>
 </template>
 
@@ -88,6 +88,11 @@ export default {
         icon: "mdi-file-chart",
         children: [
           {
+            icon: "mdi-color-helper",
+            title: "Доски",
+            to: "board",
+          },
+          {
             icon: "mdi-clock-fast",
             title: "Простои",
             to: "downtimes",
@@ -102,11 +107,6 @@ export default {
             title: "Действия",
             to: "action",
           },          
-          {
-            icon: "mdi-color-helper",
-            title: "Доски",
-            to: "board",
-          },
         ],
       },
       {

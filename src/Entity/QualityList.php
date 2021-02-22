@@ -18,7 +18,7 @@ class QualityList
      * @ORM\Id
      * @ORM\GeneratedValue
      * @ORM\Column(type="smallint", 
-     *      options={"min":"1", "max"="32767", "unsigned":true})
+     *      options={"check":"BETWEEN 0 AND 15", "unsigned":true})
      */
     private int $id;
 
@@ -27,12 +27,6 @@ class QualityList
      *      options={"comment":"Название списка"})
      */
     private string $name;
-
-    /**
-     * @ORM\Column(type="smallint", nullable=true,
-     *      options={"comment":"ID качества по-умолчанию"})
-     */
-    private int $def;
 
     public function __toString()
     {
@@ -57,18 +51,6 @@ class QualityList
     public function setName(string $name): self
     {
         $this->name = $name;
-
-        return $this;
-    }
-
-    public function getDef(): ?int
-    {
-        return $this->def;
-    }
-
-    public function setDef(?int $def): self
-    {
-        $this->def = $def;
 
         return $this;
     }

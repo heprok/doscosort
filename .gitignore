@@ -8,7 +8,7 @@
 /src/.preload.php
 /var/
 /vendor/
-/project.code-workspace
+/*.code-workspace
 /.vscode
 ###< symfony/framework-bundle ###
 
@@ -18,3 +18,4 @@
 npm-debug.log
 yarn-error.log
 ###< symfony/webpack-encore-bundle ###
+

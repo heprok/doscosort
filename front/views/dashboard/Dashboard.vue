@@ -1,54 +1,57 @@
 <template>
   <v-container id="dashboard" fluid tag="section">
     <v-row>
-      <v-col cols="12" sm="6" lg="3">
-        <base-material-stats-card
+      <v-col
+        cols="12"
+        sm="6"
+        lg="3"
+        v-for="infoCard in infoCards"
+        :key="infoCard.nameCard"
+      >
+        <info-card
+          :color="infoCard.color"
+          :icon="infoCard.icon"
+          :sub-icon="infoCard.subIcon"
+          :title="infoCard.nameCard"
+          :urlApi="infoCard.urlApi"
+          :durations="infoCard.duration"
+        />
+      </v-col>
+
+      <!-- <v-col cols="12" sm="6" lg="3">
+        <info-card
           color="info"
-          icon="mdi-twitter"
-          title="Followers"
-          value="+245"
-          sub-icon="mdi-clock"
-          sub-text="Just Updated"
-        />
-      </v-col>
-
-      <v-col cols="12" sm="6" lg="3">
-        <base-material-stats-card
-          color="primary"
           icon="mdi-poll"
-          title="Website Visits"
-          value="75.521"
-          sub-icon="mdi-tag"
-          sub-text="Tracked from Google Analytics"
+          title="Объем досок за смену"
+          urlApi="/api/infocard/volumeBoardsCurrentShift"
         />
       </v-col>
 
       <v-col cols="12" sm="6" lg="3">
-        <base-material-stats-card
-          color="success"
-          icon="mdi-store"
-          title="Revenue"
-          value="$ 34,245"
-          sub-icon="mdi-calendar"
-          sub-text="Last 24 Hours"
+        <info-card
+          color="info"
+          icon="mdi-poll"
+          title="Кол-во брёвен за смену"
+          urlApi="/api/infocard/countTimber/currentShift"
         />
       </v-col>
 
       <v-col cols="12" sm="6" lg="3">
-        <base-material-stats-card
+        <info-card
           color="orange"
           icon="mdi-sofa"
-          title="Bookings"
-          value="184"
-          sub-icon="mdi-alert"
-          sub-icon-color="red"
-          sub-text="Get More Space..."
+          title="Последний простой"
+          urlApi="/api/infocard/lastDowntime"
+          sub-icon="mdi-clock"
         />
-      </v-col>
+      </v-col> -->
+    </v-row>
+    <!-- <v-row>
       <v-col cols="6" lg="6" sm="12">
 
-        <base-material-chart-card
+          <base-material-chart-card
           color="#000"
+          data="[2, 3, 4]"
           hover-reveal
           type="Line"
           url="api/dashboard/report/volumeboard/chart"
@@ -86,19 +89,11 @@
               mdi-clock-outline
             </v-icon>
             <span class="caption grey--text font-weight-light">updated 10 minutes ago</span>
-          </template>-->
+          </template>
         </base-material-chart-card>
       </v-col>
 
       <v-col cols="6" lg="6" sm="12">
-        <!-- <base-material-chart-card
-          :data="diffboardontimber.data"
-          :options="diffboardontimber.options"
-          color="#000"
-          hover-reveal
-          type="Bar"
-          url="api/dashboard/report/diffboardontimber/chart"
-        >-->
         <base-material-chart-card
           color="#000"
           hover-reveal
@@ -130,25 +125,13 @@
           <h4
             class="card-title font-weight-light mt-2 ml-2"
           >Соотношение между выпеленных досок с сравнением с бревном</h4>
-          <!-- 
-          <p class="d-inline-flex font-weight-light ml-2 mt-1">
-            <v-icon color="green" small>mdi-arrow-up</v-icon>
-            <span class="green--text">55%</span>&nbsp;
-            За последние 30 дней
-          </p>-->
-
-          <!-- <template v-slot:actions>
-            <v-icon class="mr-1" small>mdi-clock-outline</v-icon>
-            <span class="caption grey--text font-weight-light">updated 4 minutes ago</span>
-          </template>-->
         </base-material-chart-card>
       </v-col>
-    </v-row>
+    </v-row> -->
   </v-container>
 </template>
 
 <script>
-
 // import LineChart from '../../components/base/chart/report/dashboard/VolumeBoardChart.js';
 // import LineChartCard from '../../components/base/ChartJsCard.vue';
 export default {
@@ -156,10 +139,73 @@ export default {
   data() {
     return {
       loader: false,
+      infoCards: [
+        {
+          nameCard: "Текущая смена",
+          color: "info",
+          subIcon: "mdi-tag",
+          icon: "mdi-account-hard-hat",
+          urlApi: "/infocard/currentShift",
+        },
+        {
+          nameCard: "Объем досок",
+          color: "info",
+          icon: "mdi-poll",
+          urlApi: "/infocard/volumeBoards",
+          duration: [
+            {
+              url: "/currentShift",
+              title: "за смену",
+            },
+            {
+              url: "/today",
+              title: "за сутки",
+            },
+            {
+              url: "/weekly",
+              title: "за неделю",
+            },
+            {
+              url: "/mountly",
+              title: "за месяц",
+            },
+          ],
+        },
+        {
+          nameCard: "Кол-во досок",
+          color: "info",
+          icon: "mdi-poll",
+          urlApi: "/infocard/countBoard",
+          duration: [
+            {
+              url: "/currentShift",
+              title: "за смену",
+            },
+            {
+              url: "/today",
+              title: "за сутки",
+            },
+            {
+              url: "/weekly",
+              title: "за неделю",
+            },
+            {
+              url: "/mountly",
+              title: "за месяц",
+            },
+          ],
+        },
+        {
+          nameCard: "Последний простой",
+          color: "orange",
+          icon: "mdi-account-hard-hat",
+          subIcon: "mdi-clock",
+          urlApi: "/infocard/lastDowntime",
+        },
+      ],
     };
   },
-  mounted() {
-  },
+  mounted() {},
   methods: {
     complete(index) {
       this.list[index] = !this.list[index];

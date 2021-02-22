@@ -31,7 +31,7 @@ final class DateFilter extends AbstractContextAwareFilter
             ->setParameter('start', $start->format(DATE_ATOM))
             ->setParameter('end', $end->format(DATE_ATOM));
 
-        dump($queryBuilder->getQuery()->getResult());
+        // dump($queryBuilder->getQuery()->getResult());
     }
 
     protected function splitPropertyParts(string $property): array

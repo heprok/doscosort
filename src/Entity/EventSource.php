@@ -23,6 +23,7 @@ class EventSource
     /**
      * @ORM\Id
      * @ORM\Column(type="string", length=1) 
+     * @Groups({"event_source:read"})
      */
     private string $id;
 
@@ -47,6 +48,11 @@ class EventSource
     public function getName(): ?string
     {
         return $this->name;
+    }
+
+    public function __toString()
+    {
+        return $this->getName() ?? '';
     }
 
     public function setName(string $name): self

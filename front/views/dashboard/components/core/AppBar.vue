@@ -10,8 +10,9 @@
       class="hidden-sm-and-down font-weight-light"
       v-text="$route.name"
     />
-
     <v-spacer />
+
+    <summary-stats-card/> 
     <v-switch
       v-model="$vuetify.theme.dark"
       @change="switchTheme"
@@ -25,8 +26,8 @@
 
 <script>
 // Components
-import { VHover, VListItem } from "vuetify/lib";
-
+// import { VHover, VListItem } from "vuetify/lib";
+import SummaryStatsCard from "../../../../components/SummaryStatsCard"
 // Utilities
 import { mapState, mapMutations } from "vuex";
 
@@ -34,33 +35,34 @@ export default {
   name: "DashboardCoreAppBar",
 
   components: {
-    AppBarItem: {
-      render(h) {
-        return h(VHover, {
-          scopedSlots: {
-            default: ({ hover }) => {
-              return h(
-                VListItem,
-                {
-                  attrs: this.$attrs,
-                  class: {
-                    "black--text": !hover,
-                    "white--text secondary elevation-12": hover,
-                  },
-                  props: {
-                    activeClass: "",
-                    dark: hover,
-                    link: true,
-                    ...this.$attrs,
-                  },
-                },
-                this.$slots.default
-              );
-            },
-          },
-        });
-      },
-    },
+    SummaryStatsCard,
+    // AppBarItem: {
+    //   render(h) {
+    //     return h(VHover, {
+    //       scopedSlots: {
+    //         default: ({ hover }) => {
+    //           return h(
+    //             VListItem,
+    //             {
+    //               attrs: this.$attrs,
+    //               class: {
+    //                 "black--text": !hover,
+    //                 "white--text secondary elevation-12": hover,
+    //               },
+    //               props: {
+    //                 activeClass: "",
+    //                 dark: hover,
+    //                 link: true,
+    //                 ...this.$attrs,
+    //               },
+    //             },
+    //             this.$slots.default
+    //           );
+    //         },
+    //       },
+    //     });
+    //   },
+    // },
   },
 
   props: {

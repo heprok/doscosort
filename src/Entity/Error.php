@@ -15,7 +15,7 @@ use Symfony\Component\Serializer\Annotation\Groups;
  * options={"comment":"Ошибки"})
  * @ApiResource(
  *      collectionOperations={"get"},
- *      itemOperations={"get"},
+ *      itemOperations={"get", "put"},
  *      normalizationContext={"groups"={"error:read"}},
  *      denormalizationContext={"groups"={"error:write"}}
  * )
@@ -33,7 +33,7 @@ class Error
     /**
      * @ORM\Column(type="string", length=128, 
      *      options={"comment":"Текст ошибки"})
-     * @Groups({"error:read"})
+     * @Groups({"error:read", "error:write"})
      */
     private string $text;
 

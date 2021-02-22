@@ -1,7 +1,14 @@
 doctrine:
     dbal:
         url: '%env(resolve:DATABASE_URL)%'
-
+        types:
+            bnom: DoctrineExtensions\Types\BnomType
+            bnom[]: DoctrineExtensions\Types\BnomArrayType
+            bcut: DoctrineExtensions\Types\BnomArrayType
+            docdatetime: DoctrineExtensions\Types\DoctrineDateTimeType
+        mapping_types:
+            _bnom: bnom
+            bnom[]: array
         # IMPORTANT: You MUST configure your server version,
         # either here or in the DATABASE_URL env var (see .env file)
         #server_version: '5.7'
@@ -16,3 +23,15 @@ doctrine:
                 dir: '%kernel.project_dir%/src/Entity'
                 prefix: 'App\Entity'
                 alias: App
+        dql:
+            numeric_functions:
+                standard_length: DoctrineExtensions\Query\Postgresql\StandardLength
+                volume_timber: DoctrineExtensions\Query\Postgresql\VolumeTimber
+                unnest: DoctrineExtensions\Query\Postgresql\Unnest
+                volume_boards: DoctrineExtensions\Query\Postgresql\VolumeBoard
+                get_json_filed_by_key: DoctrineExtensions\Query\Postgresql\GetJsonFieldByKey
+                get_int_into_by_key: DoctrineExtensions\Query\Postgresql\GetIntIntoJsonByKey
+                cast: DoctrineExtensions\Query\Postgresql\Cast
+                array_length: DoctrineExtensions\Query\Postgresql\ArrayLength
+                now: DoctrineExtensions\Query\Postgresql\NowTime
+                concat_ws: DoctrineExtensions\Query\Mysql\ConcatWs

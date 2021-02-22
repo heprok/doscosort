@@ -8,7 +8,7 @@ final class ActionOperatorEventReport extends AbstractEventReport
 {
     public function getNameReport(): string
     {
-        return "Отчёт по действиям оператора";
+        return "по действиям оператора";
     }
 
     protected function getSourceId(): array

@@ -10,6 +10,9 @@ use Doctrine\ORM\Event\LifecycleEventArgs;
 use Doctrine\ORM\Mapping as ORM;
 use App\Filter\DateFilter;
 use ApiPlatform\Core\Annotation\ApiFilter;
+use DateInterval;
+use DatePeriod;
+use DateTime;
 
 /**
  * @ApiResource(
@@ -25,17 +28,13 @@ use ApiPlatform\Core\Annotation\ApiFilter;
  */
 class Shift
 {
-    const DATE_FORMAT_DB = 'Y-m-d\TH:i:sP';
-    const DATE_FOR_FRONT = 'd.m.Y H:i:s';
-    const DATE_FOR_FRONT_TIME = 'H:i:s';
-
     private $start;
 
     /**
      * @ORM\Id
-     * @ORM\Column(name="start", type="string")
+     * @ORM\Column(name="start", type="string",
+     *      options={"comment":"Время начала смены"})
      * @ApiProperty(identifier=true)
-     *      options={"comment":"Время начала смены", "default":NOW()}})
      * @Groups({"shift:read"})
      * @ApiFilter(DateFilter::class)
      */
@@ -49,7 +48,7 @@ class Shift
     private $number;
 
     /**
-     * @ORM\Column(type="datetime", nullable=true)
+     * @ORM\Column(type="datetime", nullable=true,
      *      options={"comment":"Окончание смены"})
      * @Groups({"shift:read"})
      */
@@ -72,38 +71,31 @@ class Shift
      */
     public function getStart(): ?string
     {
-        return $this->start->format(self::DATE_FORMAT_DB);
+        return $this->start->format(BaseEntity::DATE_FORMAT_DB);
     }
     /**
      * @Groups({"shift:read"})
      */
     public function getStartTime(): ?string
     {
-        return $this->start->format(self::DATE_FOR_FRONT_TIME);
+        return $this->start->format(BaseEntity::TIME_FOR_FRONT);
     }
     /**
      * @Groups({"shift:read"})
      */
     public function getEndTime(): ?string
     {
-        if (isset($this->stop))
-            return $this->stop->format(self::DATE_FOR_FRONT_TIME);
-        else{
-            return 'В работе';
-        }
+        return $this->stop ? $this->stop->format(BaseEntity::TIME_FOR_FRONT) : 'В работе';
     }
 
     public function getStartShift(): ?string
     {
-        return $this->start->format(self::DATE_FOR_FRONT);
+        return $this->start->format(BaseEntity::DATETIME_FOR_FRONT);
     }
 
     public function getStopShift(): ?string
     {
-        if ($this->stop)
-            return $this->stop->format(self::DATE_FOR_FRONT);
-        else
-            return 'В работе';
+        return $this->stop ? $this->stop->format(BaseEntity::DATETIME_FOR_FRONT) : 'В работе';
     }
 
     public function setStart(\DateTimeInterface $start): self
@@ -137,6 +129,14 @@ class Shift
         return $this;
     }
 
+    public function getPeriod(): DatePeriod
+    {
+        // $endDate = $this->stop ? $this->stop : new DateTime();
+        $period = new DatePeriod($this->start, new DateInterval('P1D'), $this->stop ?? new DateTime()); 
+        
+        return $period;
+    }
+
     /**
      * @ORM\PrePersist
      * @ORM\PreUpdate
@@ -157,7 +157,9 @@ class Shift
         $entityManager = $event->getEntityManager();
         $connection = $entityManager->getConnection();
         $platform = $connection->getDatabasePlatform();
-        $this->start = \DateTime::createFromFormat($platform->getDateTimeFormatString(), $this->startTimestampKey);
+        $this->start = DateTime::createFromFormat($platform->getDateTimeTzFormatString(), $this->startTimestampKey) ?: 
+            \DateTime::createFromFormat($platform->getDateTimeFormatString(), $this->startTimestampKey) ?: 
+                \DateTime::createFromFormat(BaseEntity::DATE_SECOND_TIMEZONE_FORMAT_DB, $this->startTimestampKey);
     }
 
     public function getPeople(): ?People

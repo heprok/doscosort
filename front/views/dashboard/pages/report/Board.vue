@@ -1,8 +1,9 @@
 <template>
-  <v-container id="report_boards_dashboard" fluid tag="section">
+  <v-container id="report_board_dashboard" fluid tag="section">
     <v-row>
       <v-col cols="12">
-        <shift-date-picker urlReport="report/boards"> </shift-date-picker>
+        <shift-date-picker urlReport="report/board" :filterSqlWhere="filters">
+        </shift-date-picker>
       </v-col>
     </v-row>
   </v-container>
@@ -10,10 +11,13 @@
 
 <script>
 export default {
-  name: "report_boards_dashboard",
+  name: "report_board_dashboard",
 
   data() {
-    return {};
+    return {
+      filters: ['thickness', 'width', 'species', 'length', 'pocket' ],
+
+    };
   },
   mounted() {},
   methods: {},

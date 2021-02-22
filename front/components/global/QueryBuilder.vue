@@ -207,20 +207,20 @@ export default {
         });
       return rule;
     },
-    getRulePostav() {
+    getRuleLength() {
       let rule = {
         type: RuleTypes.MULTI_SELECT,
-        id: "p.id",
-        label: "Постав",
-        nameTable: "",
+        id: "value",
+        label: "Длина, мм.",
+        nameTable: "l.",
       };
-      Axios.get(this.$store.state.apiEntryPoint + "/postavs")
+      Axios.get(this.$store.state.apiEntryPoint + "/lengths")
         .then((response) => {
           let data = response.data["hydra:member"];
-          rule.options = data.map((postav) => {
+          rule.options = data.map((length) => {
             return {
-              value: postav.id,
-              label: postav.name,
+              value: length.value,
+              label: length.value,
             };
           });
           this.countLoadingRules++;
@@ -228,58 +228,51 @@ export default {
         })
         .catch((err) => {
           this.$snotify.error(err.data);
-          this.$snotify.error("Ошибка при загрузке постава");
+          this.$snotify.error("Ошибка при загрузке длин");
           console.log(err);
         });
       return rule;
-    },
-    getRuleDiam() {
-      let rule = {
-        type: RuleTypes.NUMBER,
-        id: "diam",
-        label: "Диаметр бревна, см. ",
-        nameTable: "t.",
-      };
-      this.countLoadingRules++;
-
-      return rule;
-    },
-    getRuleTimberPostavDiam() {
-      let rule = {
-        type: RuleTypes.NUMBER,
-        id: "CAST(p.postav->'top' AS float)",
-        label: "Диаметр постава, мм. ",
-        nameTable: "",
-      };
-      this.countLoadingRules++;
-
-      return rule;
-    },
-    getRuleBoardPostavDiam() {
-      let rule = {
-        type: RuleTypes.NUMBER,
-        id: "get_int_into_by_key(p.postav, 'top')",
-        label: "Диаметр постава, мм. ",
-        nameTable: "",
-      };
-      this.countLoadingRules++;
-
-      return rule;
-    },
-    getRuleLength() {
+    },    
+    getRuleWidth() {
       let rule = {
         type: RuleTypes.MULTI_SELECT,
-        id: "standard_length(t.length)",
-        label: "Длина, мм.",
-        nameTable: "",
+        id: "nom",
+        label: "Ширина, мм.",
+        nameTable: "w.",
       };
-      Axios.get(this.$store.state.apiEntryPoint + "/lengths")
+      Axios.get(this.$store.state.apiEntryPoint + "/widths")
         .then((response) => {
           let data = response.data["hydra:member"];
           rule.options = data.map((length) => {
             return {
-              value: length.standard,
-              label: length.standard,
+              value: length.nom,
+              label: length.nom,
+            };
+          });
+          this.countLoadingRules++;
+          // console.log(rule.options);
+        })
+        .catch((err) => {
+          this.$snotify.error(err.data);
+          this.$snotify.error("Ошибка при загрузке ширин");
+          console.log(err);
+        });
+      return rule;
+    },    
+    getRuleThickness() {
+      let rule = {
+        type: RuleTypes.MULTI_SELECT,
+        id: "t.nom",
+        label: "Толщина, мм.",
+        nameTable: "",
+      };
+      Axios.get(this.$store.state.apiEntryPoint + "/thicknesses")
+        .then((response) => {
+          let data = response.data["hydra:member"];
+          rule.options = data.map((length) => {
+            return {
+              value: length.nom,
+              label: length.nom,
             };
           });
           this.countLoadingRules++;
@@ -297,12 +290,23 @@ export default {
         type: RuleTypes.TEXT,
         id: "cut",
         label: "Сечение",
-        nameTable: "t.",
+        nameTable: "b.",
       };
       this.countLoadingRules++;
 
       return rule;
-    },
+    },     
+    getRulePocket() {
+      let rule = {
+        type: RuleTypes.NUMBER,
+        id: "pocket",
+        label: "Карман",
+        nameTable: "b.",
+      };
+      this.countLoadingRules++;
+
+      return rule;
+    },    
   },
   mounted() {
     this.filters.forEach((filter) => {
@@ -319,17 +323,11 @@ export default {
         case "event_source":
           this.rules.push(this.getRuleEventSource());
           break;
-        case "postav":
-          this.rules.push(this.getRulePostav());
+        case "width":
+          this.rules.push(this.getRuleWidth());
           break;
-        case "diam":
-          this.rules.push(this.getRuleDiam());
-          break;
-        case "postav_board_diam":
-          this.rules.push(this.getRuleBoardPostavDiam());
-          break;
-        case "postav_timber_diam":
-          this.rules.push(this.getRuleTimberPostavDiam());
+        case "thickness":
+          this.rules.push(this.getRuleThickness());
           break;
         case "cut":
           this.rules.push(this.getRuleCut());
@@ -339,6 +337,9 @@ export default {
           break;
         case "length":
           this.rules.push(this.getRuleLength());
+          break;        
+        case "pocket":
+          this.rules.push(this.getRulePocket());
           break;
         default:
           break;

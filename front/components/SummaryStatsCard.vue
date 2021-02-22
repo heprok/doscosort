@@ -57,6 +57,18 @@
                   </td>
                 </tr>
                 <tr>
+                  <td><p class="font-weight-regular">Кол-во досок шт</p></td>
+                  <td align="center" v-for="shift in shifts" :key="shift.name">
+                    {{ shift.countBoards }}
+                  </td>
+                </tr>
+                <tr>
+                  <td><p class="font-weight-regular">Количество шт</p></td>
+                  <td align="center" :colspan="shifts.length">
+                    <p class="font-weight-bold">{{ summary.countBoards }}</p>
+                  </td>
+                </tr>
+                <tr>
                   <td><p class="font-weight-regular">Простой</p></td>
                   <td align="center" v-for="shift in shifts" :key="shift.name">
                     {{ shift.downtime }}

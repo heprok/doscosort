@@ -64,28 +64,40 @@ class Board
     private $nom_length;
 
     /**
-     * @ORM\ManyToOne(targetEntity=QualityList::class, cascade={"persist", "refresh"})
-     * @ORM\JoinColumn(nullable=false, name="qual_list_id", onDelete="SET NULL")
-     */
-    private $qual_list_id;
-
-    /**
-     * @ORM\Column(type="string", length=1, 
-     *      options={"comment":"Два качества от операторов, по 4 бита"})
-     */
-    private $qualities;
-
-    /**
-     * @ORM\Column(type="string", length=1, 
-     *      options={"comment":"Карман"})
-     */
-    private $pocket;
-
-    /**
      * @ORM\ManyToOne(targetEntity=Species::class, cascade={"persist", "refresh"})
      * @ORM\JoinColumn(nullable=false, onDelete="SET NULL")
      */
     private $species;
+
+    /**
+     * @ORM\ManyToOne(targetEntity=Quality::class)
+     * @ORM\JoinColumn(nullable=false)
+     */
+    private $quality_1;
+
+    /**
+     * @ORM\Column(type="string", length=16, 
+     *      options={"comment":"Название качества 1 операторa в момент записи"})
+     */
+    private $quality_1_name;
+
+    /**
+     * @ORM\ManyToOne(targetEntity=Quality::class)
+     * @ORM\JoinColumn(nullable=false)
+     */
+    private $quality_2;
+
+    /**
+     * @ORM\Column(type="string", length=16, 
+     *      options={"comment":"Название качества 2 операторa в момент записи"})
+     */
+    private $quality_2_name;
+
+    /**
+     * @ORM\Column(type="smallint",
+     *      options={"comment":"Карман"})
+     */
+    private $pocket;
 
     public function getDrec(): ?\DateTimeInterface
     {
@@ -171,38 +183,14 @@ class Board
         return $this;
     }
 
-    public function getQualListId(): ?QualityList
+    public function getSpecies(): ?Species
     {
-        return $this->qual_list_id;
+        return $this->species;
     }
 
-    public function setQualListId(?QualityList $qual_list_id): self
+    public function setSpecies(?Species $species): self
     {
-        $this->qual_list_id = $qual_list_id;
-
-        return $this;
-    }
-
-    public function getQualities(): ?string
-    {
-        return $this->qualities;
-    }
-
-    public function setQualities(int $qualities): self
-    {
-        $this->qualities = chr($qualities);
-
-        return $this;
-    }
-
-    public function getPocket(): int
-    {
-        return ord($this->pocket);
-    }
-
-    public function setPocket(int $pocket): self
-    {
-        $this->pocket = chr($pocket);
+        $this->species = $species;
 
         return $this;
     }
@@ -222,22 +210,71 @@ class Board
     /**
      * @ORM\PostLoad
      */
-    public function syncDrecTimestampKeyToDrec(LifecycleEventArgs $event)
+    public function syncdrecTimestampKeyToDrec(LifecycleEventArgs $event)
     {
         $entityManager = $event->getEntityManager();
         $connection = $entityManager->getConnection();
         $platform = $connection->getDatabasePlatform();
-        $this->drec = \DateTime::createFromFormat($platform->getDateTimeTzFormatString(), $this->drecTimestampKey);
+        $this->drec = DateTime::createFromFormat($platform->getDateTimeTzFormatString(), $this->drecTimestampKey) ?:
+            \DateTime::createFromFormat($platform->getDateTimeFormatString(), $this->drecTimestampKey);
     }
 
-    public function getSpecies(): ?Species
+    public function getQuality1(): ?Quality
     {
-        return $this->species;
+        return $this->quality_1;
     }
 
-    public function setSpecies(?Species $species): self
+    public function setQuality1(?Quality $quality_1): self
     {
-        $this->species = $species;
+        $this->quality_1 = $quality_1;
+
+        return $this;
+    }
+
+    public function getQuality1Name(): ?string
+    {
+        return $this->quality_1_name;
+    }
+
+    public function setQuality1Name(string $quality_1_name): self
+    {
+        $this->quality_1_name = $quality_1_name;
+
+        return $this;
+    }
+
+    public function getQuality2(): ?Quality
+    {
+        return $this->quality_2;
+    }
+
+    public function setQuality2(?Quality $quality_2): self
+    {
+        $this->quality_2 = $quality_2;
+
+        return $this;
+    }
+
+    public function getQuality2Name(): ?string
+    {
+        return $this->quality_2_name;
+    }
+
+    public function setQuality2Name(string $quality_2_name): self
+    {
+        $this->quality_2_name = $quality_2_name;
+
+        return $this;
+    }
+
+    public function getPocket(): ?int
+    {
+        return $this->pocket;
+    }
+
+    public function setPocket(int $pocket): self
+    {
+        $this->pocket = $pocket;
 
         return $this;
     }

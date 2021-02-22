@@ -4,9 +4,10 @@
       <v-col cols="12">
         <crud-table
           title="Список ошибок"
-          url-api="api/errors"
+          url-api="/errors"
           icon="mdi-account-group"
           :headers="headers"
+          isCheckPass
           is-crud
         >
         </crud-table>
@@ -25,9 +26,9 @@ export default {
   data() {
     return {
       headers: [
-        { text: "Код", value: "id" },
+        { text: "Код", value: "id" , edited: false},
         { text: "Текст", value: "text" },
-        { text: "Действия", value: "actions" },
+        { text: "Действия", value: "actions", edited: false },
       ],
     };
   },

@@ -22,21 +22,25 @@ import './plugins/global'
 import vuetify from './plugins/vuetify'
 import i18n from './i18n'
 import Snotify, { SnotifyPosition } from 'vue-snotify'
+import moment from 'moment-timezone'
 
 const optionsNotification = {
   toast: {
     position: SnotifyPosition.rightTop
   }
 }
+moment.tz.setDefault(store.state.timezone)
 
 Vue.use(Snotify, optionsNotification);
 
+Vue.prototype.$moment = moment
 Vue.config.productionTip = false
 
 new Vue({
   router,
   Snotify,
   store,
+  moment,
   vuetify,
   i18n,
   render: h => h(App),

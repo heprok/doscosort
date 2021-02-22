@@ -15,33 +15,41 @@ use Symfony\Component\Serializer\Annotation\Groups;
  *      collectionOperations={"get", "post"},
  *      itemOperations={"get", "put", "delete"},
  *      normalizationContext={"groups"={"action_operator:read"}},
- *      denormalizationContext={"groups"={"action_operator:write"}}
+ *      denormalizationContext={"groups"={"action_operator:write"},"disable_type_enforcement"=true}
  * )
  */
 class ActionOperator
 {
     /**
      * @ORM\Id
-     * @ORM\Column(type="smallint")
+     * @ORM\Column(type="smallint", name="id")
      * @Groups({"action_operator:read", "action_operator:write"})
      */
-    private $id;
+    private $code;
 
     /**
-     * @ORM\Column(type="string", length=128)
+     * @ORM\Column(type="string", length=128,
+     *      options={"comment":"Название действия"})
      * @Groups({"action_operator:read", "action_operator:write"})
      */
     private $name;
 
-    public function __construct(int $id, string $name)
+    public function __construct(int $code, string $name)
     {
-        $this->id = $id;
+        $this->code = $code;
         $this->name = $name;
     }
 
-    public function getId(): ?int
+    public function getCode(): ?int
     {
-        return $this->id;
+        return $this->code;
+    }    
+    
+    public function setCode(int $code): self
+    {
+        $this->code = $code;
+
+        return $this;
     }
 
     public function getName(): ?string

@@ -27,67 +27,77 @@ class BoardRepository extends ServiceEntityRepository
      * @param DatePeriod $period
      * @return QueryBuilder
      */
-    private function getQueryFromPeriod(DatePeriod $period): QueryBuilder
+    private function getBaseQueryFromPeriod(DatePeriod $period, array $sqlWhere = []): QueryBuilder
     {
-        return $this->createQueryBuilder('b')
+        $qb = $this->createQueryBuilder('b')
             ->andWhere('b.drecTimestampKey BETWEEN :start AND :end')
-            ->setParameter('start', $period->getStartDate()->format(DATE_ATOM))
-            ->setParameter('end', $period->getEndDate()->format(DATE_ATOM))
-            ->orderBy('b.drecTimestampKey', 'ASC');
-    }
+            ->setParameter('start', $period->getStartDate()->format(DATE_RFC3339_EXTENDED))
+            ->setParameter('end', $period->getEndDate()->format(DATE_RFC3339_EXTENDED))
+            ->leftJoin('b.species', 's');
 
+
+        foreach ($sqlWhere as $where) {
+            $query = $where->nameTable . $where->id . ' ' . $where->operator . ' ' . $where->value;
+            if ($where->logicalOperator == 'AND')
+                $qb->andWhere($query);
+            else
+                $qb->orWhere($query);
+        }
+
+        return $qb;
+
+        // ->orderBy('b.drec', 'ASC');
+    }
 
     /**
      * @return Board[] Returns an array of Board objects
      */
     public function findByPeriod(DatePeriod $period)
     {   
-        return $this->getQueryFromPeriod($period)
+        return $this->getBaseQueryFromPeriod($period)
+            ->getQuery()
+            ->getResult();
+    }
+
+    public function getReportVolumeBoardByPeriod(DatePeriod $period, array $sqlWhere = [])
+    {
+        $qb = $this->getBaseQueryFromPeriod($period, $sqlWhere);
+        return $qb
+            ->select(
+                's.name as name_species',
+                // 'standard_length (b.length) AS st_length',
+                'b.quality_1_name',
+                'b.length',
+                'concat_ws(\' × \', b.nom_width, b.nom_thickness) AS cut',
+                'count(1) AS count_board',
+                'sum(CAST(b.nom_length as real) / 1000 * CAST(b.nom_width as real) / 1000 * CAST(b.nom_length as real) / 1000) AS volume_boards'
+                // 'volume_boards (unnest(b.boards), b.length) AS volume_boards'
+            )
+            ->addGroupBy('name_species', 'cut', 'b.quality_1_name', 'b.length')
+            ->addOrderBy('name_species, cut, b.quality_1_name, b.length')
             ->getQuery()
             ->getResult();
     }
 
 
-    public function findVolumeByPeriod(DatePeriod $period)
+    public function getVolumeBoardsByPeriod(DatePeriod $period):float
     {
+        $qb = $this->getBaseQueryFromPeriod($period);
 
-        $query = $this->getEntityManager()->createQuery(
-            'SELECT 
-                s.name,
-                b.qualities,
-                CONCAT(b.nom_thickness, b.nom_width) AS cut
-            FROM
-                App\Entity\Board b
-            LEFT JOIN b.species s
-            GROUP BY
-                s.name,
-                b.qualities,
-                cut,
-                b.nom_length'
-        );
-            dd($query->getResult());
-        $query = $this->getEntityManager()->createQuery(
-            'SELECT 
-                s.name,
-                b.qualities,
-                b.nom_thickness::varchar || \' × \' || b.nom_width AS cut,
-                b.nom_length::real / 1000 AS length,
-                count(1),
-                sum(nom_length::real / 1000 * nom_width::real / 1000 * nom_length::real / 1000) AS volume_boards
-            FROM
-                App:Entity:Board b
-            LEFT JOIN b.species_id s
-            GROUP BY
-                s.name,
-                b.qualities,
-                cut,
-                b.nom_length
-            ORDER BY
-                s.name,
-                cut,
-                length'
-        );
-        return $query->getResult();
+        return $qb
+                ->select('sum(CAST(b.nom_length as real) / 1000 * CAST(b.nom_width as real) / 1000 * CAST(b.nom_length as real) / 1000) AS volume_boards')
+                ->getQuery()
+                ->getResult()[0]['volume_boards'] ?? 0.0;
+    }
+
+    public function getCountBoardsByPeriod(DatePeriod $period):int
+    {
+        $qb = $this->getBaseQueryFromPeriod($period);
+
+        return $qb
+                ->select('count(1) AS count_boards')
+                ->getQuery()
+                ->getResult()[0]['count_boards'] ?? 0;
     }
 
     // /**

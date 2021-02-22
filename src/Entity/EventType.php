@@ -23,6 +23,7 @@ class EventType
     /**
      * @ORM\Id
      * @ORM\Column(type="string", length=1)
+     * @Groups({"event_type:read"})
      */
     private $id;
 
@@ -38,14 +39,19 @@ class EventType
         $this->name = $name;
     }
 
-    public function getId(): ?int
+    public function getId(): string
     {
         return $this->id;
     }
 
     public function getName(): ?string
     {
-        return $this->name;
+        return $this->name ?? '';
+    }
+
+    public function __toString()
+    {
+        return $this->getName();
     }
 
     public function setName(string $name): self

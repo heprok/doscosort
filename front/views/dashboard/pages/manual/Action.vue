@@ -4,9 +4,10 @@
       <v-col cols="12">
         <crud-table
           title="Действие опертора"
-          url-api="api/action_operators"
+          url-api="/action_operators"
           icon="mdi-gesture-double-tap"
           :headers="headers"
+          isCheckPass
           is-crud
         >
         </crud-table>
@@ -27,7 +28,7 @@ export default {
       headers: [
         { text: "Код", value: "id" },
         { text: "Название", value: "name" },
-        { text: "Действия", value: "actions" },
+        { text: "Действия", value: "actions", edited: false },
       ],
     };
   },
