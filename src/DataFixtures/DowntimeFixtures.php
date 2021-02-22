@@ -33,16 +33,17 @@ class DowntimeFixtures extends Fixture
             $manager->persist($place);
         }
 
+        $randomDatesTimestamp = AppFixtures::getRandomDatetime(self::COUNT_DOWNTIME);
+
         for ($i=0; $i < self::COUNT_DOWNTIME; $i++) { 
             $downtime = new Downtime();
             
-            $randomDateTimestamp = AppFixtures::randomDate();
             $startTime = new DateTime();
-            $startTime->setTimestamp($randomDateTimestamp);
+            $startTime->setTimestamp($randomDatesTimestamp[$i]);
             $downtime->setDrec($startTime);
 
             $stopTime = new DateTime();
-            $stopTime->setTimestamp($randomDateTimestamp + 3 * 60);
+            $stopTime->setTimestamp($randomDatesTimestamp[$i] + 3 * 60);
             $downtime->setFinish($stopTime);
 
             $downtime->setCause($arrCause[rand(0, self::COUNT_CAUSE - 1)]);

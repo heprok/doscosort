@@ -6,7 +6,6 @@ namespace App\Report\Board;
 
 use App\Report\AbstractPdf;
 use App\Report\AbstractReport;
-use DateInterval;
 
 final class BoardPdfReport extends AbstractPdf
 {

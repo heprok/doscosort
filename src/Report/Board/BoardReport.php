@@ -23,7 +23,7 @@ final class BoardReport extends AbstractReport
             'Качество',
             'Сечение, мм',
             'Длина, м',
-            'Кол-во',
+            'Кол-во, шт',
             'Объем, м3',
         ]);
         parent::__construct($period, $people, $sqlWhere);
@@ -54,6 +54,23 @@ final class BoardReport extends AbstractReport
         return $summaryStats;
     }
 
+    protected function getColumnTotal(): array
+    {
+        return [
+            $this->labels[4],
+            $this->labels[5]
+        ];
+    }
+
+    protected function getTextSubTotal(string $name_species, $cut): string
+    {
+        return 'Итог (' . $name_species . ', '  . $cut . '){' . (string)(count($this->getLabels()) - count($this->getColumnTotal())) . '}%0{1}%1{1}';
+    }
+
+    protected function getTextTotal(): string
+    {
+        return 'Общий итог{' . (string)(count($this->getLabels()) - count($this->getColumnTotal())) . '}%0{1}%1{1}';
+    }
     public function getNameReport(): string
     {
         return "по доскам";

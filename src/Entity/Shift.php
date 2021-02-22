@@ -63,6 +63,7 @@ class Shift
 
     public function getStartTimestampKey(): ?int
     {
+        dump($this->start);
         return strtotime($this->start->format(DATE_ATOM));
     }
 

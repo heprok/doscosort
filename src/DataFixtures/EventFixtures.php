@@ -42,12 +42,14 @@ class EventFixtures extends Fixture
         $manager->persist($event_source);
         $arr_event_sources[] = $event_source;
         
+        $randomDatesTimestamp = AppFixtures::getRandomDatetime(self::COUNT_EVENT);
+
         for ($i=0; $i < self::COUNT_EVENT; $i++) { 
             $event = new Event();
 
-            $randomDateTimestamp = AppFixtures::randomDate();
             $drec = new DateTime();
-            $drec->setTimestamp($randomDateTimestamp);
+            $drec->setTimestamp($randomDatesTimestamp[$i]);
+            
             
             $event->setDrec($drec);
             $type = $arr_event_type[array_rand($arr_event_type)];
