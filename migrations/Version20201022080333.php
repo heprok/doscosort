@@ -32,7 +32,7 @@ final class Version20201022080333 extends AbstractMigration
                 width SMALLINT NOT NULL,
                 length SMALLINT NOT NULL,
                 qualities CHAR NOT NULL,
-                pocket CHAR NOT NULL,
+                pocket SMALLINT NOT NULL,
                 PRIMARY KEY(drec))'
         );
         $this->addSql('CREATE INDEX IDX_4FD10382239D68EF ON ds.board (nom_thickness)');
