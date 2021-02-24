@@ -70,7 +70,7 @@ class BoardRepository extends ServiceEntityRepository
                 'b.length',
                 'concat_ws(\' × \', b.nom_width, b.nom_thickness) AS cut',
                 'count(1) AS count_board',
-                'sum(CAST(b.nom_length as real) / 1000 * CAST(b.nom_width as real) / 1000 * CAST(b.nom_length as real) / 1000) AS volume_boards'
+                'sum(CAST(b.nom_length as real) / 1000 * CAST(b.nom_width as real) / 1000 * CAST(b.thickness as real) / 1000) AS volume_boards'
                 // 'volume_boards (unnest(b.boards), b.length) AS volume_boards'
             )
             ->addGroupBy('name_species', 'cut', 'b.quality_1_name', 'b.length')
@@ -85,7 +85,7 @@ class BoardRepository extends ServiceEntityRepository
         $qb = $this->getBaseQueryFromPeriod($period);
 
         return $qb
-                ->select('sum(CAST(b.nom_length as real) / 1000 * CAST(b.nom_width as real) / 1000 * CAST(b.nom_length as real) / 1000) AS volume_boards')
+                ->select('sum(CAST(b.nom_length as real) / 1000 * CAST(b.nom_width as real) / 1000 * CAST(b.thickness as real) / 1000) AS volume_boards')
                 ->getQuery()
                 ->getResult()[0]['volume_boards'] ?? 0.0;
     }
