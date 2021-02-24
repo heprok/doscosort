@@ -71,7 +71,7 @@ class Board
 
     /**
      * @ORM\ManyToOne(targetEntity=Quality::class)
-     * @ORM\JoinColumn(nullable=false)
+     * @ORM\JoinColumn(name="quality_1", nullable=false)
      */
     private $quality_1;
 
@@ -83,7 +83,7 @@ class Board
 
     /**
      * @ORM\ManyToOne(targetEntity=Quality::class)
-     * @ORM\JoinColumn(nullable=false)
+     * @ORM\JoinColumn(name="quality_2", nullable=false)
      */
     private $quality_2;
 
@@ -195,6 +195,66 @@ class Board
         return $this;
     }
 
+    
+    public function getQuality1(): ?Quality
+    {
+        return $this->quality_1;
+    }
+    
+    public function setQuality1(?Quality $quality_1): self
+    {
+        $this->quality_1 = $quality_1;
+        
+        return $this;
+    }
+    
+    public function getQuality1Name(): ?string
+    {
+        return $this->quality_1_name;
+    }
+    
+    public function setQuality1Name(string $quality_1_name): self
+    {
+        $this->quality_1_name = $quality_1_name;
+        
+        return $this;
+    }
+    
+    public function getQuality2(): ?Quality
+    {
+        return $this->quality_2;
+    }
+    
+    public function setQuality2(?Quality $quality_2): self
+    {
+        $this->quality_2 = $quality_2;
+        
+        return $this;
+    }
+    
+    public function getQuality2Name(): ?string
+    {
+        return $this->quality_2_name;
+    }
+    
+    public function setQuality2Name(string $quality_2_name): self
+    {
+        $this->quality_2_name = $quality_2_name;
+        
+        return $this;
+    }
+    
+    public function getPocket(): ?int
+    {
+        return $this->pocket;
+    }
+    
+    public function setPocket(int $pocket): self
+    {
+        $this->pocket = $pocket;
+        
+        return $this;
+    }
     /**
      * @ORM\PrePersist
      * @ORM\PreUpdate
@@ -206,7 +266,7 @@ class Board
         $platform = $connection->getDatabasePlatform();
         $this->drecTimestampKey = $this->drec->format($platform->getDateTimeFormatString());
     }
-
+    
     /**
      * @ORM\PostLoad
      */
@@ -216,66 +276,7 @@ class Board
         $connection = $entityManager->getConnection();
         $platform = $connection->getDatabasePlatform();
         $this->drec = DateTime::createFromFormat($platform->getDateTimeTzFormatString(), $this->drecTimestampKey) ?:
-            \DateTime::createFromFormat($platform->getDateTimeFormatString(), $this->drecTimestampKey);
-    }
-
-    public function getQuality1(): ?Quality
-    {
-        return $this->quality_1;
-    }
-
-    public function setQuality1(?Quality $quality_1): self
-    {
-        $this->quality_1 = $quality_1;
-
-        return $this;
-    }
-
-    public function getQuality1Name(): ?string
-    {
-        return $this->quality_1_name;
-    }
-
-    public function setQuality1Name(string $quality_1_name): self
-    {
-        $this->quality_1_name = $quality_1_name;
-
-        return $this;
-    }
-
-    public function getQuality2(): ?Quality
-    {
-        return $this->quality_2;
-    }
-
-    public function setQuality2(?Quality $quality_2): self
-    {
-        $this->quality_2 = $quality_2;
-
-        return $this;
-    }
-
-    public function getQuality2Name(): ?string
-    {
-        return $this->quality_2_name;
-    }
-
-    public function setQuality2Name(string $quality_2_name): self
-    {
-        $this->quality_2_name = $quality_2_name;
-
-        return $this;
-    }
-
-    public function getPocket(): ?int
-    {
-        return $this->pocket;
-    }
-
-    public function setPocket(int $pocket): self
-    {
-        $this->pocket = $pocket;
-
-        return $this;
+            \DateTime::createFromFormat($platform->getDateTimeFormatString(), $this->drecTimestampKey) ?:
+                \DateTime::createFromFormat(BaseEntity::DATE_SECOND_TIMEZONE_FORMAT_DB, $this->drecTimestampKey);
     }
 }

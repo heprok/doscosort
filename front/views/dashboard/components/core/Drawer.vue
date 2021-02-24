@@ -91,6 +91,11 @@ export default {
             icon: "mdi-color-helper",
             title: "Доски",
             to: "board",
+          },          
+          {
+            icon: "mdi-book-open",
+            title: "Хрология досок",
+            to: "boardregistry",
           },
           {
             icon: "mdi-clock-fast",

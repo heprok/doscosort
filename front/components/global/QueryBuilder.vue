@@ -210,9 +210,9 @@ export default {
     getRuleLength() {
       let rule = {
         type: RuleTypes.MULTI_SELECT,
-        id: "value",
+        id: "nom_length",
         label: "Длина, мм.",
-        nameTable: "l.",
+        nameTable: "b.",
       };
       Axios.get(this.$store.state.apiEntryPoint + "/lengths")
         .then((response) => {
@@ -236,9 +236,9 @@ export default {
     getRuleWidth() {
       let rule = {
         type: RuleTypes.MULTI_SELECT,
-        id: "nom",
+        id: "nom_width",
         label: "Ширина, мм.",
-        nameTable: "w.",
+        nameTable: "b.",
       };
       Axios.get(this.$store.state.apiEntryPoint + "/widths")
         .then((response) => {
@@ -262,9 +262,9 @@ export default {
     getRuleThickness() {
       let rule = {
         type: RuleTypes.MULTI_SELECT,
-        id: "t.nom",
+        id: "nom_thickness",
         label: "Толщина, мм.",
-        nameTable: "",
+        nameTable: "b.",
       };
       Axios.get(this.$store.state.apiEntryPoint + "/thicknesses")
         .then((response) => {

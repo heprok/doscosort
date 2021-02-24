@@ -32,11 +32,11 @@ class Unload
 
     /**
      * @ORM\Id
-     * @ORM\Column(type="integer", 
+     * @ORM\Column(type="string", 
      *      options={"comment":"Время выгрузки"})
      * @Groups({"unload:read"})
      */
-    private $drecTimestampKey;
+    private string $drecTimestampKey;
 
 
     /**
@@ -44,21 +44,28 @@ class Unload
      *      options={"comment":"Название качеств"})
      * @Groups({"unload:read"})
      */
-    private $qualities;
+    private string $qualities;
 
     /**
      * @ORM\Column(type="smallint", 
      *      options={"comment":"Количество досок"})
      * @Groups({"unload:read"})
      */
-    private $amount;
+    private int $amount;    
+    
+    /**
+     * @ORM\Column(type="smallint", 
+     *      options={"comment":"Карман"})
+     * @Groups({"unload:read"})
+     */
+    private int $pocket;
 
     /**
      * @ORM\ManyToOne(targetEntity=Group::class)
      * @ORM\JoinColumn(nullable=false)
      * @Groups({"unload:read"})
      */
-    private $group;
+    private Group $group;
 
     public function getId(): ?int
     {
@@ -85,6 +92,18 @@ class Unload
     public function setAmount(int $amount): self
     {
         $this->amount = $amount;
+
+        return $this;
+    }    
+    
+    public function getPocket(): ?int
+    {
+        return $this->pocket;
+    }
+
+    public function setPocket(int $pocket): self
+    {
+        $this->pocket = $pocket;
 
         return $this;
     }
@@ -125,5 +144,7 @@ class Unload
             \DateTime::createFromFormat($platform->getDateTimeFormatString(), $this->drecTimestampKey) ?: 
                 \DateTime::createFromFormat(BaseEntity::DATE_SECOND_TIMEZONE_FORMAT_DB, $this->drecTimestampKey);
     }
+
+
 
 }

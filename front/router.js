@@ -63,6 +63,11 @@ export default new Router({
           name: 'Доски',
           path: 'report/board',
           component: () => import('@/views/dashboard/pages/report/Board'),
+        },          
+        {
+          name: 'Хронология досок',
+          path: 'report/boardregistry',
+          component: () => import('@/views/dashboard/pages/report/RegistryBoard'),
         },        
       ],
     },

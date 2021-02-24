@@ -34,6 +34,9 @@ class BoardRepository extends ServiceEntityRepository
             ->setParameter('start', $period->getStartDate()->format(DATE_RFC3339_EXTENDED))
             ->setParameter('end', $period->getEndDate()->format(DATE_RFC3339_EXTENDED))
             ->leftJoin('b.species', 's');
+            // ->leftJoin('b.nom_thickness', 't')
+            // ->leftJoin('b.nom_width', 'w')
+            // ->leftJoin('b.nom_length', 'l');
 
 
         foreach ($sqlWhere as $where) {
@@ -52,9 +55,10 @@ class BoardRepository extends ServiceEntityRepository
     /**
      * @return Board[] Returns an array of Board objects
      */
-    public function findByPeriod(DatePeriod $period)
+    public function findByPeriod(DatePeriod $period, array $sqlWhere = [])
     {   
-        return $this->getBaseQueryFromPeriod($period)
+        return $this->getBaseQueryFromPeriod($period, $sqlWhere)
+            ->setMaxResults(1000)
             ->getQuery()
             ->getResult();
     }
@@ -68,7 +72,7 @@ class BoardRepository extends ServiceEntityRepository
                 // 'standard_length (b.length) AS st_length',
                 'b.quality_1_name',
                 'b.length',
-                'concat_ws(\' × \', b.nom_width, b.nom_thickness) AS cut',
+                'concat_ws(\' × \', b.nom_thickness, b.nom_width) AS cut',
                 'count(1) AS count_board',
                 'sum(CAST(b.nom_length as real) / 1000 * CAST(b.nom_width as real) / 1000 * CAST(b.thickness as real) / 1000) AS volume_boards'
                 // 'volume_boards (unnest(b.boards), b.length) AS volume_boards'
