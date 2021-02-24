@@ -22,7 +22,7 @@ while [ -n "$1" ]
 do
 case "$1" in
 -f) 7z a -r doscosortweb.7z public config src templates vendor composer.json ;;
-*) 7z a -r doscosortweb.7z public config src templates composer.json ;;
+-m) 7z a -r doscosortweb.7z public config src templates composer.json ;;
 esac
 shift
 done
