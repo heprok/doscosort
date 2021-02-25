@@ -12,7 +12,7 @@ final class RegistryBoardPdfReport extends AbstractPdf
     public function __construct(AbstractReport $report)
     {
         $this->setReport($report);
-        parent::__constructor('L');
+        parent::__constructor('L', true);
     }
 
     protected function getPointFontHeader(): int
