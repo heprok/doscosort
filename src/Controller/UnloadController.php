@@ -5,11 +5,13 @@ declare(strict_types=1);
 namespace App\Controller;
 
 use App\Report\AbstractReport;
-use App\Report\Event\ActionOperatorEventReport;
-use App\Report\Event\EventPdfReport;
-use App\Repository\EventRepository;
+use App\Report\Downtime\DowntimePdfReport;
+use App\Report\Downtime\DowntimeReport;
+use App\Report\Pocket\PocketUnloadPdfReport;
+use App\Report\Pocket\PocketUnloadReport;
 use App\Repository\PeopleRepository;
 use App\Repository\ShiftRepository;
+use App\Repository\UnloadRepository;
 use DateInterval;
 use DatePeriod;
 use DateTime;
@@ -17,12 +19,15 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
 
-#[Route("report/event/action_operator", name: "report_event_action_operator_")]
-class ActionOperatorEventController extends AbstractController
+#[Route("report/unload", name: "report_unload_")]
+class UnloadController extends AbstractController
 {
+    // private PeopleRepository $peopleRepository;
+    // private UnloadRepository $unloadRepository;
+
     public function __construct(
         private PeopleRepository $peopleRepository,
-        private EventRepository $eventRepository
+        private UnloadRepository $unloadRepository
     ) {
     }
 
@@ -41,7 +46,7 @@ class ActionOperatorEventController extends AbstractController
         $startDate = new DateTime($start);
         $endDate = new DateTime($end);
         $period = new DatePeriod($startDate, new DateInterval('P1D'), $endDate);
-        $report = new ActionOperatorEventReport($period, $this->eventRepository, $peoples, $sqlWhere);
+        $report = new PocketUnloadReport($period, $this->unloadRepository, $peoples, $sqlWhere);
         $this->showPdf($report);
     }
 
@@ -54,7 +59,7 @@ class ActionOperatorEventController extends AbstractController
     private function showPdf(AbstractReport $report)
     {
         $report->init();
-        $pdf = new EventPdfReport($report);
+        $pdf = new PocketUnloadPdfReport($report);
         $pdf->render();
     }
 }

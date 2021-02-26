@@ -68,6 +68,11 @@ export default new Router({
           name: 'Хронология досок',
           path: 'report/boardregistry',
           component: () => import('@/views/dashboard/pages/report/RegistryBoard'),
+        },         
+        {
+          name: 'Выгруженные карманы',
+          path: 'report/unload',
+          component: () => import('@/views/dashboard/pages/report/Unload'),
         },        
       ],
     },

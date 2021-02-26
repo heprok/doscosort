@@ -1,6 +1,22 @@
 <template>
   <v-container id="report_board_dashboard" fluid tag="section">
     <v-row>
+      <v-col
+        cols="12"
+        sm="6"
+        lg="4"
+        v-for="infoCard in infoCards"
+        :key="infoCard.nameCard"
+      >
+        <info-card
+          :color="infoCard.color"
+          :icon="infoCard.icon"
+          :sub-icon="infoCard.subIcon"
+          :title="infoCard.nameCard"
+          :urlApi="infoCard.urlApi"
+          :durations="infoCard.duration"
+        />
+      </v-col>
       <v-col cols="12">
         <shift-date-picker urlReport="report/board" :filterSqlWhere="filters">
         </shift-date-picker>
@@ -15,8 +31,7 @@ export default {
 
   data() {
     return {
-      filters: ['thickness', 'width', 'species', 'length', 'pocket' ],
-
+      filters: ["thickness", "width", "species", "length", "pocket"],
     };
   },
   mounted() {},

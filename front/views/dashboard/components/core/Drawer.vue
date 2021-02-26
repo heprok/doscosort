@@ -96,6 +96,11 @@ export default {
             icon: "mdi-book-open",
             title: "Хрология досок",
             to: "boardregistry",
+          },          
+          {
+            icon: "mdi-chevron-double-down",
+            title: "Выгруженные карманы",
+            to: "unload",
           },
           {
             icon: "mdi-clock-fast",

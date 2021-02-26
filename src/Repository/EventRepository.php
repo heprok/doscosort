@@ -39,7 +39,7 @@ class EventRepository extends ServiceEntityRepository
     */
 
 
-    private function getQueryFromPeriod(DatePeriod $period, array $sqlWhere = []) :QueryBuilder
+    private function getBaseQueryFromPeriod(DatePeriod $period, array $sqlWhere = []) :QueryBuilder
     {
 
         $qb = $this->createQueryBuilder('e')
@@ -67,7 +67,7 @@ class EventRepository extends ServiceEntityRepository
      */
     public function findByTypeAndSourceFromPeriod(DatePeriod $period, array $type, array $source, array $sqlWhere = [])
     {
-        return $qb = $this->getQueryFromPeriod($period, $sqlWhere)
+        return $qb = $this->getBaseQueryFromPeriod($period, $sqlWhere)
             ->andWhere('e.type IN( :type )')
             ->andWhere('e.source IN( :source )')
             ->setParameter('type', $type)

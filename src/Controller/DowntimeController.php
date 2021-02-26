@@ -20,13 +20,10 @@ use Symfony\Component\Routing\Annotation\Route;
 #[Route("report/downtimes", name:"report_downtimes_")]
 class DowntimeController extends AbstractController
 {
-    private PeopleRepository $peopleRepository;
-    private DowntimeRepository $downtimeRepository;
-
-    public function __construct(PeopleRepository $peopleRepository, DowntimeRepository $downtimeRepository)
+    public function __construct(
+        private PeopleRepository $peopleRepository, 
+        private DowntimeRepository $downtimeRepository)
     {
-        $this->peopleRepository = $peopleRepository;
-        $this->downtimeRepository = $downtimeRepository;
     }
     
     #[Route("/{start}...{end}/people/{idsPeople}/pdf", name:"for_period_with_people_show_pdf")]

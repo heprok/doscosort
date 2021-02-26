@@ -32,7 +32,7 @@ class Unload
 
     /**
      * @ORM\Id
-     * @ORM\Column(type="string", 
+     * @ORM\Column(name="drec", type="string", 
      *      options={"comment":"Время выгрузки"})
      * @Groups({"unload:read"})
      */
@@ -62,14 +62,26 @@ class Unload
 
     /**
      * @ORM\ManyToOne(targetEntity=Group::class)
-     * @ORM\JoinColumn(nullable=false)
+     * @ORM\JoinColumn(nullable=false, name="group")
      * @Groups({"unload:read"})
      */
     private Group $group;
 
-    public function getId(): ?int
+    public function getDrecTimestampKey(): ?int
     {
-        return $this->id;
+        return strtotime($this->drec->format(DATE_ATOM));
+    }
+
+    public function getDrec(): DateTime
+    {
+        return $this->drec;
+    }
+
+    public function setDrec(\DateTimeInterface $drec): self
+    {
+        $this->drec = $drec;
+
+        return $this;
     }
 
     public function getQualities(): ?string

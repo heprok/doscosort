@@ -84,9 +84,9 @@ class BoardRepository extends ServiceEntityRepository
     }
 
 
-    public function getVolumeBoardsByPeriod(DatePeriod $period):float
+    public function getVolumeBoardsByPeriod(DatePeriod $period, array $sqlWhere = []):float
     {
-        $qb = $this->getBaseQueryFromPeriod($period);
+        $qb = $this->getBaseQueryFromPeriod($period, $sqlWhere);
 
         return $qb
                 ->select('sum(CAST(b.nom_length as real) / 1000 * CAST(b.nom_width as real) / 1000 * CAST(b.thickness as real) / 1000) AS volume_boards')
@@ -94,9 +94,9 @@ class BoardRepository extends ServiceEntityRepository
                 ->getResult()[0]['volume_boards'] ?? 0.0;
     }
 
-    public function getCountBoardsByPeriod(DatePeriod $period):int
+    public function getCountBoardsByPeriod(DatePeriod $period, array $sqlWhere = []):int
     {
-        $qb = $this->getBaseQueryFromPeriod($period);
+        $qb = $this->getBaseQueryFromPeriod($period, $sqlWhere);
 
         return $qb
                 ->select('count(1) AS count_boards')

@@ -18,28 +18,27 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
 
-#[Route("report/board", name:"report_board_")]
+#[Route("report/board", name: "report_board_")]
 class BoardController extends AbstractController
 {
-    private PeopleRepository $peopleRepository;
-    private BoardRepository $boardRepository;
-
-    public function __construct(PeopleRepository $peopleRepository, BoardRepository $boardRepository)
-    {
+    public function __construct(
+        private PeopleRepository $peopleRepository,
+        private BoardRepository $boardRepository
+    ) {
         $this->peopleRepository = $peopleRepository;
         $this->boardRepository = $boardRepository;
     }
 
-    #[Route("/{start}...{end}/people/{idsPeople}/pdf", name:"for_period_with_people_show_pdf")]
+    #[Route("/{start}...{end}/people/{idsPeople}/pdf", name: "for_period_with_people_show_pdf")]
     public function showReportForPeriodWithPeoplePdf(string $start, string $end, string $idsPeople)
     {
         $request = Request::createFromGlobals();
         $sqlWhere = json_decode($request->query->get('sqlWhere') ?? '[]');
-        
+
         $idsPeople = explode('...', $idsPeople);
         $peoples = [];
         foreach ($idsPeople as $idPeople) {
-            if($idPeople != '')
+            if ($idPeople != '')
                 $peoples[] = $this->peopleRepository->find($idPeople);
         }
         $startDate = new DateTime($start);
@@ -47,9 +46,9 @@ class BoardController extends AbstractController
         $period = new DatePeriod($startDate, new DateInterval('P1D'), $endDate);
         $report = new BoardReport($period, $this->boardRepository, $peoples, $sqlWhere);
         $this->showPdf($report);
-    }    
-    
-    #[Route("/{start}...{end}/pdf", name:"for_period_show_pdf")]
+    }
+
+    #[Route("/{start}...{end}/pdf", name: "for_period_show_pdf")]
     public function showReportForPeriodPdf(string $start, string $end)
     {
         $this->showReportForPeriodWithPeoplePdf($start, $end, '');
@@ -62,16 +61,16 @@ class BoardController extends AbstractController
         $pdf->render();
     }
 
-    #[Route("_registry/{start}...{end}/people/{idsPeople}/pdf", name:"registry_for_period_with_people_show_pdf")]
-    public function showReportRegistryForPeriodPeoplePdf(string $start, string $end, string $idsPeople  )
+    #[Route("_registry/{start}...{end}/people/{idsPeople}/pdf", name: "registry_for_period_with_people_show_pdf")]
+    public function showReportRegistryForPeriodPeoplePdf(string $start, string $end, string $idsPeople)
     {
         $request = Request::createFromGlobals();
         $sqlWhere = json_decode($request->query->get('sqlWhere') ?? '[]');
-        
+
         $idsPeople = explode('...', $idsPeople);
         $peoples = [];
         foreach ($idsPeople as $idPeople) {
-            if($idPeople != '')
+            if ($idPeople != '')
                 $peoples[] = $this->peopleRepository->find($idPeople);
         }
         $startDate = new DateTime($start);
@@ -79,9 +78,9 @@ class BoardController extends AbstractController
         $period = new DatePeriod($startDate, new DateInterval('P1D'), $endDate);
         $report = new RegistryBoardReport($period, $this->boardRepository, $peoples, $sqlWhere);
         $this->showRegistryPdf($report);
-    }    
+    }
 
-    #[Route("_registry/{start}...{end}/pdf", name:"registry_for_period_show_pdf")]
+    #[Route("_registry/{start}...{end}/pdf", name: "registry_for_period_show_pdf")]
     public function showReportRegistryForPeriodPdf(string $start, string $end)
     {
         $this->showReportRegistryForPeriodPeoplePdf($start, $end, '');

@@ -35,8 +35,7 @@ final class BoardReport extends AbstractReport
     public function getSummaryStatsMaterial(): array
     {
         $summaryStatsMaterial = [];
-        $summaryStatsMaterial['boards'] = new SummaryStatMaterial('Доски', $this->repository->getVolumeBoardsByPeriod($this->period), $this->repository->getCountBoardsByPeriod($this->period), 'м³', 'шт');
-
+        $summaryStatsMaterial['boards'] = new SummaryStatMaterial('Доски', $this->repository->getVolumeBoardsByPeriod($this->period, $this->sqlWhere), $this->repository->getCountBoardsByPeriod($this->period, $this->sqlWhere), 'м³', 'шт');
         return $summaryStatsMaterial;
     }
 
@@ -58,6 +57,7 @@ final class BoardReport extends AbstractReport
     {
         return 'Общий итог{' . (string)(count($this->getLabels()) - count($this->getColumnTotal())) . '}%0{1}%1{1}';
     }
+
     public function getNameReport(): string
     {
         return "по доскам";
@@ -91,7 +91,7 @@ final class BoardReport extends AbstractReport
             $cut = $row['cut'];
             $quality_1_name = $row['quality_1_name'];
             $name_species = $row['name_species'];
-            $length = number_format($row['length'] / 1000, 1);
+            $length = $row['length'] / 1000;
             $count_board = $row['count_board'];
             $volume_boards = (float)$row['volume_boards'];
 
