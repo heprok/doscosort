@@ -142,38 +142,7 @@ export default {
       loader: false,
       infoCards: [
         {
-          nameCard: "Текущая смена",
-          color: "info",
-          subIcon: "mdi-tag",
-          icon: "mdi-account-hard-hat",
-          urlApi: "/infocard/currentShift",
-        },
-        {
-          nameCard: "Объем досок",
-          color: "info",
-          icon: "mdi-poll",
-          urlApi: "/infocard/volumeBoards",
-          duration: [
-            {
-              url: "/currentShift",
-              title: "за смену",
-            },
-            {
-              url: "/today",
-              title: "за сутки",
-            },
-            {
-              url: "/weekly",
-              title: "за неделю",
-            },
-            {
-              url: "/mountly",
-              title: "за месяц",
-            },
-          ],
-        },
-        {
-          nameCard: "Кол-во досок",
+          nameCard: "Кол-во пил-мат",
           color: "info",
           icon: "mdi-poll",
           urlApi: "/infocard/countBoard",
@@ -197,24 +166,101 @@ export default {
           ],
         },
         {
+          nameCard: "Объем пил-мат",
+          color: "info",
+          icon: "mdi-poll",
+          urlApi: "/infocard/volumeBoards",
+          duration: [
+            {
+              url: "/currentShift",
+              title: "за смену",
+            },
+            {
+              url: "/today",
+              title: "за сутки",
+            },
+            {
+              url: "/weekly",
+              title: "за неделю",
+            },
+            {
+              url: "/mountly",
+              title: "за месяц",
+            },
+          ],
+        },
+        {
+          nameCard: "Текущая смена",
+          color: "info",
+          subIcon: "mdi-tag",
+          icon: "mdi-account-hard-hat",
+          urlApi: "/infocard/currentShift",
+        },
+        {
           nameCard: "Последний простой",
           color: "orange",
-          icon: "mdi-account-hard-hat",
+          icon: "mdi-clock-fast",
           subIcon: "mdi-camera-timer",
           urlApi: "/infocard/lastDowntime",
         },
         {
-          nameCard: "Скорость сортировки",
+          nameCard: "Кол-во пил-мат ",
+          subTitle: "ПФМ: Выгруженно пиломатериалов",
           color: "info",
-          icon: "mdi-speedometer",
-          urlApi: "/infocard/vars/PresetSpeed",
+          icon: "mdi-gradient",
+          subIcon: "mdi-tag",
+          urlApi: "/infocard/pfm/countBoard",
+          duration: [
+            {
+              url: "/currentShift",
+              title: "за смену",
+            },
+            {
+              url: "/today",
+              title: "за сутки",
+            },
+            {
+              url: "/weekly",
+              title: "за неделю",
+            },
+            {
+              url: "/mountly",
+              title: "за месяц",
+            },
+          ],
+        },
+        {
+          nameCard: "Объём пил-мат ",
+          subTitle: "ПФМ: Выгруженный объём пиломатериалов",
+          color: "info",
+          icon: "mdi-gradient",
+          subIcon: "mdi-tag",
+          urlApi: "/infocard/pfm/volumeBoard",
+          duration: [
+            {
+              url: "/currentShift",
+              title: "за смену",
+            },
+            {
+              url: "/today",
+              title: "за сутки",
+            },
+            {
+              url: "/weekly",
+              title: "за неделю",
+            },
+            {
+              url: "/mountly",
+              title: "за месяц",
+            },
+          ],
         },
         {
           nameCard: "Кол-во карманов",
           subTitle: "ПФМ: Выгруженно карманов",
           color: "info",
           icon: "mdi-gradient",
-          subIcon: 'mdi-tag',
+          subIcon: "mdi-tag",
           urlApi: "/infocard/pfm/countUnloadPocket",
           duration: [
             {
@@ -236,56 +282,10 @@ export default {
           ],
         },
         {
-          nameCard: "Кол-во досок ",
-          subTitle: "ПФМ: Выгруженно досок",
+          nameCard: "Скорость сортировки",
           color: "info",
-          icon: "mdi-gradient",
-          subIcon: 'mdi-tag',
-          urlApi: "/infocard/pfm/countBoard",
-          duration: [
-            {
-              url: "/currentShift",
-              title: "за смену",
-            },
-            {
-              url: "/today",
-              title: "за сутки",
-            },
-            {
-              url: "/weekly",
-              title: "за неделю",
-            },
-            {
-              url: "/mountly",
-              title: "за месяц",
-            },
-          ],
-        },        
-        {
-          nameCard: "Объём досок ",
-          subTitle: "ПФМ: Выгруженный объём досок",
-          color: "info",
-          icon: "mdi-gradient",
-          subIcon: 'mdi-tag',
-          urlApi: "/infocard/pfm/volumeBoard",
-          duration: [
-            {
-              url: "/currentShift",
-              title: "за смену",
-            },
-            {
-              url: "/today",
-              title: "за сутки",
-            },
-            {
-              url: "/weekly",
-              title: "за неделю",
-            },
-            {
-              url: "/mountly",
-              title: "за месяц",
-            },
-          ],
+          icon: "mdi-speedometer",
+          urlApi: "/infocard/vars/PresetSpeed",
         },
       ],
     };

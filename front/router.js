@@ -60,12 +60,12 @@ export default new Router({
           component: () => import('@/views/dashboard/pages/report/event/Action'),
         },          
         {
-          name: 'Доски',
+          name: 'Пиломатериалы',
           path: 'report/board',
           component: () => import('@/views/dashboard/pages/report/Board'),
         },          
         {
-          name: 'Хронология досок',
+          name: 'Хронология пиломатериалов',
           path: 'report/boardregistry',
           component: () => import('@/views/dashboard/pages/report/RegistryBoard'),
         },         

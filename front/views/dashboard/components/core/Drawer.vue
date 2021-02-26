@@ -89,12 +89,12 @@ export default {
         children: [
           {
             icon: "mdi-color-helper",
-            title: "Доски",
+            title: "Пиломатериалы",
             to: "board",
           },          
           {
             icon: "mdi-book-open",
-            title: "Хрология досок",
+            title: "Хронология пил-мат",
             to: "boardregistry",
           },          
           {

@@ -45,7 +45,7 @@
                   </td>
                 </tr>
                 <tr>
-                  <td><p class="font-weight-regular">Объём досок м3</p></td>
+                  <td><p class="font-weight-regular">Объём пил-мат м3</p></td>
                   <td align="center" v-for="shift in shifts" :key="shift.name">
                     {{ shift.volumeBoards }}
                   </td>
@@ -57,7 +57,7 @@
                   </td>
                 </tr>
                 <tr>
-                  <td><p class="font-weight-regular">Кол-во досок шт</p></td>
+                  <td><p class="font-weight-regular">Кол-во пил-мат шт</p></td>
                   <td align="center" v-for="shift in shifts" :key="shift.name">
                     {{ shift.countBoards }}
                   </td>

@@ -86,7 +86,7 @@ class InfoCardController extends AbstractController
         if (!$period instanceof DatePeriod)
             return $this->json(['value' => '0', 'color' => 'error'], 204);
 
-        $volumeBoards = number_format($this->boardRepository->getVolumeBoardsByPeriod($period), BaseEntity::PRECISION_FOR_FLOAT) . ' м³';
+        $volumeBoards = number_format($this->boardRepository->getVolumeBoardsByPeriod($period), BaseEntity::PRECISION_FOR_FLOAT, '.', ' ') . ' м³';
         return $this->json([
             'value' => $volumeBoards,
             'color' => 'info'
@@ -128,7 +128,7 @@ class InfoCardController extends AbstractController
         if (!$period instanceof DatePeriod)
             return $this->json(['value' => '0', 'color' => 'error'], 204);
 
-        $volumeBoard = number_format($this->unloadRepository->getVolumeUnloadBoradUnloadByPeriod($period), BaseEntity::PRECISION_FOR_FLOAT) . ' м³';
+        $volumeBoard = number_format($this->unloadRepository->getVolumeUnloadBoradUnloadByPeriod($period), BaseEntity::PRECISION_FOR_FLOAT, '.', ' ') . ' м³';
         return $this->json([
             'value' => $volumeBoard,
             'color' => 'info'
