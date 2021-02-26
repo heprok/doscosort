@@ -124,18 +124,17 @@ export default {
     return {
       urlApi: this.$store.state.apiEntryPoint + "/infocard/summaryDay",
       urlsToReport: [
-        { name: "Отчёт по брёвнам", url: "report/timber", type: "pdf" },
+        {
+          name: "Отчёт по доскам",
+          url: "report/board",
+          type: "pdf",
+        },
+        {
+          name: "Выгруженные карманы",
+          url: "report/unload",
+          type: "pdf",
+        },
         { name: "Отчёт по простям", url: "report/downtimes", type: "pdf" },
-        {
-          name: "Отчёт по брёвнам из постава",
-          url: "report/timber_postav",
-          type: "pdf",
-        },
-        {
-          name: "Отчёт по доскам из постава",
-          url: "report/board_postav",
-          type: "pdf",
-        },
         {
           name: "Отчёт по авариям и сообщениям",
           url: "report/event/alert",

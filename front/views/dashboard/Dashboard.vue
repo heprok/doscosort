@@ -13,6 +13,7 @@
           :icon="infoCard.icon"
           :sub-icon="infoCard.subIcon"
           :title="infoCard.nameCard"
+          :subText="infoCard.subTitle"
           :urlApi="infoCard.urlApi"
           :durations="infoCard.duration"
         />
@@ -199,8 +200,92 @@ export default {
           nameCard: "Последний простой",
           color: "orange",
           icon: "mdi-account-hard-hat",
-          subIcon: "mdi-clock",
+          subIcon: "mdi-camera-timer",
           urlApi: "/infocard/lastDowntime",
+        },
+        {
+          nameCard: "Скорость сортировки",
+          color: "info",
+          icon: "mdi-speedometer",
+          urlApi: "/infocard/vars/PresetSpeed",
+        },
+        {
+          nameCard: "Кол-во карманов",
+          subTitle: "ПФМ: Выгруженно карманов",
+          color: "info",
+          icon: "mdi-gradient",
+          subIcon: 'mdi-tag',
+          urlApi: "/infocard/pfm/countUnloadPocket",
+          duration: [
+            {
+              url: "/currentShift",
+              title: "за смену",
+            },
+            {
+              url: "/today",
+              title: "за сутки",
+            },
+            {
+              url: "/weekly",
+              title: "за неделю",
+            },
+            {
+              url: "/mountly",
+              title: "за месяц",
+            },
+          ],
+        },
+        {
+          nameCard: "Кол-во досок ",
+          subTitle: "ПФМ: Выгруженно досок",
+          color: "info",
+          icon: "mdi-gradient",
+          subIcon: 'mdi-tag',
+          urlApi: "/infocard/pfm/countBoard",
+          duration: [
+            {
+              url: "/currentShift",
+              title: "за смену",
+            },
+            {
+              url: "/today",
+              title: "за сутки",
+            },
+            {
+              url: "/weekly",
+              title: "за неделю",
+            },
+            {
+              url: "/mountly",
+              title: "за месяц",
+            },
+          ],
+        },        
+        {
+          nameCard: "Объём досок ",
+          subTitle: "ПФМ: Выгруженный объём досок",
+          color: "info",
+          icon: "mdi-gradient",
+          subIcon: 'mdi-tag',
+          urlApi: "/infocard/pfm/volumeBoard",
+          duration: [
+            {
+              url: "/currentShift",
+              title: "за смену",
+            },
+            {
+              url: "/today",
+              title: "за сутки",
+            },
+            {
+              url: "/weekly",
+              title: "за неделю",
+            },
+            {
+              url: "/mountly",
+              title: "за месяц",
+            },
+          ],
         },
       ],
     };

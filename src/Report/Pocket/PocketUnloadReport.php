@@ -26,7 +26,7 @@ final class PocketUnloadReport extends AbstractReport
             'Сечение',
             'Длина, мм',
             'Кол-во, шт',
-            'Объём, м3',
+            'Объём, м³',
         ]);
         parent::__construct($period, $people, $sqlWhere);
     }

@@ -11,6 +11,8 @@ use App\Entity\Shift;
 use App\Entity\People;
 use App\Repository\DowntimeRepository;
 use App\Repository\BoardRepository;
+use App\Repository\UnloadRepository;
+use App\Repository\VarsRepository;
 use DateInterval;
 use DatePeriod;
 use DateTime;
@@ -26,7 +28,9 @@ class InfoCardController extends AbstractController
     public function __construct(
         private ShiftRepository $shiftRepository,
         private BoardRepository $boardRepository,
-        private DowntimeRepository $downtimeRepository
+        private DowntimeRepository $downtimeRepository,
+        private VarsRepository $varsRepository,
+        private UnloadRepository $unloadRepository,
     ) {
     }
 
@@ -78,11 +82,11 @@ class InfoCardController extends AbstractController
     #[Route("/volumeBoards/{duration}", requirements: ["duration" => "today|currentShift|mountly|weekly"], name: "volumeBoards")]
     public function getVolumeBoards(string $duration)
     {
-        $period = $this->getPeriodForDuration($duration, $this->shiftRepository);
+        $period = $this->getPeriodForDuration($duration);
         if (!$period instanceof DatePeriod)
             return $this->json(['value' => '0', 'color' => 'error'], 204);
 
-        $volumeBoards = number_format($this->boardRepository->getVolumeBoardsByPeriod($period), BaseEntity::PRECISION_FOR_FLOAT) . ' м3';
+        $volumeBoards = number_format($this->boardRepository->getVolumeBoardsByPeriod($period), BaseEntity::PRECISION_FOR_FLOAT) . ' м³';
         return $this->json([
             'value' => $volumeBoards,
             'color' => 'info'
@@ -92,13 +96,68 @@ class InfoCardController extends AbstractController
     #[Route("/countBoard/{duration}", requirements: ["duration" => "today|currentShift|mountly|weekly"], name: "countBoard")]
     public function getCountBoards(string $duration)
     {
-        $period = $this->getPeriodForDuration($duration, $this->shiftRepository);
+        $period = $this->getPeriodForDuration($duration);
         if (!$period instanceof DatePeriod)
             return $this->json(['value' => '0', 'color' => 'error'], 204);
 
         $countBoard = $this->boardRepository->getCountBoardsByPeriod($period) . ' шт.';
         return $this->json([
             'value' => $countBoard,
+            'color' => 'info'
+        ]);
+    }    
+        
+    #[Route("/pfm/countBoard/{duration}", requirements: ["duration" => "today|currentShift|mountly|weekly"], name: "pfm_countBoard")]
+    public function getPfmCountBoard(string $duration)
+    {
+        $period = $this->getPeriodForDuration($duration);
+        if (!$period instanceof DatePeriod)
+            return $this->json(['value' => '0', 'color' => 'error'], 204);
+
+        $countBoard = $this->unloadRepository->getCountUnloadPocketByPeriod($period) . ' шт.';
+        return $this->json([
+            'value' => $countBoard,
+            'color' => 'info'
+        ]);
+    }        
+    
+    #[Route("/pfm/volumeBoard/{duration}", requirements: ["duration" => "today|currentShift|mountly|weekly"], name: "pfm_volumeBoard")]
+    public function getPfmVolumeBoard(string $duration)
+    {
+        $period = $this->getPeriodForDuration($duration);
+        if (!$period instanceof DatePeriod)
+            return $this->json(['value' => '0', 'color' => 'error'], 204);
+
+        $volumeBoard = number_format($this->unloadRepository->getVolumeUnloadBoradUnloadByPeriod($period), BaseEntity::PRECISION_FOR_FLOAT) . ' м³';
+        return $this->json([
+            'value' => $volumeBoard,
+            'color' => 'info'
+        ]);
+    }        
+    
+    #[Route("/pfm/countUnloadPocket/{duration}", requirements: ["duration" => "today|currentShift|mountly|weekly"], name: "pfm_countUnloadPocket")]
+    public function getPfmCountUnloadPocket(string $duration)
+    {
+        $period = $this->getPeriodForDuration($duration);
+        if (!$period instanceof DatePeriod)
+            return $this->json(['value' => '0', 'color' => 'error'], 204);
+
+        $countUnloadPocket = $this->unloadRepository->getCountUnloadPocketByPeriod($period) . ' шт.';
+        return $this->json([
+            'value' => $countUnloadPocket,
+            'color' => 'info'
+        ]);
+    }    
+    
+    #[Route("/vars/{name}", name: "vars")]
+    public function getVarByName(string $name)
+    {
+        $var = $this->varsRepository->findOneByName($name);
+        if(!$var)
+            return $this->json(['value' => 'Not found', 'color' => 'error']);
+            
+        return $this->json([
+            'value' => $var->getValue(),
             'color' => 'info'
         ]);
     }
@@ -160,7 +219,7 @@ class InfoCardController extends AbstractController
     #[Route("/totalDowntime/{duration}", requirements: ["duration" => "today|currentShift|mountly|weekly"], name: "totalTimeDowntime")]
     public function getTotalTimeDowntime(string $duration)
     {
-        $period = $this->getPeriodForDuration($duration, $this->shiftRepository);
+        $period = $this->getPeriodForDuration($duration);
         if (!$period instanceof DatePeriod)
             return $this->json(['value' => '0', 'color' => 'error'], 204);
 

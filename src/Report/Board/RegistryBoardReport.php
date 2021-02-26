@@ -28,7 +28,7 @@ final class RegistryBoardReport extends AbstractReport
             'Ном. ширина, мм',
             'Ном. длина, мм',
             'Сечение',
-            'Объём, м3',
+            'Объём, м³',
             'Качество 1',
             'Качество 2',
             'Карман',

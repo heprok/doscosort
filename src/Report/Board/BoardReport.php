@@ -24,7 +24,7 @@ final class BoardReport extends AbstractReport
             'Сечение, мм',
             'Длина, м',
             'Кол-во, шт',
-            'Объем, м3',
+            'Объем, м³',
         ]);
         parent::__construct($period, $people, $sqlWhere);
     }
