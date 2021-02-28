@@ -73,7 +73,7 @@ class UnloadRepository extends ServiceEntityRepository
     {
         $qb = $this->getBaseQueryFromPeriod($period, $sqlWhere);
         return $qb
-            ->select('sum(b.amount) as volumeBoard')
+            ->select('sum(b.volume) as volumeBoard')
             ->getQuery()
             ->getResult()[0]['volumeBoard'] ?? 0.0;
     }

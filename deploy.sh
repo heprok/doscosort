@@ -12,6 +12,8 @@ cp -r ~/prjTechno/mill-250/web/src/Identifier ./
 
 cd Report
 rm -rf AbstractPdf.php AbstractReport.php Downtime Event
+cp -r ~/prjTechno/mill-250/web/src/Report/Event ./
+cp -r ~/prjTechno/mill-250/web/src/Report/Downtime ./
 cp ~/prjTechno/mill-250/web/src/Report/AbstractReport.php ./
 cp ~/prjTechno/mill-250/web/src/Report/AbstractPdf.php ./
 

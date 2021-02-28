@@ -67,6 +67,13 @@ class Unload
      */
     private Group $group;
 
+    /**
+     * @ORM\Column(type="float",
+     *      options={"comment":"Объём выгруженного кармана"})
+     * @Groups({"unload:read"})
+     */
+    private float $volume;
+
     public function getDrecTimestampKey(): ?int
     {
         return strtotime($this->drec->format(DATE_ATOM));
@@ -157,6 +164,15 @@ class Unload
                 \DateTime::createFromFormat(BaseEntity::DATE_SECOND_TIMEZONE_FORMAT_DB, $this->drecTimestampKey);
     }
 
+    public function getVolume(): ?float
+    {
+        return $this->volume;
+    }
 
+    public function setVolume(float $volume): self
+    {
+        $this->volume = $volume;
 
+        return $this;
+    }
 }

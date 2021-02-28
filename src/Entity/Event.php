@@ -58,7 +58,14 @@ class Event
      * @ORM\Column(type="string", length=128)
      * @Groups({"event:read"})
      */
-    private $text;
+    private string $text;
+
+    /**
+     * @ORM\Column(type="smallint", 
+     *      options={"comment", "Код ошибки"})
+     * @Groups({"event:read"})
+     */
+    private ?int $code;
 
     public function getDrecTimestampKey(): ?int
     {
@@ -152,5 +159,10 @@ class Event
         $this->drec = DateTime::createFromFormat($platform->getDateTimeTzFormatString(), $this->drecTimestampKey) ?: 
             \DateTime::createFromFormat($platform->getDateTimeFormatString(), $this->drecTimestampKey) ?: 
                 \DateTime::createFromFormat(BaseEntity::DATE_SECOND_TIMEZONE_FORMAT_DB, $this->drecTimestampKey);
+    }
+
+    public function getCode() :?int
+    {
+        return $this->code;
     }
 }

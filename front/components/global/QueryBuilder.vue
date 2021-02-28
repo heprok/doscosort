@@ -306,6 +306,17 @@ export default {
       this.countLoadingRules++;
 
       return rule;
+    },      
+    getRuleCode() {
+      let rule = {
+        type: RuleTypes.NUMBER,
+        id: "code",
+        label: "Код ошибки",
+        nameTable: "e.",
+      };
+      this.countLoadingRules++;
+
+      return rule;
     },    
   },
   mounted() {
@@ -341,6 +352,8 @@ export default {
         case "pocket":
           this.rules.push(this.getRulePocket());
           break;
+        case 'code':
+          this.rules.push(this.getRuleCode());
         default:
           break;
       }
