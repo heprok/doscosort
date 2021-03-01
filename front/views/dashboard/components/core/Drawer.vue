@@ -20,7 +20,7 @@
     <v-list dense nav>
       <v-list-item>
         <!-- <v-list-item-avatar class="align-self-center" color="white" contain> -->
-          <v-img :src="logotype" max-height="100" max-width="200" />
+        <v-img :src="logotype" max-height="100" max-width="200" />
         <!-- </v-list-item-avatar> -->
         <!-- 
         <v-list-item-content>
@@ -48,7 +48,7 @@
       <!-- https://github.com/vuetifyjs/vuetify/pull/8574 -->
       <div />
     </v-list>
-<!-- 
+    <!-- 
     <template v-slot:append>
       <base-item
         :item="{
@@ -91,12 +91,12 @@ export default {
             icon: "mdi-color-helper",
             title: "Пиломатериалы",
             to: "board",
-          },          
+          },
           {
             icon: "mdi-book-open",
             title: "Хронология пил-мат",
             to: "boardregistry",
-          },          
+          },
           {
             icon: "mdi-chevron-double-down",
             title: "Выгруженные карманы",
@@ -116,7 +116,7 @@ export default {
             icon: "mdi-gesture-double-tap",
             title: "Действия",
             to: "action",
-          },          
+          },
         ],
       },
       {
@@ -133,6 +133,11 @@ export default {
             icon: "mdi-account-group",
             title: "Люди",
             to: "people",
+          },
+          {
+            icon: "mdi-timetable",
+            title: "Рабочее расписание",
+            to: "workschedule",
           },
           {
             icon: "mdi-camera-timer",
@@ -195,11 +200,11 @@ export default {
 </script>
 
 <style lang="sass">
-  @import '~vuetify/src/styles/tools/_rtl.sass'
+@import '~vuetify/src/styles/tools/_rtl.sass'
 
-  #core-navigation-drawer
-    .v-list-group__header.v-list-item--active:before
-      opacity: .24
+#core-navigation-drawer
+  .v-list-group__header.v-list-item--active:before
+    opacity: .24
 
     .v-list-item
       &__icon--text,

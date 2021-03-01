@@ -4,11 +4,12 @@ rm -rf public/build
 yarn build
 
 cd src
-rm -rf Filter Identifier Dataset
+rm -rf Filter Identifier Dataset BaseEntity.php
 
 cp -r ~/prjTechno/mill-250/web/src/Filter ./
 cp -r ~/prjTechno/mill-250/web/src/Dataset ./
 cp -r ~/prjTechno/mill-250/web/src/Identifier ./
+cp ~/prjTechno/mill-250/web/src/Entity/BaseEntity.php ./
 
 cd Report
 rm -rf AbstractPdf.php AbstractReport.php Downtime Event
@@ -32,11 +33,12 @@ done
 mv doscosortweb.7z ~/VirtualBox\ VMs/share
 
 cd src
-rm -rf Filter Identifier Dataset
+rm -rf Filter Identifier Dataset  BaseEntity.php
 
 sudo ln -s ~/prjTechno/mill-250/web/src/Filter ./
 sudo ln -s ~/prjTechno/mill-250/web/src/Dataset ./
 sudo ln -s ~/prjTechno/mill-250/web/src/Identifier ./
+sudo ln -s ~/prjTechno/mill-250/web/src/Entity/BaseEntity.php ./
 
 cd Report
 rm -rf AbstractPdf.php AbstractReport.php Downtime Event

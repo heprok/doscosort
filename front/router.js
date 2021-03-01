@@ -29,6 +29,11 @@ export default new Router({
           component: () => import('@/views/dashboard/pages/manual/People'),
         },        
         {
+          name: 'Рабочее расписание',
+          path: 'manual/workschedule',
+          component: () => import('@/views/dashboard/pages/manual/WorkSchedule'),
+        },  
+        {
           name: 'Простои',
           path: 'manual/downtime',
           component: () => import('@/views/dashboard/pages/manual/Downtime'),

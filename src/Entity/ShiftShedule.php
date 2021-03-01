@@ -36,7 +36,6 @@ class ShiftShedule
     private int $start;
 
     /**
-     * @ORM\Id
      * @ORM\Column(type="integer", unique=true,
      *      options={"comment":"Конец смены"})
      * @Groups({"shift_shedule:read", "shift_shedule:write"})
@@ -50,21 +49,28 @@ class ShiftShedule
      */
     private string $name;
 
-    public function getStart(): ?int
+
+    public function __construct(string $startTime, string $stopTime, string $name){
+        $this->start = (int)str_replace(':', '', $startTime);
+        $this->stop = (int)str_replace(':', '', $stopTime);
+        $this->name = $name;
+    }
+
+    public function getStart(): int
     {
         return $this->start;
-    }    
-    
+    }
+
+    public function getStop(): int
+    {
+        return $this->stop;
+    }
+
     public function setStart(int $start): self
     {
         $this->start = $start;
 
         return $this;
-    }
-
-    public function getStop(): ?int
-    {
-        return $this->stop;
     }
 
     public function setStop(int $stop): self
@@ -73,6 +79,35 @@ class ShiftShedule
 
         return $this;
     }
+
+    #[Groups(["shift_shedule:read"])]
+    public function getStopTime(): string
+    {
+        $stop = BaseEntity::int2time($this->stop);
+        return $stop->format(BaseEntity::INTERVAL_TIME_FORMAT);
+    }
+
+    #[Groups(["shift_shedule:read"])]
+    public function getStartTime(): string
+    {
+        $start = BaseEntity::int2time($this->start);
+        return $start->format(BaseEntity::INTERVAL_TIME_FORMAT);
+    }    
+
+    #[Groups(["shift_shedule:write"])]
+    public function setStopTime(string $stop): self
+    {
+        $this->stop = (int)str_replace(':', '', $stop);
+        return $this;
+    }
+
+    #[Groups(["shift_shedule:write"])]
+    public function setStartTime(string $start): self
+    {
+        $this->start = (int)str_replace(':', '', $start);
+
+        return $this;
+    }    
 
     public function getName(): ?string
     {

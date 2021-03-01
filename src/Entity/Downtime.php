@@ -148,7 +148,7 @@ class Downtime
     public function getDurationTime(): ?string
     {
         if (isset($this->finish))
-            return $this->finish->diff($this->drec)->format(BaseEntity::INTERVAL_TIME_FROMAT);
+            return $this->finish->diff($this->drec)->format(BaseEntity::INTERVAL_TIME_SECOND_FORMAT);
         else {
             return 'Продолжается';
         }
