@@ -84,6 +84,14 @@ class Unload
         return $this->drec;
     }
 
+    /**
+     * @Groups({"unload:read"})
+     */
+    public function getTime(): ?string
+    {
+        return $this->drec->format(BaseEntity::TIME_FOR_FRONT);
+    }
+
     public function setDrec(\DateTimeInterface $drec): self
     {
         $this->drec = $drec;

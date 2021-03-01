@@ -122,6 +122,15 @@ class Group
         return $this->width;
     }
 
+    public function getCut(): string
+    {
+        return $this->thickness . ' × ' . $this->width;
+    }
+
+    public function getIntervalLength() : string
+    {
+        return  $this->min_length . ' - ' .  $this->max_length;
+    }
     public function setWidth(int $width): self
     {
         $this->width = $width;
