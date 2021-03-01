@@ -15,7 +15,7 @@ use Symfony\Component\Serializer\Annotation\Groups;
  * options={"comment":"Породы древисины"})
  * @ApiResource(
  *      collectionOperations={"get"},
- *      itemOperations={"get"},
+ *      itemOperations={"get", "put"},
  *      normalizationContext={"groups"={"species:read"}},
  *      denormalizationContext={"groups"={"species:write"}}
  * )
@@ -40,7 +40,7 @@ class Species
     /**
      * @ORM\Column(type="boolean",
      *      options={"comment":"Хвойное"})
-     * @Groups({"species:read"})
+     * @Groups({"species:read", "species:write"})
      */
     private bool $fir;
 
@@ -78,7 +78,7 @@ class Species
     /**
      * @ORM\Column(type="boolean",
      *      options={"default":true})
-     * @Groups({"species:read"})
+     * @Groups({"species:read", "species:write"})
      */
     private bool $enabled;
 

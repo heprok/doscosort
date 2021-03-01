@@ -39,7 +39,7 @@ final class PocketUnloadReport extends AbstractReport
     public function getSummaryStatsMaterial(): array
     {
         $summaryStatsMaterial = [];
-        $summaryStatsMaterial['boards'] = new SummaryStatMaterial('Доски', $this->repository->getVolumeUnloadBoradUnloadByPeriod($this->period, $this->sqlWhere), $this->repository->getCountUnloadPocketByPeriod($this->period, $this->sqlWhere), 'м³', 'шт');
+        $summaryStatsMaterial['boards'] = new SummaryStatMaterial('Доски', $this->repository->getVolumeUnloadBoradUnloadByPeriod($this->period, $this->sqlWhere), $this->repository->getAmountUnloadBoradUnloadByPeriod($this->period, $this->sqlWhere), 'м³', 'шт');
         // $summaryStatsMaterial['boards'] = new SummaryStatMaterial('Доски', '')
         return $summaryStatsMaterial;
     }
@@ -89,6 +89,7 @@ final class PocketUnloadReport extends AbstractReport
             $numberPocket = $unload->getPocket();
             $amount = $unload->getAmount();
             $qualityName = $unload->getQualities();
+            $volume = $unload->getVolume();
 
             $group = $unload->getGroup();
             $nameSpecies = $group->getSpecies()->getName();
@@ -96,7 +97,6 @@ final class PocketUnloadReport extends AbstractReport
             $thickness = $group->getThickness();
             $cut = $thickness .  '×' . $width;
             $intervalLength = $group->getMinLength() . ' - ' .  $group->getMaxLength();
-            $volume = $thickness * $width * $group->getMaxLength() / 1e9;
 
             $dataset->addRow([
                 $drec->format(self::FORMAT_DATE_TIME),
