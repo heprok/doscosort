@@ -9,7 +9,7 @@ rm -rf Filter Identifier Dataset BaseEntity.php
 cp -r ~/prjTechno/mill-250/web/src/Filter ./
 cp -r ~/prjTechno/mill-250/web/src/Dataset ./
 cp -r ~/prjTechno/mill-250/web/src/Identifier ./
-cp ~/prjTechno/mill-250/web/src/Entity/BaseEntity.php ./
+cp ~/prjTechno/mill-250/web/src/Entity/BaseEntity.php ./Entity/
 
 cd Report
 rm -rf AbstractPdf.php AbstractReport.php Downtime Event
@@ -24,8 +24,8 @@ echo
 while [ -n "$1" ]
 do
 case "$1" in
--f) 7z a -r doscosortweb.7z public config src templates vendor composer.json ;;
--m) 7z a -r doscosortweb.7z public config src templates composer.json ;;
+-f) 7z a doscosortweb.7z public config src templates vendor composer.json ;;
+-m) 7z a doscosortweb.7z public config src templates composer.json ;;
 esac
 shift
 done

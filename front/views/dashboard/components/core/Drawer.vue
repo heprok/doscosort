@@ -154,6 +154,11 @@ export default {
             title: "Действия оператора",
             to: "action",
           },
+          {
+            icon: "mdi-format-line-spacing",
+            title: "Стандартные длины",
+            to: "standartlength",
+          },
         ],
       },
     ],

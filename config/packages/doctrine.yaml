@@ -25,7 +25,7 @@ doctrine:
                 alias: App
         dql:
             numeric_functions:
-                standard_length: DoctrineExtensions\Query\Postgresql\StandardLength
+                standard_length: DoctrineExtensions\Query\Postgresql\StandardLengthDs
                 volume_timber: DoctrineExtensions\Query\Postgresql\VolumeTimber
                 unnest: DoctrineExtensions\Query\Postgresql\Unnest
                 volume_boards: DoctrineExtensions\Query\Postgresql\VolumeBoard

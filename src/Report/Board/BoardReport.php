@@ -91,7 +91,7 @@ final class BoardReport extends AbstractReport
             $cut = $row['cut'];
             $quality_1_name = $row['quality_1_name'];
             $name_species = $row['name_species'];
-            $length = $row['length'] / 1000;
+            $length = number_format($row['length'] / 1000, 1);
             $count_board = $row['count_board'];
             $volume_boards = (float)$row['volume_boards'];
 

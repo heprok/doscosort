@@ -48,6 +48,11 @@ export default new Router({
           path: 'manual/action',
           component: () => import('@/views/dashboard/pages/manual/Action'),
         },       
+        {
+          name: 'Стандартные длины',
+          path: 'manual/standartlength',
+          component: () => import('@/views/dashboard/pages/manual/StandartLength'),
+        },   
         //reports 
         {
           name: 'Простои ',
@@ -78,7 +83,7 @@ export default new Router({
           name: 'Выгруженные карманы',
           path: 'report/unload',
           component: () => import('@/views/dashboard/pages/report/Unload'),
-        },        
+        },              
       ],
     },
   ],
