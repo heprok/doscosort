@@ -13,34 +13,36 @@ use Symfony\Component\Serializer\Annotation\Groups;
  * @ORM\Entity(repositoryClass=DowntimeLocationRepository::class)
  * @ORM\Table(name="ds.downtime_location",
  *      options={"comment":"Локации простоя"})
- * @ApiResource(
- *      collectionOperations={"get", "post"},
- *      itemOperations={"get", "put"},
- *      normalizationContext={"groups"={"downtime_location:read"}},
- *      denormalizationContext={"groups"={"downtime_location:write"}, "disable_type_enforcement"=true}
- * )
  */
+#[
+ApiResource(
+    collectionOperations: ["get", "post"],
+    itemOperations: ["get", "put"],
+    normalizationContext: ["groups" => ["downtime_location:read"]],
+    denormalizationContext: ["groups" => ["downtime_location:write"]]
+)]
 class DowntimeLocation
 {
     /**
      * @ORM\Id()
+     * @ORM\GeneratedValue()
      * @ORM\Column(type="integer", name="id")
-     * @Groups({"downtime_location:read","downtime_location:write", "downtime_place:read"})
      */
+    #[Groups(["downtime_location:read", "downtime_location:write", "downtime_place:read"])]
     private int $code;
 
     /**
      * @ORM\Column(type="string", length=128, name="text",
      *      options={"comment":"Название причины"})
-     * @Groups({"downtime_location:read", "downtime_location:write","downtime_place:read"})
      */
+    #[Groups(["downtime_location:read", "downtime_location:write", "downtime_place:read"])]
     private string $name;
 
     /**
      * @ORM\Column(type="boolean",
      *      options={"comment":"Используется", "default":"true"})
-     * @Groups({"downtime_location:read", "downtime_location:write"})
      */
+    #[Groups(["downtime_location:read", "downtime_location:write"])]
     private bool $enabled = true;
 
     /**
@@ -48,11 +50,11 @@ class DowntimeLocation
      */
     private $downtimePlaces;
 
-    public function __construct(int $code, string $name)
+    public function __construct(string $name)
     {
-        $this->code = $code;
         $this->name = $name;
         $this->downtimePlaces = new ArrayCollection();
+        $this->downtimes = new ArrayCollection();
     }
 
     public function getCode(): ?int
@@ -66,10 +68,14 @@ class DowntimeLocation
 
         return $this;
     }
-
-    public function getName(): ?string
+    public function __toString()
     {
-        return $this->name;
+        return $this->getName();
+    }
+
+    public function getName(): string
+    {
+        return $this->name ?? '';
     }
 
     public function setName(string $name): self
@@ -121,5 +127,4 @@ class DowntimeLocation
 
         return $this;
     }
-
 }

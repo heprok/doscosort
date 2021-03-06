@@ -13,20 +13,22 @@ use DatePeriod;
 use DateTime;
 use Doctrine\ORM\Event\LifecycleEventArgs;
 use Doctrine\ORM\Mapping as ORM;
+use phpDocumentor\Reflection\Location;
 
 /**
- * @ApiResource(
- *      collectionOperations={"get"},
- *      itemOperations={"get"},
- *      normalizationContext={"groups"={"downtime:read"}},
- *      denormalizationContext={"groups"={"downtime:write"}}
- * )
- * @ApiFilter(DateFilter::class, properties={"drecTimestampKey"})
+
  * @ORM\HasLifecycleCallbacks()
  * @ORM\Entity(repositoryClass=DowntimeRepository::class)
  * @ORM\Table(name="ds.downtime",
  *      options={"comment":"Простои"})
  */
+#[ApiResource(
+        collectionOperations: ["get"],
+        itemOperations: ["get"],
+        normalizationContext: ["groups" => ["downtime:read"]],
+        denormalizationContext: ["groups" => ["downtime:write"]]
+    )]
+#[ApiFilter(DateFilter::class, properties: ["drecTimestampKey"])]
 class Downtime
 {
 
@@ -39,27 +41,28 @@ class Downtime
      * @ApiProperty(identifier=true)
      * @Groups({"downtime:read"})
      */
+    #[Groups(["downtime:read"])]
     private $drecTimestampKey;
 
     /**
      * @ORM\ManyToOne(targetEntity=DowntimeCause::class, cascade={"persist", "refresh"})
      * @ORM\JoinColumn(onDelete="SET NULL")
-     * @Groups({"downtime:read"})
      */
+    #[Groups(["downtime:read"])]
     private $cause;
 
     /**
      * @ORM\ManyToOne(targetEntity=DowntimePlace::class, cascade={"persist", "refresh"})
      * @ORM\JoinColumn(onDelete="SET NULL")
-     * @Groups({"downtime:read"})
      */
+    #[Groups(["downtime:read"])]
     private $place;
 
     /**
      * @ORM\Column(type="datetime", nullable=true,
      *      options={"comment":"Время окончания простоя"})
-     * @Groups({"downtime:read"})
      */
+    #[Groups(["downtime:read"])]
     private $finish;
 
     public function getDrecTimestampKey(): ?int
@@ -67,9 +70,7 @@ class Downtime
         return strtotime($this->drec->format(DATE_ATOM));
     }
 
-    /**
-     * @Groups({"downtime:read"})
-     */
+    #[Groups(["downtime:read"])]
     public function getStart(): ?string
     {
         return $this->drec->format(BaseEntity::DATE_FORMAT_DB);
@@ -123,16 +124,23 @@ class Downtime
         return $this;
     }
 
-    /**
-     * @Groups({"downtime:read"})
-     */
+    public function getLocation(): ?Location
+    {
+        return $this->place->getLocation();
+    }  
+    
+    public function getGroup(): ?Group
+    {
+        return $this->cause->getGroups();
+    }
+
+    #[Groups(["downtime:read"])]
     public function getStartTime(): ?string
     {
         return $this->drec->format(BaseEntity::TIME_FOR_FRONT);
     }
-    /**
-     * @Groups({"downtime:read"})
-     */
+
+    #[Groups(["downtime:read"])]
     public function getEndTime(): ?string
     {
         if (isset($this->finish))
@@ -142,9 +150,7 @@ class Downtime
         }
     }
 
-    /**
-     * @Groups({"downtime:read"})
-     */
+    #[Groups(["downtime:read"])]
     public function getDurationTime(): ?string
     {
         if (isset($this->finish))
@@ -156,8 +162,11 @@ class Downtime
 
     public function getDurationInterval(): ?DateInterval
     {
-        if (isset($this->finish))
-            return $this->finish->diff($this->drec);
+        if (isset($this->finish)){
+            $dateInterval = $this->finish->diff($this->drec); 
+            $dateInterval->f = 0;
+            return $dateInterval;
+        }
         else {
             return null;
         }

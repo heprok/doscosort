@@ -15,51 +15,53 @@ use Symfony\Component\Serializer\Annotation\Groups;
  * @ORM\Entity(repositoryClass=DowntimePlaceRepository::class)
  * @ORM\Table(name="ds.downtime_place",
  *      options={"comment":"Места простоя"})
- * @ApiResource(
- *      collectionOperations={"get", "post"},
- *      itemOperations={"get", "put"},
- *      normalizationContext={"groups"={"downtime_place:read"}},
- *      denormalizationContext={"groups"={"downtime_place:write"}, "disable_type_enforcement"=true}
- * )
  */
+#[
+    ApiResource(
+        collectionOperations: ["get", "post"],
+        itemOperations: ["get", "put"],
+        normalizationContext: ["groups" => ["downtime_place:read"]],
+        denormalizationContext: ["groups" => ["downtime_place:write"]]
+    )
+]
 class DowntimePlace
 {
     /**
      * @ORM\Id()
+     * @ORM\GeneratedValue()
      * @ORM\Column(type="integer", name="id")
-     * @Groups({"downtime_place:read", "downtime_place:write"})
      */
+    #[Groups(["downtime_place:read", "downtime_place:write"])]
     private int $code;
 
     /**
      * @ORM\Column(type="string", length=128, name="text",
      *      options={"comment":"Название места"})
-     * @Groups({"downtime_place:read", "downtime_place:write", "downtime:read", "break_shedule:read"})
      */
+    #[Groups(["downtime_place:read", "downtime_place:write", "downtime:read", "break_shedule:read"])]
     private string $name;
 
     /**
      * @ORM\Column(type="boolean",
      *      options={"comment":"Используется", "default":"true"})
-     * @Groups({"downtime_place:read", "downtime_place:write", "downtime:read"})
      */
+    #[Groups(["downtime_place:read", "downtime_place:write", "downtime:read"])]
     private bool $enabled = true;
 
     /**
      * @ORM\ManyToOne(targetEntity=DowntimeLocation::class, inversedBy="downtimePlaces")
      * @ORM\JoinColumn(nullable=false)
-     * @Groups({"downtime_place:read", "downtime_place:write"})
      */
+    #[Groups(["downtime_place:read", "downtime_place:write"])]
     private $location;
 
     /**
      * @ORM\OneToMany(targetEntity=BreakShedule::class, mappedBy="place")
      */
     private $breakShedules;
-    
-    public function __construct(int $code, string $name)
+
+    public function __construct(string $name)
     {
-        $this->code = $code;
         $this->name = $name;
         $this->breakShedules = new ArrayCollection();
     }
@@ -72,10 +74,10 @@ class DowntimePlace
     public function setCode(int $code): self
     {
         $this->code = $code;
-        
+
         return $this;
     }
-    
+
     public function __toString()
     {
         return $this->getName();
@@ -93,12 +95,12 @@ class DowntimePlace
         return $this;
     }
 
-    public function getEnabled() :bool
+    public function getEnabled(): bool
     {
         return $this->enabled;
     }
 
-    public function setEnabled(bool $enabled) : self
+    public function setEnabled(bool $enabled): self
     {
         $this->enabled = $enabled;
 

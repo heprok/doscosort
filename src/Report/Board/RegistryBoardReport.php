@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Report\Board;
 
 use App\Dataset\PdfDataset;
+use App\Entity\Column;
 use App\Entity\SummaryStat;
 use App\Entity\SummaryStatMaterial;
 use App\Report\AbstractReport;
@@ -13,30 +14,16 @@ use DatePeriod;
 
 final class RegistryBoardReport extends AbstractReport
 {
-    private BoardRepository $repository;
-
-    public function __construct(DatePeriod $period, BoardRepository $repository, array $people = [], array $sqlWhere = [])
-    {
-        $this->repository = $repository;
-        $this->setLabels([
-            'Дата записи',
-            'Порода',
-            'Факт. толщина, мм',
-            'Факт. ширина, мм',
-            'Факт. длина, мм',
-            'Ном. толщина, мм',
-            'Ном. ширина, мм',
-            'Ном. длина, мм',
-            'Сечение',
-            'Объём, м³',
-            'Качество 1',
-            'Качество 2',
-            'Карман',
-        ]);
+    public function __construct(
+        DatePeriod $period,
+        private BoardRepository $repository,
+        array $people = [],
+        array $sqlWhere = []
+    ) {
         parent::__construct($period, $people, $sqlWhere);
     }
 
-        /**
+    /**
      * @return SummaryStatMaterial[]
      */
     public function getSummaryStatsMaterial(): array
@@ -65,19 +52,31 @@ final class RegistryBoardReport extends AbstractReport
         return "хронология досок";
     }
 
-    protected function getColumnTotal(): array
-    {
-        return [
-        ];
-    }
-
-
     protected function updateDataset(): bool
     {
         $boards = $this->repository->findByPeriod($this->getPeriod(), $this->getSqlWhere());
         if (!$boards)
             die('В данный период нет досок');
-        $dataset = new PdfDataset($this->getLabels());
+
+        $mainDataSetColumns = [
+            new Column(title: 'Дата записи', precentWidth: 15, group: false, align: 'C',  total: false),
+            new Column(title: 'Порода', precentWidth: 10, group: false, align: 'C',  total: false),
+            new Column(title: 'Факт. толщина, мм', precentWidth: 9, group: false, align: 'C',  total: false),
+            new Column(title: 'Факт. ширина, мм', precentWidth: 9, group: false, align: 'C',  total: false),
+            new Column(title: 'Факт. длина, мм', precentWidth: 9, group: false, align: 'C',  total: false),
+            new Column(title: 'Ном. толщина, мм', precentWidth: 9, group: false, align: 'C',  total: false),
+            new Column(title: 'Ном. ширина, мм', precentWidth: 9, group: false, align: 'C',  total: false),
+            new Column(title: 'Ном. длина, мм', precentWidth: 9, group: false, align: 'C',  total: false),
+            new Column(title: 'Сечение', precentWidth: 5, group: false, align: 'C',  total: false),
+            new Column(title: 'Объём, м³', precentWidth: 5, group: false, align: 'C',  total: false),
+            new Column(title: 'Качество 1', precentWidth: 6, group: false, align: 'C',  total: false),
+            new Column(title: 'Качество 2', precentWidth: 6, group: false, align: 'C',  total: false),
+            new Column(title: 'Карман', precentWidth: 4, group: false, align: 'C',  total: false),
+        ];
+
+        $mainDataset = new PdfDataset(
+            columns: $mainDataSetColumns,
+        );
 
         foreach ($boards as $key => $board) {
             $drec = $board->getDrec();
@@ -94,9 +93,9 @@ final class RegistryBoardReport extends AbstractReport
             $cut = $nomThickness .  '×' . $nomWidth;
             $volume = $nomLength * $nomThickness * $nomWidth / 1e9;
 
-            $dataset->addRow([
+            $mainDataset->addRow([
                 $drec->format(self::FORMAT_DATE_TIME),
-                $name_species, 
+                $name_species,
                 $thickness,
                 $width,
                 $length,
@@ -111,7 +110,7 @@ final class RegistryBoardReport extends AbstractReport
             ]);
         }
 
-        $this->addDataset($dataset);
+        $this->addDataset($mainDataset);
 
         return true;
     }

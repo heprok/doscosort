@@ -19,23 +19,13 @@ final class BoardPdfReport extends AbstractPdf
     {
         return 6;
     }
-
-    protected function getColumnInPrecent(): array
-    {
-        return [20, 20, 15, 15, 15, 15];
-    }
     
-    protected function getAlignForColumns():array
-    {
-        return ['C', 'C', 'C', 'C', 'C', 'R'];
-    }
-
     protected function getPointFontText(): int
     {
         return 8;
     }
-    
-    protected function getHeightCell():int
+
+    protected function getHeightCell(): int
     {
         return 5;
     }

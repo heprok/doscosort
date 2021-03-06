@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Report\Pocket;
 
 use App\Dataset\PdfDataset;
+use App\Entity\Column;
 use App\Entity\SummaryStat;
 use App\Entity\SummaryStatMaterial;
 use App\Report\AbstractReport;
@@ -13,27 +14,16 @@ use DatePeriod;
 
 final class PocketUnloadReport extends AbstractReport
 {
-    private UnloadRepository $repository;
-
-    public function __construct(DatePeriod $period, UnloadRepository $repository, array $people = [], array $sqlWhere = [])
-    {
-        $this->repository = $repository;
-        $this->setLabels([
-            'Время',
-            '№ кармана',
-            'Порода',
-            'Качество',
-            'Сечение',
-            'Длина, мм',
-            'Кол-во, шт',
-            'Объём, м³',
-        ]);
+    public function __construct(
+        DatePeriod $period,
+        private UnloadRepository $repository,
+        array $people = [],
+        array $sqlWhere = []
+    ) {
         parent::__construct($period, $people, $sqlWhere);
     }
 
-
-
-        /**
+    /**
      * @return SummaryStatMaterial[]
      */
     public function getSummaryStatsMaterial(): array
@@ -53,7 +43,7 @@ final class PocketUnloadReport extends AbstractReport
         $summaryStats = [];
         // $summaryMaterial = $this->getSummaryStatsMaterial();
         // $precent = number_format($summaryMaterial['unloads']->getValue() / $summaryMaterial['timber']->getValue() * 100, 0);
-        $countUnloadPocket = $this->repository->getCountUnloadPocketByPeriod($this->period, $this->sqlWhere); 
+        $countUnloadPocket = $this->repository->getCountUnloadPocketByPeriod($this->period, $this->sqlWhere);
         $summaryStats[] = new SummaryStat('Общее кол-во выгруженных карманов', $countUnloadPocket, 'шт');
 
         return $summaryStats;
@@ -64,25 +54,26 @@ final class PocketUnloadReport extends AbstractReport
         return "выгруженных карманов";
     }
 
-    protected function getColumnTotal(): array
-    {
-        return [
-            $this->labels[6],
-            $this->labels[7]
-        ];
-    }
-
-    protected function getTextTotal(): string
-    {
-        return 'Общий итог{' . (string)(count($this->getLabels()) - count($this->getColumnTotal())) . '}%0{1}%1{1}';
-    }
-
     protected function updateDataset(): bool
     {
         $unloads = $this->repository->findByPeriod($this->getPeriod(), $this->getSqlWhere());
         if (!$unloads)
             die('В данный период нет досок');
-        $dataset = new PdfDataset($this->getLabels());
+
+        $mainDataSetColumns = [
+            new Column(title: 'Время', precentWidth: 20, group: false, align: 'C', total: false),
+            new Column(title: '№ кармана', precentWidth: 10, group: false, align: 'C', total: false),
+            new Column(title: 'Порода', precentWidth: 13, group: false, align: 'C', total: false),
+            new Column(title: 'Качество', precentWidth: 17, group: false, align: 'C', total: false),
+            new Column(title: 'Сечение', precentWidth: 9, group: false, align: 'C', total: false),
+            new Column(title: 'Длина, мм', precentWidth: 14, group: false, align: 'C', total: false),
+            new Column(title: 'Кол-во, шт', precentWidth: 10, group: false, align: 'R', total: true),
+            new Column(title: 'Объём, м³', precentWidth: 10, group: false, align: 'R', total: true),
+        ];
+        $mainDataset = new PdfDataset(
+            columns: $mainDataSetColumns,
+            textTotal: 'Общий итог',
+        );
 
         foreach ($unloads as $key => $unload) {
             $drec = $unload->getDrec();
@@ -98,10 +89,10 @@ final class PocketUnloadReport extends AbstractReport
             $cut = $thickness .  '×' . $width;
             $intervalLength = $group->getMinLength() . ' - ' .  $group->getMaxLength();
 
-            $dataset->addRow([
+            $mainDataset->addRow([
                 $drec->format(self::FORMAT_DATE_TIME),
                 $numberPocket,
-                $nameSpecies, 
+                $nameSpecies,
                 $qualityName,
                 $cut,
                 $intervalLength,
@@ -109,8 +100,8 @@ final class PocketUnloadReport extends AbstractReport
                 $volume,
             ]);
         }
-        $dataset->addTotal($this->getColumnTotal(), $this->getTextTotal());
-        $this->addDataset($dataset);
+        $mainDataset->addTotal();
+        $this->addDataset($mainDataset);
 
         return true;
     }

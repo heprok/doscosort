@@ -15,41 +15,44 @@ use Symfony\Component\Serializer\Annotation\Groups;
  * @ORM\Entity(repositoryClass=DowntimeCauseRepository::class)
  * @ORM\Table(name="ds.downtime_cause",
  *      options={"comment":"Причины простоя"})
- * @ApiResource(
- *      collectionOperations={"get", "post"},
- *      itemOperations={"get", "put"},
- *      normalizationContext={"groups"={"downtime_cause:read"}},
- *      denormalizationContext={"groups"={"downtime_cause:write"}, "disable_type_enforcement"=true}
- * )
  */
+#[
+    ApiResource(
+        collectionOperations: ["get", "post"],
+        itemOperations: ["get", "put"],
+        normalizationContext: ["groups" => ["downtime_cause:read"]],
+        denormalizationContext: ["groups" => ["downtime_cause:write"]]
+    )
+]
 class DowntimeCause
 {
     /**
      * @ORM\Id()
+     * @ORM\GeneratedValue()
      * @ORM\Column(type="integer", name="id")
-     * @Groups({"downtime_cause:read","downtime_cause:write"})
      */
+    #[Groups(["downtime_cause:read", "downtime_cause:write"])]
     private int $code;
 
     /**
      * @ORM\Column(type="string", length=128, name="text",
      *      options={"comment":"Название причины"})
-     * @Groups({"downtime_cause:read", "downtime_cause:write", "downtime:read", "break_shedule:read"})
      */
+    #[Groups(["downtime_cause:read", "downtime_cause:write", "downtime:read", "break_shedule:read"])]
     private string $name;
 
     /**
      * @ORM\Column(type="boolean",
      *      options={"comment":"Используется", "default":"true"})
-     * @Groups({"downtime_cause:read", "downtime_cause:write", "downtime:read"})
      */
+    #[Groups(["downtime_cause:read", "downtime_cause:write", "downtime:read"])]
     private bool $enabled = true;
 
     /**
      * @ORM\ManyToOne(targetEntity=DowntimeGroup::class, inversedBy="downtimeCauses")
      * @ORM\JoinColumn(nullable=false, name="group_id")
-     * @Groups({"downtime_cause:read", "downtime_cause:write"})
      */
+    #[Groups(["downtime_cause:read", "downtime_cause:write"])]
     private $groups;
 
     /**
@@ -57,9 +60,8 @@ class DowntimeCause
      */
     private $breakShedules;
 
-    public function __construct(int $code, string $name)
+    public function __construct(string $name)
     {
-        $this->code = $code;
         $this->name = $name;
         $this->breakShedules = new ArrayCollection();
     }
