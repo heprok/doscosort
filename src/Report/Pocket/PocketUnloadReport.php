@@ -73,8 +73,9 @@ final class PocketUnloadReport extends AbstractReport
         $mainDataset = new PdfDataset(
             columns: $mainDataSetColumns,
             textTotal: 'Общий итог',
+            textSubTotal: 'Итог за день',
         );
-
+        $buff['day'] = '';
         foreach ($unloads as $key => $unload) {
             $drec = $unload->getDrec();
             $numberPocket = $unload->getPocket();
@@ -89,6 +90,12 @@ final class PocketUnloadReport extends AbstractReport
             $cut = $thickness .  '×' . $width;
             $intervalLength = $group->getMinLength() . ' - ' .  $group->getMaxLength();
 
+            if ($buff['day'] != $drec->format('d') && $key != 0) {
+                $mainDataset->addSubTotal();
+            }
+
+            $buff['day'] = $drec->format('d');
+
             $mainDataset->addRow([
                 $drec->format(self::FORMAT_DATE_TIME),
                 $numberPocket,
@@ -100,6 +107,7 @@ final class PocketUnloadReport extends AbstractReport
                 $volume,
             ]);
         }
+        $mainDataset->addSubTotal();
         $mainDataset->addTotal();
         $this->addDataset($mainDataset);
 
