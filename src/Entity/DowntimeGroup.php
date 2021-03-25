@@ -15,12 +15,13 @@ use Symfony\Component\Serializer\Annotation\Groups;
  *      options={"comment":"Группы причин простоя"})
  */
 #[
-ApiResource(
-    collectionOperations: ["get", "post"],
-    itemOperations: ["get", "put"],
-    normalizationContext: ["groups" => ["downtime_group:read"]],
-    denormalizationContext: ["groups" => ["downtime_group:write"]]
-)]
+    ApiResource(
+        collectionOperations: ["get", "post"],
+        itemOperations: ["get", "put"],
+        normalizationContext: ["groups" => ["downtime_group:read"]],
+        denormalizationContext: ["groups" => ["downtime_group:write"]]
+    )
+]
 class DowntimeGroup
 {
     /**
@@ -78,7 +79,7 @@ class DowntimeGroup
     {
         return $this->name ?? '';
     }
-    
+
     public function setName(string $name): self
     {
         $this->name = $name;

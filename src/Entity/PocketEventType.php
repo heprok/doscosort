@@ -11,13 +11,14 @@ use Symfony\Component\Serializer\Annotation\Groups;
  * @ORM\Entity(repositoryClass=PocketEventTypeRepository::class)
  * @ORM\Table(name="ds.pocket_event_type",
  *      options={"comment":"Типи события для карманов"})
- * @ApiResource(
- *      collectionOperations={"get", "post"},
- *      itemOperations={"get", "put", "delete"},
- *      normalizationContext={"groups"={"pocket_event_type:read"}},
- *      denormalizationContext={"groups"={"pocket_event_type:write"}}
- * )
  */
+#[
+ApiResource(
+    collectionOperations: ["get", "post"],
+    itemOperations: ["get", "put", "delete"],
+    normalizationContext: ["groups" => ["pocket_event_type:read"]],
+    denormalizationContext: ["groups" => ["pocket_event_type:write"]]
+)]
 class PocketEventType
 {
     /**
@@ -29,12 +30,12 @@ class PocketEventType
     /**
      * @ORM\Column(type="string", length=32,
      *      options={"comment":"Название типа"})
-     * @Groups({"pocket_event_type:read", "event:read"})
      */
+    #[Groups(["pocket_event_type:read", "event:read"])]
     private $name;
 
     public function __construct(string $id, string $name)
-    {   
+    {
         $this->id = $id;
         $this->name = $name;
     }

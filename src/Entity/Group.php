@@ -17,51 +17,51 @@ class Group
      * @ORM\Id
      * @ORM\GeneratedValue
      * @ORM\Column(type="integer")
-     * @Groups({"unload:read"})
      */
+    #[Groups(["unload:read"])]
     private $id;
 
     /**
      * @ORM\Column(type="boolean")
-     * @Groups({"unload:read"})
      */
+    #[Groups(["unload:read"])]
     private $dry;
 
     /**
      * @ORM\ManyToOne(targetEntity=Species::class)
      * @ORM\JoinColumn(nullable=false)
-     * @Groups({"unload:read"})
      */
+    #[Groups(["unload:read"])]
     private $species;
 
     /**
      * @ORM\Column(type="integer")
-     * @Groups({"unload:read"})
      */
+    #[Groups(["unload:read"])]
     private $qualities;
 
     /**
      * @ORM\Column(type="smallint")
-     * @Groups({"unload:read"})
      */
+    #[Groups(["unload:read"])]
     private $thickness;
 
     /**
      * @ORM\Column(type="smallint")
-     * @Groups({"unload:read"})
      */
+    #[Groups(["unload:read"])]
     private $width;
 
     /**
      * @ORM\Column(type="smallint")
-     * @Groups({"unload:read"})
      */
+    #[Groups(["unload:read"])]
     private $min_length;
 
     /**
      * @ORM\Column(type="smallint")
-     * @Groups({"unload:read"})
      */
+    #[Groups(["unload:read"])]
     private $max_length;
 
     public function getId(): ?int
@@ -127,7 +127,7 @@ class Group
         return $this->thickness . ' × ' . $this->width;
     }
 
-    public function getIntervalLength() : string
+    public function getIntervalLength(): string
     {
         return  $this->min_length . ' - ' .  $this->max_length;
     }

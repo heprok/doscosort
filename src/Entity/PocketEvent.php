@@ -12,28 +12,29 @@ use Doctrine\ORM\Event\LifecycleEventArgs;
 
 /**
  * @ORM\Entity(repositoryClass=PocketEventRepository::class)
- * @ApiResource(
- *      collectionOperations={"get"},
- *      itemOperations={"get"},
- *      normalizationContext={"groups"={"event:read"}},
- *      denormalizationContext={"groups"={"event:write"}}
- * )
  * @ORM\HasLifecycleCallbacks()
  * @ORM\Table(name="ds.pocket_event")
  */
+#[
+ApiResource(
+    collectionOperations: ["get"],
+    itemOperations: ["get"],
+    normalizationContext: ["groups" => ["event:read"]],
+    denormalizationContext: ["groups" => ["event:write"]]
+)]
 class PocketEvent
 {
     const DATE_FORMAT_DB = 'Y-m-d\TH:i:sP';
 
     private DateTime $drec;
-    
+
     /**
      * @ORM\Id
      * @ORM\Column(name="drec", type="string",
      *      options={"comment":"Время события"})
-     * @ApiProperty(identifier=true)
-     * @Groups({"event:read"})
      */
+    #[ApiProperty(identifier: true)]
+    #[Groups(["event:read"])]
     private $drecTimestampKey;
 
 
@@ -110,7 +111,7 @@ class PocketEvent
         $entityManager = $event->getEntityManager();
         $connection = $entityManager->getConnection();
         $platform = $connection->getDatabasePlatform();
-        $this->drec = DateTime::createFromFormat($platform->getDateTimeTzFormatString(), $this->drecTimestampKey) ?: 
+        $this->drec = DateTime::createFromFormat($platform->getDateTimeTzFormatString(), $this->drecTimestampKey) ?:
             \DateTime::createFromFormat($platform->getDateTimeFormatString(), $this->drecTimestampKey);
     }
 }

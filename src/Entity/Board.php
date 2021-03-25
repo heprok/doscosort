@@ -11,11 +11,11 @@ use Doctrine\ORM\Event\LifecycleEventArgs;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * @ApiResource()
  * @ORM\Entity(repositoryClass=BoardRepository::class)
  * @ORM\Table(name="ds.board")
  * @ORM\HasLifecycleCallbacks()
  */
+#[ApiResource()]
 class Board
 {
     private DateTime $drec;

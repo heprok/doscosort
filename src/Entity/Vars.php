@@ -13,30 +13,32 @@ use ApiPlatform\Core\Annotation\ApiFilter;
 /**
  * @ORM\Entity(repositoryClass=VarsRepository::class)
  * @ORM\Table(name="ds.vars")
- * @ApiResource(
- *      collectionOperations={"get"},
- *      itemOperations={"get"},
- *      normalizationContext={"groups"={"vars:read"}},
- *      denormalizationContext={"groups"={"vars:write"}}
- * )
- * @ApiFilter(SearchFilter::class, properties={"name": "exact"})
  */
+#[
+    ApiResource(
+        collectionOperations: ["get"],
+        itemOperations: ["get"],
+        normalizationContext: ["groups" => ["vars:read"]],
+        denormalizationContext: ["groups" => ["vars:write"]]
+    )
+]
+#[ApiFilter(SearchFilter::class, properties: ["name" => "exact"])]
 class Vars
 {
     /**
      * @ORM\Id
      * @ORM\Column(type="string",length=64,
      *      options={"comment":"Ключ"})
-     * @ApiProperty(identifier=true)
-     * @Groups({"vars:read"})
      */
+    #[ApiProperty(identifier: true)]
+    #[Groups(["vars:read"])]
     private $name;
 
     /**
      * @ORM\Column(type="string", length=64, nullable=true, 
      *      options={"comment":"Значение"})
-     * @Groups({"vars:read"})
      */
+    #[Groups(["vars:read"])]
     private $value;
 
     public function __construct(string $name, string $value = '')

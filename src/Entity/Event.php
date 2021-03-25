@@ -20,12 +20,13 @@ use Doctrine\ORM\Event\LifecycleEventArgs;
  */
 #[ApiFilter(DateFilter::class, properties: ["drecTimestampKey"])]
 #[
-ApiResource(
-    collectionOperations: ["get"],
-    itemOperations: ["get"],
-    normalizationContext: ["groups" => ["event:read"]],
-    denormalizationContext: ["groups" => ["event:write"]]
-)]
+    ApiResource(
+        collectionOperations: ["get"],
+        itemOperations: ["get"],
+        normalizationContext: ["groups" => ["event:read"]],
+        denormalizationContext: ["groups" => ["event:write"]]
+    )
+]
 #[ApiFilter(SearchFilter::class, properties: ["type" => "partial", "source" => "partial"])]
 
 class Event
@@ -37,36 +38,36 @@ class Event
      * @ORM\Id
      * @ORM\Column(name="drec", type="string",
      *      options={"comment":"Начало события"})
-     * @Groups({"event:read"})
      */
-    #[ApiProperty(identifier:true)]
+    #[Groups(["event:read"])]
+    #[ApiProperty(identifier: true)]
     private $drecTimestampKey;
 
     /**
      * @ORM\ManyToOne(targetEntity=EventType::class)
      * @ORM\JoinColumn(nullable=false, name="type")
-     * @Groups({"event:read"})
      */
+    #[Groups(["event:read"])]
     private $type;
 
     /**
      * @ORM\ManyToOne(targetEntity=EventSource::class)
      * @ORM\JoinColumn(nullable=false, name="source")
-     * @Groups({"event:read"})
      */
+    #[Groups(["event:read"])]
     private $source;
 
     /**
      * @ORM\Column(type="string", length=128)
-     * @Groups({"event:read"})
      */
+    #[Groups(["event:read"])]
     private string $text;
 
     /**
      * @ORM\Column(type="smallint", 
      *      options={"comment", "Код ошибки"})
-     * @Groups({"event:read"})
      */
+    #[Groups(["event:read"])]
     private ?int $code;
 
     public function getDrecTimestampKey(): ?int
@@ -79,17 +80,13 @@ class Event
         return $this->drec;
     }
 
-    /**
-     * @Groups({"event:read"})
-     */
+    #[Groups(["event:read"])]
     public function getStart(): ?string
     {
         return $this->drec->format(BaseEntity::DATETIME_FOR_FRONT);
     }
 
-    /**
-     * @Groups({"event:read"})
-     */
+    #[Groups(["event:read"])]
     public function getStartTime(): ?string
     {
         return $this->drec->format(BaseEntity::TIME_FOR_FRONT);

@@ -15,17 +15,18 @@ use DatePeriod;
 use DateTime;
 
 /**
- * @ApiResource(
- *      collectionOperations={"get"},
- *      itemOperations={"get"},
- *      normalizationContext={"groups"={"shift:read"}},
- *      denormalizationContext={"groups"={"shift:write"}}
- * )
  * @ORM\Entity(repositoryClass=ShiftRepository::class)
  * @ORM\HasLifecycleCallbacks()
  * @ORM\Table(name="ds.shift",
  *      options={"comment":"Смены"})
  */
+#[
+ApiResource(
+    collectionOperations: ["get"],
+    itemOperations: ["get"],
+    normalizationContext: ["groups" => ["shift:read"]],
+    denormalizationContext: ["groups" => ["shift:write"]]
+)]
 class Shift
 {
     private $start;
@@ -34,31 +35,31 @@ class Shift
      * @ORM\Id
      * @ORM\Column(name="start", type="string",
      *      options={"comment":"Время начала смены"})
-     * @ApiProperty(identifier=true)
-     * @Groups({"shift:read"})
-     * @ApiFilter(DateFilter::class)
      */
+    #[ApiProperty(identifier: true)]
+    #[ApiFilter(DateFilter::class)]
+    #[Groups(["shift:read"])]
     private $startTimestampKey;
 
     /**
      * @ORM\Column(type="smallint")
      *      options={"comment":"Номер смены"})
-     * @Groups({"shift:read"})
      */
+    #[Groups(["shift:read"])]
     private $number;
 
     /**
      * @ORM\Column(type="datetime", nullable=true,
      *      options={"comment":"Окончание смены"})
-     * @Groups({"shift:read"})
      */
+    #[Groups(["shift:read"])]
     private $stop;
 
     /**
      * @ORM\ManyToOne(targetEntity=People::class, cascade={"persist", "remove", "refresh"})
      * @ORM\JoinColumn(onDelete="SET NULL")
-     * @Groups({"shift:read"})
      */
+    #[Groups(["shift:read"])]
     private $people;
 
     public function getStartTimestampKey(): ?int
@@ -67,23 +68,19 @@ class Shift
         return strtotime($this->start->format(DATE_ATOM));
     }
 
-    /**
-     * @Groups({"shift:read"})
-     */
+    #[Groups(["shift:read"])]
     public function getStart(): ?string
     {
         return $this->start->format(BaseEntity::DATE_FORMAT_DB);
     }
-    /**
-     * @Groups({"shift:read"})
-     */
+
+    #[Groups(["shift:read"])]
     public function getStartTime(): ?string
     {
         return $this->start->format(BaseEntity::TIME_FOR_FRONT);
     }
-    /**
-     * @Groups({"shift:read"})
-     */
+
+    #[Groups(["shift:read"])]
     public function getEndTime(): ?string
     {
         return $this->stop ? $this->stop->format(BaseEntity::TIME_FOR_FRONT) : 'В работе';
@@ -133,8 +130,8 @@ class Shift
     public function getPeriod(): DatePeriod
     {
         // $endDate = $this->stop ? $this->stop : new DateTime();
-        $period = new DatePeriod($this->start, new DateInterval('P1D'), $this->stop ?? new DateTime()); 
-        
+        $period = new DatePeriod($this->start, new DateInterval('P1D'), $this->stop ?? new DateTime());
+
         return $period;
     }
 
@@ -158,9 +155,9 @@ class Shift
         $entityManager = $event->getEntityManager();
         $connection = $entityManager->getConnection();
         $platform = $connection->getDatabasePlatform();
-        $this->start = DateTime::createFromFormat($platform->getDateTimeTzFormatString(), $this->startTimestampKey) ?: 
-            \DateTime::createFromFormat($platform->getDateTimeFormatString(), $this->startTimestampKey) ?: 
-                \DateTime::createFromFormat(BaseEntity::DATE_SECOND_TIMEZONE_FORMAT_DB, $this->startTimestampKey);
+        $this->start = DateTime::createFromFormat($platform->getDateTimeTzFormatString(), $this->startTimestampKey) ?:
+            \DateTime::createFromFormat($platform->getDateTimeFormatString(), $this->startTimestampKey) ?:
+            \DateTime::createFromFormat(BaseEntity::DATE_SECOND_TIMEZONE_FORMAT_DB, $this->startTimestampKey);
     }
 
     public function getPeople(): ?People

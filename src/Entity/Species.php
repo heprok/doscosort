@@ -13,35 +13,36 @@ use Symfony\Component\Serializer\Annotation\Groups;
  * @ORM\Entity(repositoryClass=SpeciesRepository::class)
  * @ORM\Table(name="dic.species",
  * options={"comment":"Породы древисины"})
- * @ApiResource(
- *      collectionOperations={"get"},
- *      itemOperations={"get", "put"},
- *      normalizationContext={"groups"={"species:read"}},
- *      denormalizationContext={"groups"={"species:write"}}
- * )
  */
+#[
+ApiResource(
+    collectionOperations: ["get"],
+    itemOperations: ["get", "post"],
+    normalizationContext: ["groups" => ["species:read"]],
+    denormalizationContext: ["groups" => ["species:write"]]
+)]
 class Species
 {
     /**
      * @ORM\Id
      * @ORM\Column(type="string", length=2,
      *      options={"fixed":"true"})
-     * @Groups({"species:read"})
      */
+    #[Groups(["species:read"])]
     private string $id;
 
     /**
      * @ORM\Column(type="string", length=25,
      *      options={"comment":"Название"})
-     * @Groups({"species:read"})
      */
+    #[Groups(["species:read"])]
     private string $name;
 
     /**
      * @ORM\Column(type="boolean",
      *      options={"comment":"Хвойное"})
-     * @Groups({"species:read", "species:write"})
      */
+    #[Groups(["species:read", "species:write"])]
     private bool $fir;
 
     /**
@@ -78,8 +79,8 @@ class Species
     /**
      * @ORM\Column(type="boolean",
      *      options={"default":true})
-     * @Groups({"species:read", "species:write"})
      */
+    #[Groups(["species:read", "species:write"])]
     private bool $enabled;
 
     public function __construct(
@@ -108,7 +109,7 @@ class Species
     {
         return $this->id;
     }
-    
+
     public function getName(): ?string
     {
         return $this->name;

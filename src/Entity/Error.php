@@ -13,28 +13,29 @@ use Symfony\Component\Serializer\Annotation\Groups;
  * @ORM\Entity(repositoryClass=ErrorRepository::class)
  * @ORM\Table(name="ds.error",
  * options={"comment":"Ошибки"})
- * @ApiResource(
- *      collectionOperations={"get"},
- *      itemOperations={"get", "put"},
- *      normalizationContext={"groups"={"error:read"}},
- *      denormalizationContext={"groups"={"error:write"}}
- * )
  */
+#[
+ApiResource(
+    collectionOperations: ["get"],
+    itemOperations: ["get", "post"],
+    normalizationContext: ["groups" => ["error:read"]],
+    denormalizationContext: ["groups" => ["error:write"]]
+)]
 class Error
 {
     /**
      * @ORM\Id
      * @ORM\Column(type="smallint", 
      *      options={"comment":"Код ошибки"})
-     * @Groups({"error:read"})
      */
+    #[Groups(["error:read"])]
     private int $id;
 
     /**
      * @ORM\Column(type="string", length=128, 
      *      options={"comment":"Текст ошибки"})
-     * @Groups({"error:read", "error:write"})
      */
+    #[Groups(["error:read", "error:write"])]
     private string $text;
 
     public function __construct(int $id, string $text)

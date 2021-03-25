@@ -8,42 +8,45 @@ use App\Repository\ThicknessRepository;
 use Doctrine\ORM\Mapping as ORM;
 use ApiPlatform\Core\Annotation\ApiResource;
 use Symfony\Component\Serializer\Annotation\Groups;
+
 /**
  * @ORM\Entity(repositoryClass=ThicknessRepository::class)
  * @ORM\Table(name="ds.thickness", 
  *      options={"comment":"Справочник толщин"})
- * @ApiResource(
- *      collectionOperations={"get", "post"},
- *      itemOperations={"get", "put", "delete"},
- *      normalizationContext={"groups"={"thickness:read"}},
- *      denormalizationContext={"groups"={"thickness:write"}, "disable_type_enforcement"=true}
- * )
  */
+#[
+    ApiResource(
+        collectionOperations: ["get", "post"],
+        itemOperations: ["get", "put", "delete"],
+        normalizationContext: ["groups" => ["thickness:read"]],
+        denormalizationContext: ["groups" => ["thickness:write"], "disable_type_enforcement" => true]
+    )
+]
 class Thickness
 {
-    
+
     /**
      * @ORM\Id
      * @ORM\Column(type="smallint", 
      *      options={"comment":"Номинальная толщина"})
-     * @Groups({"thickness:read", "thickness:write"})
      */
+    #[Groups(["thickness:read", "thickness:write"])]
     private int $nom;
 
     /**
      * @ORM\Column(type="smallint", 
      *      options={"comment":"Минимальная толщина"})
-     * @Groups({"thickness:read", "thickness:write"})
      */
+    #[Groups(["thickness:read", "thickness:write"])]
     private int $min;
 
     /**
      * @ORM\Column(type="smallint", 
      *      options={"comment":"Максимальная толщина", "check":"min <= max"})
-     * @Groups({"thickness:read", "thickness:write"})
      */
+    #[Groups(["thickness:read", "thickness:write"])]
     private int $max;
-    
+
     public function __toString()
     {
         return strval($this->nom);

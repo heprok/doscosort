@@ -21,24 +21,23 @@ use phpDocumentor\Reflection\Location;
  * @ORM\Table(name="ds.downtime",
  *      options={"comment":"Простои"})
  */
-#[ApiResource(
-        collectionOperations: ["get"],
-        itemOperations: ["get"],
-        normalizationContext: ["groups" => ["downtime:read"]],
-        denormalizationContext: ["groups" => ["downtime:write"]]
-    )]
+#[
+ApiResource(
+    collectionOperations: ["get"],
+    itemOperations: ["get"],
+    normalizationContext: ["groups" => ["downtime:read"]],
+    denormalizationContext: ["groups" => ["downtime:write"]]
+)]
 #[ApiFilter(DateFilter::class, properties: ["drecTimestampKey"])]
 class Downtime
 {
-
     private DateTime $drec;
 
     /**
      * @ORM\Id
      * @ORM\Column(name="drec", type="string",
      *      options={"comment":"Время начала простоя"})
-     * @ApiProperty(identifier=true)
-     * @Groups({"downtime:read"})
+     #[ApiProperty(identifier:true)]
      */
     #[Groups(["downtime:read"])]
     private $drecTimestampKey;
@@ -126,8 +125,8 @@ class Downtime
     public function getLocation(): ?Location
     {
         return $this->place->getLocation();
-    }  
-    
+    }
+
     public function getGroup(): ?Group
     {
         return $this->cause->getGroups();
@@ -161,12 +160,11 @@ class Downtime
 
     public function getDurationInterval(): ?DateInterval
     {
-        if (isset($this->finish)){
-            $dateInterval = $this->finish->diff($this->drec); 
+        if (isset($this->finish)) {
+            $dateInterval = $this->finish->diff($this->drec);
             $dateInterval->f = 0;
             return $dateInterval;
-        }
-        else {
+        } else {
             return null;
         }
     }

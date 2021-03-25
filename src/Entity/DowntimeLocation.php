@@ -15,12 +15,13 @@ use Symfony\Component\Serializer\Annotation\Groups;
  *      options={"comment":"Локации простоя"})
  */
 #[
-ApiResource(
-    collectionOperations: ["get", "post"],
-    itemOperations: ["get", "put"],
-    normalizationContext: ["groups" => ["downtime_location:read"]],
-    denormalizationContext: ["groups" => ["downtime_location:write"]]
-)]
+    ApiResource(
+        collectionOperations: ["get", "post"],
+        itemOperations: ["get", "put"],
+        normalizationContext: ["groups" => ["downtime_location:read"]],
+        denormalizationContext: ["groups" => ["downtime_location:write"]]
+    )
+]
 class DowntimeLocation
 {
     /**

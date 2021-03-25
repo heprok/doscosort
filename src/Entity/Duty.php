@@ -13,27 +13,28 @@ use Symfony\Component\Serializer\Annotation\Groups;
  * @ORM\Entity(repositoryClass=DutyRepository::class)
  * @ORM\Table(name="ds.duty",
  *      options={"comment":"Список должностей"})
- * @ApiResource(
- *      collectionOperations={"get", "post"},
- *      itemOperations={"get", "put", "delete"},
- *      normalizationContext={"groups"={"duty:read"}},
- *      denormalizationContext={"groups"={"duty:write"}}
- * )
  */
+#[
+ApiResource(
+    collectionOperations: ["get", "post"],
+    itemOperations: ["get", "put", "delete"],
+    normalizationContext: ["groups" => ["duty:read"]],
+    denormalizationContext: ["groups" => ["duty:write"]]
+)]
 class Duty
 {
     /**
      * @ORM\Id
      * @ORM\Column(type="string", name="id", length=2,
      *      options={"fixed":"true"})
-     * @Groups({"duty:read", "duty:write"})
      */
+    #[Groups(["duty:read", "duty:write"])]
     private string $code;
 
     /**
      * @ORM\Column(type="string", length=30)
-     * @Groups({"duty:read", "duty:write", "people:read"})
      */
+    #[Groups(["duty:read", "duty:write", "people:read"])]
     private string $name;
 
     public function __construct(?string $code, string $name)

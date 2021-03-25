@@ -20,8 +20,8 @@ class Length
      * @ORM\Id
      * @ORM\Column(type="smallint",
      *      options={"comment":"Длина"})
-     * @Groups({"length:read", "length:write"})
      */
+    #[Groups(["length:read", "length:write"])]
     private int $value;
 
     public function __toString()

@@ -6,39 +6,42 @@ use App\Repository\WidthRepository;
 use Doctrine\ORM\Mapping as ORM;
 use ApiPlatform\Core\Annotation\ApiResource;
 use Symfony\Component\Serializer\Annotation\Groups;
+
 /**
  * @ORM\Entity(repositoryClass=WidthRepository::class)
  * @ORM\Table(name="ds.width", 
  *      options={"comment":"Справочник ширин"})
- * @ApiResource(
- *      collectionOperations={"get", "post"},
- *      itemOperations={"get", "put", "delete"},
- *      normalizationContext={"groups"={"width:read"}},
- *      denormalizationContext={"groups"={"width:write"}, "disable_type_enforcement"=true}
- * )
  */
+#[
+    ApiResource(
+        collectionOperations: ["get", "post"],
+        itemOperations: ["get", "put", "delete"],
+        normalizationContext: ["groups" => ["width:read"]],
+        denormalizationContext: ["groups" => ["width:write"], "disable_type_enforcement" => true]
+    )
+]
 class Width
 {
     /**
      * @ORM\Id
      * @ORM\Column(type="smallint", 
      *      options={"comment":"Номинальная ширина"})
-     * @Groups({"width:read", "width:write"})
      */
+    #[Groups(["width:read", "width:write"])]
     private int $nom;
 
     /**
      * @ORM\Column(type="smallint", 
      *      options={"comment":"Минимальная ширина"})
-     * @Groups({"width:read", "width:write"})
      */
+    #[Groups(["width:read", "width:write"])]
     private int $min;
 
     /**
      * @ORM\Column(type="smallint", 
      *      options={"comment":"Максимальная ширина", "check":"min <= max"})
-     * @Groups({"width:read", "width:write"})
      */
+    #[Groups(["width:read", "width:write"])]
     private int $max;
 
     public function __toString()
