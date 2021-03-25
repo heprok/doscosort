@@ -32,6 +32,12 @@ class Quality
      */
     private string $name;
 
+    public function __construct(QualityList $list, string $name)
+    {
+        $this->list = $list;
+        $this->name = $name;
+    }
+
     public function getId(): ?int
     {
         return $this->id;

@@ -4,6 +4,7 @@ namespace App\DataFixtures;
 
 use App\Entity\Board;
 use App\Entity\Length;
+use App\Entity\Quality;
 use App\Entity\QualityList;
 use App\Entity\Species;
 use App\Entity\Thickness;
@@ -22,7 +23,7 @@ class BoardFixtures extends Fixture implements DependentFixtureInterface
         $nomWidths = $manager->getRepository(Width::class)->findAll();
         $nomThickness = $manager->getRepository(Thickness::class)->findAll();
         $nomLengths = $manager->getRepository(Length::class)->findAll();
-        $qualityLists = $manager->getRepository(QualityList::class)->findAll();
+        $qualities = $manager->getRepository(Quality::class)->findAll();
         $species = $manager->getRepository(Species::class)->findAll();
 
         $randomDatesTimestamp = AppFixtures::getRandomDatetime(self::COUNT_BOARD);
@@ -37,11 +38,13 @@ class BoardFixtures extends Fixture implements DependentFixtureInterface
             $board->setWidth(rand(10, 40));
             $board->setThickness(rand(100, 600));
             $board->setLength(rand(3000, 5000));
-            $board->setNomLength($nomLengths[rand(0, count($nomLengths) - 1)]);
-            $board->setNomThickness($nomThickness[rand(0, count($nomThickness) - 1)]);
-            $board->setNomWidth($nomWidths[rand(0, count($nomWidths) - 1)]);
-            $board->setQualListId($qualityLists[rand(0, count($qualityLists) - 1)]);
-            $board->setQualities(rand(0, 3));
+            $board->setNomLength($nomLengths[array_rand($nomLengths)]);
+            $board->setNomThickness($nomThickness[array_rand($nomThickness)]);
+            $board->setNomWidth($nomWidths[array_rand($nomWidths)]);
+            $board->setQuality1($qualities[array_rand($qualities)]);
+            $board->setQuality2($qualities[array_rand($qualities)]);
+            $board->setQuality1Name('Качество 1');
+            $board->setQuality2Name('Качество 2');
             $board->setPocket(rand(0, 25));
             $board->setSpecies($species[rand(0, /* count($species) - 1 */ 2)]);
             $manager->persist($board);
@@ -54,7 +57,7 @@ class BoardFixtures extends Fixture implements DependentFixtureInterface
         return [
             SpeciesFixtures::class,
             LengthFixtures::class,
-            QualityListFixtures::class,
+            QualityFixtures::class,
             WidthFixtures::class,
             ThicknessFixtures::class
         ];

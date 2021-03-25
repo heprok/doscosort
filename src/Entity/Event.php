@@ -15,29 +15,31 @@ use Doctrine\ORM\Event\LifecycleEventArgs;
 
 /**
  * @ORM\Entity(repositoryClass=EventRepository::class)
- * @ApiResource(
- *      collectionOperations={"get"},
- *      itemOperations={"get"},
- *      normalizationContext={"groups"={"event:read"}},
- *      denormalizationContext={"groups"={"event:write"}}
- * )
- * @ApiFilter(SearchFilter::class, properties={"type": "partial", "source": "partial"})
- * @ApiFilter(DateFilter::class, properties={"drecTimestampKey"})
- * @ORM\HasLifecycleCallbacks()
  * @ORM\Table(name="ds.event")
+ * @ORM\HasLifecycleCallbacks()
  */
+#[ApiFilter(DateFilter::class, properties: ["drecTimestampKey"])]
+#[
+ApiResource(
+    collectionOperations: ["get"],
+    itemOperations: ["get"],
+    normalizationContext: ["groups" => ["event:read"]],
+    denormalizationContext: ["groups" => ["event:write"]]
+)]
+#[ApiFilter(SearchFilter::class, properties: ["type" => "partial", "source" => "partial"])]
+
 class Event
 {
 
     private DateTime $drec;
-    
+
     /**
      * @ORM\Id
      * @ORM\Column(name="drec", type="string",
      *      options={"comment":"Начало события"})
-     * @ApiProperty(identifier=true)
      * @Groups({"event:read"})
      */
+    #[ApiProperty(identifier:true)]
     private $drecTimestampKey;
 
     /**
@@ -156,13 +158,20 @@ class Event
         $entityManager = $event->getEntityManager();
         $connection = $entityManager->getConnection();
         $platform = $connection->getDatabasePlatform();
-        $this->drec = DateTime::createFromFormat($platform->getDateTimeTzFormatString(), $this->drecTimestampKey) ?: 
-            \DateTime::createFromFormat($platform->getDateTimeFormatString(), $this->drecTimestampKey) ?: 
-                \DateTime::createFromFormat(BaseEntity::DATE_SECOND_TIMEZONE_FORMAT_DB, $this->drecTimestampKey);
+        $this->drec = DateTime::createFromFormat($platform->getDateTimeTzFormatString(), $this->drecTimestampKey) ?:
+            \DateTime::createFromFormat($platform->getDateTimeFormatString(), $this->drecTimestampKey) ?:
+            \DateTime::createFromFormat(BaseEntity::DATE_SECOND_TIMEZONE_FORMAT_DB, $this->drecTimestampKey);
     }
 
-    public function getCode() :?int
+    public function getCode(): ?int
     {
         return $this->code;
+    }
+
+    public function setCode(int $code): self
+    {
+        $this->code = $code;
+
+        return $this;
     }
 }

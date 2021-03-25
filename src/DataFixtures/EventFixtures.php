@@ -50,7 +50,7 @@ class EventFixtures extends Fixture
             $drec = new DateTime();
             $drec->setTimestamp($randomDatesTimestamp[$i]);
             
-            
+            $event->setCode(rand(0, 266));
             $event->setDrec($drec);
             $type = $arr_event_type[array_rand($arr_event_type)];
             $source = $arr_event_sources[array_rand($arr_event_sources)];

@@ -16,7 +16,6 @@ use Doctrine\ORM\Mapping as ORM;
 use phpDocumentor\Reflection\Location;
 
 /**
-
  * @ORM\HasLifecycleCallbacks()
  * @ORM\Entity(repositoryClass=DowntimeRepository::class)
  * @ORM\Table(name="ds.downtime",

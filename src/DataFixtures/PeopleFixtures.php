@@ -18,9 +18,9 @@ class PeopleFixtures extends Fixture
         // $product = new Product();
         // $manager->persist($product);
         for ($i=0; $i < self::COUNT_PEOPLE; $i++) { 
-            $people = new People($arr_fam[rand(0, count($arr_fam) - 1)]);
-            $people->setPat($arr_pat[rand(0, count($arr_pat) - 1)]);
-            $people->setNam($arr_nam[rand(0, count($arr_nam) - 1)]);
+            $people = new People($arr_fam[array_rand($arr_fam)]);
+            $people->setPat($arr_pat[array_rand($arr_pat)]);
+            $people->setNam($arr_nam[array_rand($arr_nam)]);
             $manager->persist($people);
         }
         

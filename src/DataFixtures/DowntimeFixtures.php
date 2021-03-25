@@ -4,6 +4,8 @@ namespace App\DataFixtures;
 
 use App\Entity\Downtime;
 use App\Entity\DowntimeCause;
+use App\Entity\DowntimeGroup;
+use App\Entity\DowntimeLocation;
 use App\Entity\DowntimePlace;
 use DateInterval;
 use DateTime;
@@ -14,14 +16,35 @@ class DowntimeFixtures extends Fixture
 {
     const COUNT_CAUSE = 10;
     const COUNT_PLACE = 10;
+    const COUNT_LOCATION = 2;
+    const COUNT_GROUP = 2;
     const COUNT_DOWNTIME = 100;
 
     public function load(ObjectManager $manager)
     {
         $arrPlace = [];
         $arrCause = [];
+        $arrGroup = [];
+        $arrLocation = [];
+        
+        for ($i=1; $i <= self::COUNT_GROUP; $i++) { 
+            $group = new DowntimeGroup('Группа ' . $i);
+            $arrGroup[] = $group;
+
+            $manager->persist($group);
+        }
+
+        for ($i=1; $i <= self::COUNT_LOCATION; $i++) { 
+            $location = new DowntimeLocation('Локация ' . $i);
+            $arrLocation[] = $location;
+
+            $manager->persist($location);
+        }
+
         for ($i=1; $i <= self::COUNT_CAUSE; $i++) { 
             $cause = new DowntimeCause('Причина ' . $i);
+            $cause->setGroups($arrGroup[rand(0, self::COUNT_GROUP - 1)]);
+
             $arrCause[] = $cause;
 
             $manager->persist($cause);
@@ -29,6 +52,8 @@ class DowntimeFixtures extends Fixture
         
         for ($i=1; $i <= self::COUNT_PLACE; $i++) { 
             $place = new DowntimePlace("Место  " . $i);
+            $place->setLocation($arrLocation[rand(0, self::COUNT_LOCATION - 1)]);
+            
             $arrPlace[] = $place;
             $manager->persist($place);
         }
