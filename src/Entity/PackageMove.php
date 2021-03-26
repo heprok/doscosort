@@ -40,24 +40,27 @@ class PackageMove
      * @ORM\ManyToOne(targetEntity=PackageLocation::class)
      * @ORM\JoinColumn(referencedColumnName="id", name="src", nullable=false)
      */
+    #[Groups(["package:read"])]
     private $src;
 
     /**
      * @ORM\ManyToOne(targetEntity=PackageLocation::class)
      * @ORM\JoinColumn(referencedColumnName="id", name="dst", nullable=false)
      */
+    #[Groups(["package:read"])]
     private $dst;
-
-    /**
-     * @ORM\ManyToOne(targetEntity=Package::class)
-     * @ORM\JoinColumn(nullable=false)
-     */
-    private $package;
 
     /**
      * @ORM\Column(type="string", length=255, nullable=true)
      */
+    #[Groups(["package:read"])]
     private $comment;
+
+    /**
+     * @ORM\ManyToOne(targetEntity=Package::class, inversedBy="packageMoves")
+     * @ORM\JoinColumn(nullable=false)
+     */
+    private $Package;
 
     public function getDrecTimestampKey(): ?int
     {
@@ -74,6 +77,13 @@ class PackageMove
         $this->drec = $drec;
         return $this;
     }
+
+    #[Groups(["package:read"])]
+    public function getDrecTime(): ?string
+    {
+        return $this->drec->format(BaseEntity::DATETIME_FOR_FRONT);
+    }
+
     public function getSrc(): ?PackageLocation
     {
         return $this->src;
@@ -97,19 +107,7 @@ class PackageMove
 
         return $this;
     }
-
-    public function getPackage(): ?Package
-    {
-        return $this->package;
-    }
-
-    public function setPackage(?Package $package): self
-    {
-        $this->package = $package;
-
-        return $this;
-    }
-
+    
     /**
      * @ORM\PrePersist
      * @ORM\PreUpdate
@@ -143,6 +141,18 @@ class PackageMove
     public function setComment(?string $comment): self
     {
         $this->comment = $comment;
+
+        return $this;
+    }
+
+    public function getPackage(): ?Package
+    {
+        return $this->Package;
+    }
+
+    public function setPackage(?Package $Package): self
+    {
+        $this->Package = $Package;
 
         return $this;
     }

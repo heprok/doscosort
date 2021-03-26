@@ -14,7 +14,7 @@ class PackageMoveFixtures extends Fixture implements DependentFixtureInterface
 {
     // const COUNT_PACKAGE = 1000;
     const COUNT_PACKAGE_LOCATION = 4;
-    const COUNT_PACKAGE_MOVE = 1000;
+    const COUNT_PACKAGE_MOVE = 3000;
     public function load(ObjectManager $manager)
     {
         $packages = $manager->getRepository(Package::class)->findAll();
@@ -34,6 +34,7 @@ class PackageMoveFixtures extends Fixture implements DependentFixtureInterface
             $date = new DateTime();
             $date->setTimestamp($randomDatesTimestamp[$i]);
             $move->setDrec($date);
+            $move->setComment('Lorem ipsum dolor sit amet consectetur adipisicing elit. Officia, architecto delectus sint voluptates quae error id maiores officiis laborum veniam recusandae molestias minus omnis quia? Laborum explicabo beatae repellendus cumque!');
             $move->setPackage($packages[array_rand($packages)]);
             $move->setSrc($arrLocation[array_rand($arrLocation)]);
             $move->setDst($arrLocation[array_rand($arrLocation)]);

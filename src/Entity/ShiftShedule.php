@@ -22,7 +22,7 @@ use Doctrine\ORM\Mapping\UniqueConstraint;
 #[
 ApiResource(
     collectionOperations: ["get", "post"],
-    itemOperations: ["get", "post"],
+    itemOperations: ["get", "put"],
     normalizationContext: ["groups" => ["shift_shedule:read"]],
     denormalizationContext: ["groups" => ["shift_shedule:write"]]
 )]

@@ -12,12 +12,12 @@ use Symfony\Component\Serializer\Annotation\Groups;
 /**
  * @ORM\Entity(repositoryClass=ErrorRepository::class)
  * @ORM\Table(name="ds.error",
- * options={"comment":"Ошибки"})
+ *          options={"comment":"Ошибки"})
  */
 #[
 ApiResource(
-    collectionOperations: ["get"],
-    itemOperations: ["get", "post"],
+    collectionOperations: ["get", ],
+    itemOperations: ["get", "put"],
     normalizationContext: ["groups" => ["error:read"]],
     denormalizationContext: ["groups" => ["error:write"]]
 )]

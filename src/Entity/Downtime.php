@@ -37,8 +37,8 @@ class Downtime
      * @ORM\Id
      * @ORM\Column(name="drec", type="string",
      *      options={"comment":"Время начала простоя"})
-     #[ApiProperty(identifier:true)]
      */
+    #[ApiProperty(identifier:true)]
     #[Groups(["downtime:read"])]
     private $drecTimestampKey;
 

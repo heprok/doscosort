@@ -83,6 +83,11 @@ export default {
         to: "/",
       },
       {
+        icon: "mdi-package-variant",
+        title: "Пакеты",
+        to: "/package",
+      },
+      {
         group: "/report",
         title: "Отчёты",
         icon: "mdi-file-chart",

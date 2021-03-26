@@ -8,7 +8,10 @@ use ApiPlatform\Core\Annotation\ApiFilter;
 use ApiPlatform\Core\Annotation\ApiResource;
 use App\Repository\PackageRepository;
 use DateTime;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use DoctrineExtensions\Types\Leam;
 use Symfony\Component\Serializer\Annotation\Groups;
 
 /**
@@ -16,7 +19,8 @@ use Symfony\Component\Serializer\Annotation\Groups;
  * @ORM\Table(name="ds.package",
  *      options={"comment":"Сформированные пакеты"})
  */
-#[ApiResource(
+#[
+ApiResource(
     collectionOperations: ["get"],
     itemOperations: ["get", 'put'],
     normalizationContext: ["groups" => ["package:read"]],
@@ -43,28 +47,28 @@ class Package
      * @ORM\ManyToOne(targetEntity=Species::class)
      */
     #[Groups(["package:read", "package:write"])]
-    private Species $species;
+    private ?Species $species;
 
     /**
      * @ORM\Column(type="smallint", nullable=true,
      *      options={"comment":"Толщина"})
      */
     #[Groups(["package:read", "package:write"])]
-    private int $thickness;
+    private ?int $thickness;
 
     /**
      * @ORM\Column(type="smallint", nullable=true,
      *      options={"comment":"Ширина"})
      */
     #[Groups(["package:read", "package:write"])]
-    private int $width;
+    private ?int $width;
 
     /**
      * @ORM\Column(type="string", length=32, nullable=true,
      *      options={"comment":"Качество"})
      */
     #[Groups(["package:read", "package:write"])]
-    private string $qualities;
+    private ?string $qualities;
 
     /**
      * @ORM\Column(type="leam[]",
@@ -79,6 +83,17 @@ class Package
      */
     #[Groups(["package:read"])]
     private bool $dry;
+
+    /**
+     * @ORM\OneToMany(targetEntity=PackageMove::class, mappedBy="Package")
+     */
+    #[Groups(["package:read"])]
+    private $packageMoves;
+
+    public function __construct()
+    {
+        $this->packageMoves = new ArrayCollection();
+    }
 
     public function getId(): ?int
     {
@@ -95,6 +110,18 @@ class Package
         $this->drec = $drec;
 
         return $this;
+    }
+
+    #[Groups(["package:read"])]
+    public function getDrecTime(): ?string
+    {
+        return $this->drec->format(BaseEntity::DATETIME_FOR_FRONT);
+    }
+
+    #[Groups(["package:read"])]
+    public function getCut(): string
+    {
+        return $this->thickness . ' × ' . $this->width;
     }
 
     public function getSpecies(): ?Species
@@ -114,6 +141,44 @@ class Package
         return $this->thickness;
     }
 
+    #[Groups(["package:read"])]
+    public function getRangeLengths(): string
+    {
+        $min = $max = $this->boards[0]->length;
+        foreach ($this->boards as $board){
+            $max = $board->length >= $max ? $board->length : $max;
+            $min = $board->length < $min ? $board->length : $min;
+        }
+        return  $max == $min ? $max : "$min - $max";
+    }
+
+    #[Groups(["package:read"])]
+    public function getCount() : int
+    {
+        $result = 0;
+        foreach($this->boards as $board) {
+            $result += $board->amount;
+        }
+
+        return $result;
+    }
+
+    #[Groups(["package:read"])]
+    public function getVolume() : ?float
+    {
+        if($this->thickness && $this->width && $this->species && $this->qualities) {
+
+            $result = 0.0;
+            
+            foreach ($this->boards as $board){
+                $result += $board->length * $this->thickness * $this->width * $board->amount / 1e9;
+            }
+            
+            return round($result, BaseEntity::PRECISION_FOR_FLOAT);
+        }else{
+            return null;
+        }
+    }
     public function setThickness(?int $thickness): self
     {
         $this->thickness = $thickness;
@@ -150,6 +215,20 @@ class Package
         return $this->boards;
     }
 
+    #[Groups(["package:read"])]
+    public function getBoardsArray(): array
+    {
+        $result = [];
+
+        foreach ($this->boards as $key => $board) {
+            if ($board instanceof Leam) {
+                $result[$key]['length'] =  $board->length;
+                $result[$key]['amount'] =  $board->amount;
+            }
+        }
+        return $result;
+    }
+
     public function setBoards(array $boards): self
     {
         $this->boards = $boards;
@@ -165,6 +244,36 @@ class Package
     public function setDry(bool $dry): self
     {
         $this->dry = $dry;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|PackageMove[]
+     */
+    public function getPackageMoves(): Collection
+    {
+        return $this->packageMoves;
+    }
+
+    public function addPackageMove(PackageMove $packageMove): self
+    {
+        if (!$this->packageMoves->contains($packageMove)) {
+            $this->packageMoves[] = $packageMove;
+            $packageMove->setPackage($this);
+        }
+
+        return $this;
+    }
+
+    public function removePackageMove(PackageMove $packageMove): self
+    {
+        if ($this->packageMoves->removeElement($packageMove)) {
+            // set the owning side to null (unless already changed)
+            if ($packageMove->getPackage() === $this) {
+                $packageMove->setPackage(null);
+            }
+        }
 
         return $this;
     }

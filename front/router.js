@@ -17,6 +17,12 @@ export default new Router({
           path: '',
           component: () => import('@/views/dashboard/Dashboard'),
         },
+        // Package
+        {
+          name: 'Package',
+          path: 'package',
+          component: () => import('@/views/dashboard/pages/report/Package'),
+        },
         // Manual
         {
           name: 'Список пород',

@@ -25,14 +25,14 @@ class PackageLocation
      * @ORM\GeneratedValue
      * @ORM\Column(type="integer")
      */
-    #[Groups(["package_location:write", "package_location:read"])]
+    #[Groups(["package_location:write", "package_location:read", "package:read"])]
     private int $id;
 
     /**
      * @ORM\Column(type="string", length=255,
      *      options={"comment":"Название"})
      */
-    #[Groups(["package_location:write", "package_location:read"])]
+    #[Groups(["package_location:write", "package_location:read", "package:read"])]
     private string $name;
 
     public function getId(): ?int
