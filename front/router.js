@@ -92,5 +92,9 @@ export default new Router({
         },              
       ],
     },
+    {
+      path: '/showpackage',
+      component: () => import('@/views/singlePages/Package'),
+    },
   ],
 })

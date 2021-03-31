@@ -3,20 +3,22 @@
 namespace App\DataFixtures;
 
 use App\Entity\Package;
+use App\Entity\Quality;
 use App\Entity\Species;
 use DateTime;
 use Doctrine\Bundle\FixturesBundle\Fixture;
+use Doctrine\Common\DataFixtures\DependentFixtureInterface;
 use Doctrine\Persistence\ObjectManager;
 use DoctrineExtensions\Types\Leam;
 
-class PackageFixtures extends Fixture
+class PackageFixtures extends Fixture implements DependentFixtureInterface
 {
     const COUNT_PACKAGE = 1000;
 
     public function load(ObjectManager $manager)
     {
         $species = $manager->getRepository(Species::class)->findAll();
-
+        $qualities = $manager->getRepository(Quality::class)->findAll();
         $randomDatesTimestamp = AppFixtures::getRandomDatetime(self::COUNT_PACKAGE);
         $boards = [
             new Leam(4000, 4),
@@ -36,10 +38,17 @@ class PackageFixtures extends Fixture
             $package->setSpecies($species[rand(0, /* count($species) - 1 */ 2)]);
             $package->setBoards($boards);
             $package->setDry($i % 2);
-            $package->setQualities($i % 2 ? 'NK' : '1 - китай');
+            $package->setQualities($qualities[array_rand($qualities)]->getName());
             $manager->persist($package);
         }
         $manager->flush();
     }
 
+    public function getDependencies()
+    {
+        return [
+            SpeciesFixtures::class,
+            QualityFixtures::class,
+        ];
+    }
 }

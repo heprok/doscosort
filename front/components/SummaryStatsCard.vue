@@ -45,13 +45,13 @@
                   </td>
                 </tr>
                 <tr>
-                  <td><p class="font-weight-regular">Объём пил-мат м3</p></td>
+                  <td><p class="font-weight-regular">Объём пил-мат м³</p></td>
                   <td align="center" v-for="shift in shifts" :key="shift.name">
                     {{ shift.volumeBoards }}
                   </td>
                 </tr>
                 <tr>
-                  <td><p class="font-weight-regular">Итоговый объем м3</p></td>
+                  <td><p class="font-weight-regular">Итоговый объём м³</p></td>
                   <td align="center" :colspan="shifts.length">
                     <p class="font-weight-bold">{{ summary.volumeBoards }}</p>
                   </td>

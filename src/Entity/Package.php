@@ -6,6 +6,7 @@ namespace App\Entity;
 
 use ApiPlatform\Core\Annotation\ApiFilter;
 use ApiPlatform\Core\Annotation\ApiResource;
+use ApiPlatform\Core\Bridge\Doctrine\MongoDbOdm\Filter\OrderFilter;
 use App\Repository\PackageRepository;
 use DateTime;
 use Doctrine\Common\Collections\ArrayCollection;
@@ -26,7 +27,6 @@ ApiResource(
     normalizationContext: ["groups" => ["package:read"]],
     denormalizationContext: ["groups" => ["package:write"]]
 )]
-// #[ApiFilter(DateFilter::class, properties: ["drecTimestampKey"])]
 class Package
 {
     /**
@@ -34,6 +34,7 @@ class Package
      * @ORM\GeneratedValue
      * @ORM\Column(type="integer")
      */
+    #[Groups(["package:read"])]
     private int $id;
 
     /**
@@ -74,26 +75,27 @@ class Package
      * @ORM\Column(type="leam[]",
      *      options={"comment":"Массив досок"})
      */
-    #[Groups(["package:read"])]
+    #[Groups(["package:read", "package:write"])]
     private $boards = [];
 
     /**
      * @ORM\Column(type="boolean",
      *      options={"comment":"Сухая или сырая"})
      */
-    #[Groups(["package:read"])]
+    #[Groups(["package:read", "package:write"])]
     private bool $dry;
 
     /**
-     * @ORM\OneToMany(targetEntity=PackageMove::class, mappedBy="Package")
+     * @ORM\OneToMany(targetEntity=PackageMove::class, mappedBy="package")
      */
-    #[Groups(["package:read"])]
+    #[Groups(["package:read", "package:write"])]
     private $packageMoves;
 
     public function __construct()
     {
         $this->packageMoves = new ArrayCollection();
     }
+
 
     public function getId(): ?int
     {
@@ -162,7 +164,10 @@ class Package
 
         return $result;
     }
-
+    #[Groups(["package:read"])]
+    public function getCurrentLocation(){
+        return $this->packageMoves->last() ? $this->packageMoves->last()?->getDst() : null;
+    }
     #[Groups(["package:read"])]
     public function getVolume() : ?float
     {

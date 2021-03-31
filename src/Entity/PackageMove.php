@@ -4,6 +4,9 @@ namespace App\Entity;
 
 use ApiPlatform\Core\Annotation\ApiProperty;
 use ApiPlatform\Core\Annotation\ApiResource;
+use ApiPlatform\Core\Annotation\ApiFilter;
+use ApiPlatform\Core\Bridge\Doctrine\MongoDbOdm\Filter\OrderFilter;
+use App\Filter\DateFilter;
 use App\Repository\PackageMoveRepository;
 use DateTime;
 use Doctrine\ORM\Event\LifecycleEventArgs;
@@ -18,7 +21,7 @@ use Symfony\Component\Serializer\Annotation\Groups;
  */
 #[
 ApiResource(
-    collectionOperations: ["get"],
+    collectionOperations: ["get", "post"],
     itemOperations: ["get"],
     normalizationContext: ["groups" => ["package_move:read"]],
     denormalizationContext: ["groups" => ["package_move:write"]]
@@ -40,27 +43,33 @@ class PackageMove
      * @ORM\ManyToOne(targetEntity=PackageLocation::class)
      * @ORM\JoinColumn(referencedColumnName="id", name="src", nullable=false)
      */
-    #[Groups(["package:read"])]
+    #[Groups(["package:read", "package_move:write","package_move:read"])]
     private $src;
 
     /**
      * @ORM\ManyToOne(targetEntity=PackageLocation::class)
      * @ORM\JoinColumn(referencedColumnName="id", name="dst", nullable=false)
      */
-    #[Groups(["package:read"])]
+    #[Groups(["package:read", "package_move:write","package_move:read"])]
     private $dst;
 
     /**
      * @ORM\Column(type="string", length=255, nullable=true)
      */
-    #[Groups(["package:read"])]
+    #[Groups(["package:read", "package_move:write","package_move:read"])]
     private $comment;
 
     /**
      * @ORM\ManyToOne(targetEntity=Package::class, inversedBy="packageMoves")
      * @ORM\JoinColumn(nullable=false)
      */
-    private $Package;
+    #[Groups(["package_move:write",])]
+    private $package;
+
+    public function __construct()
+    {
+        $this->drec = new DateTime();
+    }
 
     public function getDrecTimestampKey(): ?int
     {
@@ -147,12 +156,12 @@ class PackageMove
 
     public function getPackage(): ?Package
     {
-        return $this->Package;
+        return $this->package;
     }
 
-    public function setPackage(?Package $Package): self
+    public function setPackage(?Package $package): self
     {
-        $this->Package = $Package;
+        $this->package = $package;
 
         return $this;
     }

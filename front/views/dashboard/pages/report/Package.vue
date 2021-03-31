@@ -105,6 +105,7 @@ export default {
         { text: "Кол-во", value: "count", edited: false },
         { text: "Объём", value: "volume", edited: false },
         { text: "Сухая", value: "dry", type: "bool", edited: false },
+        { text: "Действия", value: "printers", edited: false },
       ],
     };
   },

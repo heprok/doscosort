@@ -6,6 +6,12 @@
     >
       <slot :name="slotName" v-bind="slotScope" />
     </template>
+    <template #[`item.printers`]="{ item }">
+      <v-icon small class="mr-2" @click="editItemAction(item)">
+        mdi-pencil
+      </v-icon>
+      <v-icon small @click="printerItemAction(item)"> mdi-printer </v-icon>
+    </template>
   </crud-table>
 </template>
 
@@ -20,6 +26,12 @@ export default {
     };
   },
   methods: {
-  }
+    editItemAction(item) {
+      console.log(item);
+    },
+    printerItemAction(item) {
+      console.log(item);
+    },
+  },
 };
 </script>

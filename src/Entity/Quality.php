@@ -2,14 +2,24 @@
 
 namespace App\Entity;
 
+use ApiPlatform\Core\Annotation\ApiResource;
 use App\Repository\QualityRepository;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Serializer\Annotation\Groups;
 
 /**
  * @ORM\Entity(repositoryClass=QualityRepository::class)
  * @ORM\Table(name="ds.quality", 
  *      options={"comment":"Качества доски"})
  */
+#[
+    ApiResource(
+        collectionOperations: ["get"],
+        itemOperations: ["get"],
+        normalizationContext: ["groups" => ["quality:read"]],
+        denormalizationContext: ["groups" => ["quality:write"]]
+    )
+]
 class Quality
 {
     /**
@@ -18,6 +28,7 @@ class Quality
      * @ORM\Column(type="smallint",
      *      options={"comment":"ID доски, 1 бит"})
      */
+    #[Groups(['quality:read'])]
     private int $id;
 
     /**
@@ -30,6 +41,7 @@ class Quality
      * @ORM\Column(type="string", length=32,
      *      options={"comment":"Название качества"})
      */
+    #[Groups(['quality:read'])]
     private string $name;
 
     public function __construct(QualityList $list, string $name)
