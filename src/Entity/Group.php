@@ -129,8 +129,18 @@ class Group
 
     public function getIntervalLength(): string
     {
-        return  $this->min_length . ' - ' .  $this->max_length;
+        return $this->min_length !== $this->max_length ? 
+        $this->min_length . ' - ' .  $this->max_length :
+        $this->max_length;
     }
+    
+    public function getIntervalLengthInMeter() : string
+    {
+        return $this->min_length !== $this->max_length ? 
+        round($this->min_length / 1000, 1) . ' - ' .  round($this->max_length / 1000, 1) . ' м':
+        round($this->max_length / 1000, 1) . ' м';
+    }
+
     public function setWidth(int $width): self
     {
         $this->width = $width;
