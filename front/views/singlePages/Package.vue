@@ -1,6 +1,8 @@
 
 <template>
   <v-app id="inspire">
+    <vue-snotify></vue-snotify>
+
     <v-main class="grey lighten-3">
       <v-container
         class="full-height"
@@ -53,9 +55,6 @@
                                   @init="onInit"
                                 />
                               </v-card-text>
-
-                              <v-divider />
-                                <qrcode-capture />
                             </base-material-card>
                           </v-dialog>
                         </v-col>
@@ -69,6 +68,7 @@
 
                   <v-card-text>
                     <v-form
+                      v-if="loadingPackage"
                       ref="form"
                       v-model="valid"
                       lazy-validation
@@ -288,6 +288,7 @@ import Axios from 'axios'
     data: () => ({
       isSavePackage: false,
       dialogLocation: false,
+      loadingPackage: false,
       error: '',
       comment: "",
       dialogQr: false,
@@ -330,28 +331,41 @@ import Axios from 'axios'
         this.qualities = request.data["hydra:member"]
       },
       async initPackage (packageId) {
-        const request = await Axios.get('/api/packages/' + packageId)
-        this.pack = request.data
+        let request;
+        this.loadingPackage = false;
+        try {
+          request = await Axios.get('/api/packages/' + packageId)
+          this.pack = request.data
         if(this.pack.species && this.pack.qualities && this.pack.width && this.pack.thickness)
           this.isSavePackage = false
-        
+          this.loadingPackage = true
+        } catch (error) {
+          if(error.response.status == 404){
+          this.$snotify.error("Пакет не найден");
+          } else {
+            this.$snotify.error(error.response.status + '   ' + error.response.data)
+          }
+        }
+        finally {
+          return request;
+        }
       },
       async onInit (promise) {
         try {
           await promise
         } catch (error) {
           if (error.name === 'NotAllowedError') {
-            this.error = 'ERROR: you need to grant camera access permisson'
+            this.$snotify.error('ERROR: вы должны дать доступ к камере')
           } else if (error.name === 'NotFoundError') {
-            this.error = 'ERROR: no camera on this device'
+            this.$snotify.error('ERROR: на этом устройстве нет камеры')
           } else if (error.name === 'NotSupportedError') {
-            this.error = 'ERROR: secure context required (HTTPS, localhost)'
+            this.$snotify.error('ERROR: secure context required (HTTPS, localhost)')
           } else if (error.name === 'NotReadableError') {
-            this.error = 'ERROR: is the camera already in use?'
+            this.$snotify.error('ERROR: камера уже используется?')
           } else if (error.name === 'OverconstrainedError') {
-            this.error = 'ERROR: installed cameras are not suitable'
+            this.$snotify.error('ERROR: установленные камеры не подходят')
           } else if (error.name === 'StreamApiNotSupportedError') {
-            this.error = 'ERROR: Stream API is not supported in this browser'
+            this.$snotify.error('ERROR: Stream API не поддерживается в этом браузере')
           }
         }
       },
