@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace App\Report;
 
 use App\Entity\BaseEntity;
-use App\Entity\Unload;
+use App\Entity\Package;
 use TCPDF;
 
 class Sticker extends TCPDF
@@ -22,8 +22,7 @@ class Sticker extends TCPDF
     // const WIDTH_PAGE=
 
     public function __construct(
-        private int $id = 1231234,
-        private Unload $unload
+        private Package $package
     ) {
         parent::__construct('L', 'mm', 'A5');
 
@@ -50,16 +49,16 @@ class Sticker extends TCPDF
         $widthPage = $this->getPageWidth() - self::PDF_MARGIN_LEFT - self::PDF_MARGIN_RIGHT;
         $heightPage = $this->getPageHeight() - self::PDF_MARGIN_TOP * 2;
 
-        $group = $unload->getGroup();
-        $cut = $group->getThickness() . 'x' . $group->getWidth();
-        $intrvalLength = $group->getIntervalLengthInMeter();
-        $number = $id;
-        $volume = number_format($unload->getVolume(), BaseEntity::PRECISION_FOR_FLOAT);
-        $count = $unload->getAmount();
-        $speciesName = $group->getSpecies()->getName();
-        $speciesName = 'Лиственница';
-        $qualities = $unload->getQualities();
-        $qualities = 'NK,GR';
+        // $group = $package->getGroup();
+        $cut = $package->getThickness() . 'x' . $package->getWidth();
+        $intrvalLength = $package->getRangeLengths();
+        $number = $package->getId();
+        $volume = number_format($package->getVolume(), BaseEntity::PRECISION_FOR_FLOAT);
+        $count = $package->getCount();
+        $speciesName = $package->getSpecies()->getName();
+        // $speciesName = 'Лиственница';
+        $qualities = $package->getQualities();
+        // $qualities = 'NK,GR';
         $blockHeight =  $heightPage / 3;
         $widthBlock = $widthPage / 6;
 
@@ -104,7 +103,8 @@ class Sticker extends TCPDF
         // QRCODE,L : QR-CODE Low error correction
         // $this->setXY(0, 0);
         // $this->write2DBarcode('www.tcpdf.org', 'QRCODE,L', 20, 30, 50, 50, $style, 'N');
-        $this->write2DBarcode('www.lpa.ltd', 'QRCODE,L', x: $widthBlock * 3 + $widthBlock * 2 + self::PDF_MARGIN_RIGHT, y: $blockHeight * 2 + self::PDF_MARGIN_TOP, w: $widthBlock * 4, h: $blockHeight - self::PDF_MARGIN_TOP / 4  + 3, style: $style, align: 'R');
+        // dd($_SERVER['HTTP_REFERER'] . 'ticket/' . $package->getId() );
+        $this->write2DBarcode((string)$number, 'QRCODE,L', x: $widthBlock * 3 + $widthBlock * 2 + self::PDF_MARGIN_RIGHT, y: $blockHeight * 2 + self::PDF_MARGIN_TOP, w: $widthBlock * 4, h: $blockHeight - self::PDF_MARGIN_TOP / 4  + 3, style: $style, align: 'R');
         // $this->Text(x: $widthBlock * 3, y: $blockHeight * 3, txt: 'QRCODE L');
 
         // $this->Cell($widthBlock, $blockHeight, '№ ' . $number, border: 0: align: 'C');

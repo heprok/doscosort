@@ -10,28 +10,29 @@
       <v-icon small class="mr-2" @click="editItemAction(item)">
         mdi-pencil
       </v-icon>
-      <v-icon small @click="printerItemAction(item)"> mdi-printer </v-icon>
+      <v-icon small @click="printerItemAction(item)">mdi-printer</v-icon>
     </template>
   </crud-table>
 </template>
 
 <script>
-import CRUDTable from "./CRUDTable.vue";
+import CRUDTable from './CRUDTable.vue'
 export default {
   components: { CRUDTable },
-  name: "CRUDTablePackage",
+  name: 'CRUDTablePackage',
   data() {
     return {
       entryPointApi: this.$store.state.apiEntryPoint,
-    };
+    }
   },
   methods: {
     editItemAction(item) {
-      console.log(item);
+      window.open('#/showpackage?packageId=' + item.id)
     },
     printerItemAction(item) {
-      console.log(item);
+      if (item.volume) window.open('ticket/' + item.id)
+      else this.editItemAction(item)
     },
   },
-};
+}
 </script>

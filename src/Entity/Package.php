@@ -25,7 +25,7 @@ ApiResource(
     collectionOperations: ["get"],
     itemOperations: ["get", 'put'],
     normalizationContext: ["groups" => ["package:read"]],
-    denormalizationContext: ["groups" => ["package:write"]]
+    denormalizationContext: ["groups" => ["package:write"], 'disable_type_enforcement' => true]
 )]
 class Package
 {
@@ -151,7 +151,7 @@ class Package
             $max = $board->length >= $max ? $board->length : $max;
             $min = $board->length < $min ? $board->length : $min;
         }
-        return  $max == $min ? $max : "$min - $max";
+        return  ($max = number_format($max / 1000, 1) . 'м') == ($min = number_format($min / 1000, 1) . 'м') ? : "$min - $max";
     }
 
     #[Groups(["package:read"])]
