@@ -32,7 +32,23 @@
                         </template>
 
                         <v-card-text>
-                          <qrcode-stream @decode="onDecode" @init="onInit" />
+                          <qrcode-stream
+                            :camera="camera"
+                            @decode="onDecode"
+                            @init="onInit"
+                          >
+                            <div class="loading-indicator" v-if="loadingQr">
+                              Загрузка.....
+                            </div>
+                            <div
+                              v-show="showScanConfirmation"
+                              class="scan-confirmation"
+                            >
+                              <v-icon x-large color="green">
+                                mdi-check-circle-outline
+                              </v-icon>
+                            </div>
+                          </qrcode-stream>
                         </v-card-text>
                       </base-material-card>
                     </v-dialog>
@@ -271,6 +287,8 @@ export default {
     loadingPackage: false,
     error: '',
     comment: '',
+    camera: 'auto',
+    showScanConfirmation: false,
     dialogQr: false,
     valid: true,
     pack: {},
@@ -346,6 +364,7 @@ export default {
       }
     },
     async onInit(promise) {
+      this.loadingQr = true
       try {
         await promise
       } catch (error) {
@@ -366,14 +385,33 @@ export default {
             'ERROR: Stream API не поддерживается в этом браузере',
           )
         }
+      } finally {
+        this.showScanConfirmation = this.camera === 'off'
+        this.loadingQr = false
       }
     },
-    onDecode(decodeString) {
+    async onDecode(decodeString) {
       const packageId = decodeString
+      this.pause()
       if (packageId) {
         this.initPackage(packageId)
+        await this.timeout(500)
         this.dialogQr = false
       }
+      this.unpause()
+    },
+    unpause() {
+      this.camera = 'auto'
+    },
+
+    pause() {
+      this.camera = 'off'
+    },
+
+    timeout(ms) {
+      return new Promise((resolve) => {
+        window.setTimeout(resolve, ms)
+      })
     },
     getParameterByName(name, url = window.location.href) {
       name = name.replace(/[[\]]/g, '\\$&')
@@ -388,13 +426,13 @@ export default {
         let request
         try {
           let object = {
-              thickness: this.pack.thickness,
-              width: this.pack.width,
-              species: this.pack.species,
-              qualities: this.pack.qualities,
-              dry: this.pack.dry,
-            }
-            request = await Axios.put(this.pack['@id'], object)
+            thickness: this.pack.thickness,
+            width: this.pack.width,
+            species: this.pack.species,
+            qualities: this.pack.qualities,
+            dry: this.pack.dry,
+          }
+          request = await Axios.put(this.pack['@id'], object)
           this.isSavePackage = true
           this.pack = request.data
           return true
@@ -414,7 +452,7 @@ export default {
       )
     },
     async printTicket() {
-      if (this.isSavePackage || await this.savePackage()) {
+      if (this.isSavePackage || (await this.savePackage())) {
         window.open('/ticket/' + this.pack.id)
       }
     },
