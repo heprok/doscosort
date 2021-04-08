@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Report\Board;
 
 use App\Dataset\PdfDataset;
+use App\Dataset\SummaryPdfDataset;
 use App\Entity\Column;
 use App\Entity\SummaryStat;
 use App\Entity\SummaryStatMaterial;
@@ -64,7 +65,7 @@ final class BoardReport extends AbstractReport
         if (!$boards)
             die('В данный период нет досок');
 
-        $mainDataSetColumns = [
+        $mainDatasetColumns = [
             new Column(title: 'Порода', precentWidth: 20, group: true, align: 'C', total: false),
             new Column(title: 'Качество', precentWidth: 20, group: false, align: 'C', total: false),
             new Column(title: 'Сечение, мм', precentWidth: 15, group: true, align: 'C', total: false),
@@ -73,14 +74,48 @@ final class BoardReport extends AbstractReport
             new Column(title: 'Объем, м³', precentWidth: 15, group: false, align: 'R', total: true),
         ];
 
+        $cutQualityDatasetColumns = [
+            new Column(title: 'Качество', precentWidth: 20, group: true, align: 'C', total: false),
+            new Column(title: 'Сечение, мм', precentWidth: 15, group: false, align: 'C', total: false),
+            // new Column(title: 'Длина, м', precentWidth: 15, group: false, align: 'C', total: false),
+            new Column(title: 'Кол-во, шт', precentWidth: 15, group: false, align: 'C', total: true),
+            new Column(title: 'Объем, м³', precentWidth: 15, group: false, align: 'R', total: true),
+            new Column(title: 'Процент, %', precentWidth: 15, group: false, align: 'R', total: true),
+        ];
+
+        $cutDatasetColumns = [
+            new Column(title: 'Сечение, мм', precentWidth: 15, group: true, align: 'C', total: false),
+            // new Column(title: 'Длина, м', precentWidth: 15, group: false, align: 'C', total: false),
+            new Column(title: 'Кол-во, шт', precentWidth: 15, group: false, align: 'C', total: true),
+            new Column(title: 'Объем, м³', precentWidth: 15, group: false, align: 'R', total: true),
+            new Column(title: 'Процент, %', precentWidth: 15, group: false, align: 'R', total: true),
+        ];
+
         $mainDataset = new PdfDataset(
-            columns: $mainDataSetColumns,
+            columns: $mainDatasetColumns,
             textTotal: 'Общий итог',
             textSubTotal: 'Итог',
         );
 
+        $cutSummaryPdfDataset = new SummaryPdfDataset(
+            nameSummary: 'Итог по сечению',
+            columns: $cutDatasetColumns,
+            textTotal: 'Итог',
+            textSubTotal: 'Итог по сечению'
+        );
+
+        $cutQualitySummaryPdfDataset = new SummaryPdfDataset(
+            nameSummary: 'Итог по качеству',
+            columns: $cutQualityDatasetColumns,
+            textTotal: 'Итого',
+            textSubTotal: 'Итог'
+        );
+
         $buff['name_species'] = '';
         $buff['cut'] = '';
+        $buff['quality_1_name'] = '';
+        $buff['cutQualitySummary'] = [];
+        $totalVolume = 0;
 
         foreach ($boards as $key => $row) {
             $cut = $row['cut'];
@@ -93,8 +128,40 @@ final class BoardReport extends AbstractReport
             if (($buff['cut'] != $cut || $buff['name_species'] != $name_species) && $key != 0) {
                 $mainDataset->addSubTotal();
             }
+
+            // if (($buff['cut'] != $cut || $buff['quality_1_name'] != $quality_1_name) && $key != 0) {
+
+            //     $cutQualitySummaryPdfDataset->addSubTotal();
+            // }
+
+            // if ($buff['cut'] != $cut && $key != 0) {
+            //     $cutSummaryPdfDataset->addSubTotal();
+            // }
+
             $buff['name_species'] = $name_species;
             $buff['cut'] = $cut;
+            $buff['quality_1_name'] = $quality_1_name;
+
+            if (!isset($buff['cutSummary'][$cut])) {
+                $buff['cutSummary'][$cut] = [
+                    'volume' => 0,
+                    'count' => 0
+                ];
+            }
+
+            $buff['cutSummary'][$cut]['volume'] += $volume_boards;
+            $buff['cutSummary'][$cut]['count'] += $count_board;
+            $totalVolume += $volume_boards;
+
+            if (!isset($buff['cutQualitySummary'][$quality_1_name][$cut])) {
+                $buff['cutQualitySummary'][$quality_1_name][$cut] = [
+                    'volume' => 0,
+                    'count' => 0,
+                ];
+            }
+
+            $buff['cutQualitySummary'][$quality_1_name][$cut]['volume'] += $volume_boards;
+            $buff['cutQualitySummary'][$quality_1_name][$cut]['count'] += $count_board;
 
             $mainDataset->addRow([
                 $name_species,
@@ -105,9 +172,35 @@ final class BoardReport extends AbstractReport
                 $volume_boards
             ]);
         }
+        foreach ($buff['cutQualitySummary'] as $quality => $cuts) {
+            foreach ($cuts as $cut => $value) {
+                $cutQualitySummaryPdfDataset->addRow([
+                    $quality,
+                    $cut,
+                    $value['count'],
+                    $value['volume'],
+                    round($value['volume'] / $totalVolume * 100, 2),
+                ]);
+            }
+            $cutQualitySummaryPdfDataset->addSubTotal();
+        }
+
+        foreach ($buff['cutSummary'] as $cut => $value) {
+            $cutSummaryPdfDataset->addRow([
+                $cut,
+                $value['count'],
+                $value['volume'],
+                round($value['volume'] / $totalVolume * 100, 2, PHP_ROUND_HALF_EVEN),
+            ]);
+        }
+        // $cutSummaryPdfDataset->addSubTotal();
+        $cutSummaryPdfDataset->addTotal();
+        $cutQualitySummaryPdfDataset->addTotal();
         $mainDataset->addSubTotal();
         $mainDataset->addTotal();
         $this->addDataset($mainDataset);
+        $this->addDataset($cutQualitySummaryPdfDataset);
+        $this->addDataset($cutSummaryPdfDataset);
 
         return true;
     }

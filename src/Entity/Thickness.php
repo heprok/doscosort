@@ -42,7 +42,7 @@ class Thickness
 
     /**
      * @ORM\Column(type="smallint", 
-     *      options={"comment":"Максимальная толщина", "check":"min <= max"})
+     *      options={"comment":"Максимальная толщина"})
      */
     #[Groups(["thickness:read", "thickness:write"])]
     private int $max;
