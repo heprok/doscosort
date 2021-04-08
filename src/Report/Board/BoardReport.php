@@ -76,19 +76,19 @@ final class BoardReport extends AbstractReport
 
         $cutQualityDatasetColumns = [
             new Column(title: 'Качество', precentWidth: 20, group: true, align: 'C', total: false),
-            new Column(title: 'Сечение, мм', precentWidth: 15, group: false, align: 'C', total: false),
+            new Column(title: 'Сечение, мм', precentWidth: 20, group: false, align: 'C', total: false),
             // new Column(title: 'Длина, м', precentWidth: 15, group: false, align: 'C', total: false),
-            new Column(title: 'Кол-во, шт', precentWidth: 15, group: false, align: 'C', total: true),
-            new Column(title: 'Объем, м³', precentWidth: 15, group: false, align: 'R', total: true),
-            new Column(title: 'Процент, %', precentWidth: 15, group: false, align: 'R', total: true),
+            new Column(title: 'Кол-во, шт', precentWidth: 20, group: false, align: 'C', total: true),
+            new Column(title: 'Объем, м³', precentWidth: 20, group: false, align: 'R', total: true),
+            new Column(title: 'Процент, %', precentWidth: 20, group: false, align: 'R', total: true),
         ];
 
         $cutDatasetColumns = [
-            new Column(title: 'Сечение, мм', precentWidth: 15, group: true, align: 'C', total: false),
+            new Column(title: 'Сечение, мм', precentWidth: 40, group: true, align: 'C', total: false),
             // new Column(title: 'Длина, м', precentWidth: 15, group: false, align: 'C', total: false),
-            new Column(title: 'Кол-во, шт', precentWidth: 15, group: false, align: 'C', total: true),
-            new Column(title: 'Объем, м³', precentWidth: 15, group: false, align: 'R', total: true),
-            new Column(title: 'Процент, %', precentWidth: 15, group: false, align: 'R', total: true),
+            new Column(title: 'Кол-во, шт', precentWidth: 20, group: false, align: 'C', total: true),
+            new Column(title: 'Объем, м³', precentWidth: 20, group: false, align: 'R', total: true),
+            new Column(title: 'Процент, %', precentWidth: 20, group: false, align: 'R', total: true),
         ];
 
         $mainDataset = new PdfDataset(

@@ -108,6 +108,11 @@ export default {
             to: "unload",
           },
           {
+            icon: "mdi-filter-remove-outline",
+            title: "Брак",
+            to: "lastpocket",
+          },
+          {
             icon: "mdi-clock-fast",
             title: "Простои",
             to: "downtimes",

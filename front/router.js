@@ -90,6 +90,11 @@ export default new Router({
           path: 'report/unload',
           component: () => import('@/views/dashboard/pages/report/Unload'),
         },              
+        {
+          name: 'Брак',
+          path: 'report/lastpocket',
+          component: () => import('@/views/dashboard/pages/report/LastPocket'),
+        },              
       ],
     },
     {

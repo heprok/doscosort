@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Report\Pocket;
 
 use App\Dataset\PdfDataset;
+use App\Dataset\SummaryPdfDataset;
 use App\Entity\Column;
 use App\Entity\SummaryStat;
 use App\Entity\SummaryStatMaterial;
@@ -75,6 +76,22 @@ final class PocketUnloadReport extends AbstractReport
             textTotal: 'Общий итог',
             textSubTotal: 'Итог за день',
         );
+
+        $summaryDataSetColumns = [
+            new Column(title: 'Порода', precentWidth: 40, group: true, align: 'C', total: false),
+            new Column(title: 'Сечение', precentWidth: 20, group: false, align: 'C', total: false),
+            new Column(title: 'Кол-во, шт', precentWidth: 20, group: false, align: 'R', total: true),
+            new Column(title: 'Объём, м³', precentWidth: 20, group: false, align: 'R', total: true),
+        ];
+
+        $summaryDataset = new SummaryPdfDataset(
+            nameSummary: 'Итог по выгруженным карманам',
+            columns: $summaryDataSetColumns,
+            textTotal: 'Общий итог',
+            textSubTotal: 'Итог',
+        );
+        
+
         $buff['day'] = '';
         foreach ($unloads as $key => $unload) {
             $drec = $unload->getDrec();
@@ -88,11 +105,22 @@ final class PocketUnloadReport extends AbstractReport
             $width = $group->getWidth();
             $thickness = $group->getThickness();
             $cut = $thickness .  '×' . $width;
-            $intervalLength = $group->getMinLength() . ' - ' .  $group->getMaxLength();
+            $intervalLength = $group->getIntervalLength();
 
             if ($buff['day'] != $drec->format('d') && $key != 0) {
                 $mainDataset->addSubTotal();
             }
+
+            if (!isset($buff['cutSummary'][$nameSpecies][$cut])) {
+                $buff['cutSummary'][$nameSpecies][$cut] = [
+                    'volume' => 0,
+                    'count' => 0,
+                ];
+            }
+
+            $buff['cutSummary'][$nameSpecies][$cut]['volume'] += $volume;
+            $buff['cutSummary'][$nameSpecies][$cut]['count'] += $amount;
+
 
             $buff['day'] = $drec->format('d');
 
@@ -107,10 +135,24 @@ final class PocketUnloadReport extends AbstractReport
                 $volume,
             ]);
         }
+
+        foreach ($buff['cutSummary'] as $species => $cuts) {
+            foreach ($cuts as $cut => $value) {
+                $summaryDataset->addRow([
+                    $species,
+                    $cut,
+                    $value['count'],
+                    $value['volume'],
+                ]);
+            }
+            $summaryDataset->addSubTotal();
+        }
+
         $mainDataset->addSubTotal();
         $mainDataset->addTotal();
+        $summaryDataset->addTotal();
         $this->addDataset($mainDataset);
-
+        $this->addDataset($summaryDataset);
         return true;
     }
 }
