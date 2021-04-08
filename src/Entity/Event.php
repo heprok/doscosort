@@ -18,7 +18,6 @@ use Doctrine\ORM\Event\LifecycleEventArgs;
  * @ORM\Table(name="ds.event")
  * @ORM\HasLifecycleCallbacks()
  */
-#[ApiFilter(DateFilter::class, properties: ["drecTimestampKey"])]
 #[
     ApiResource(
         collectionOperations: ["get"],
@@ -27,6 +26,7 @@ use Doctrine\ORM\Event\LifecycleEventArgs;
         denormalizationContext: ["groups" => ["event:write"]]
     )
 ]
+#[ApiFilter(DateFilter::class, properties: ["drecTimestampKey"])]
 #[ApiFilter(SearchFilter::class, properties: ["type" => "partial", "source" => "partial"])]
 
 class Event

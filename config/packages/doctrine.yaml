@@ -39,3 +39,4 @@ doctrine:
                 array_length: DoctrineExtensions\Query\Postgresql\ArrayLength
                 now: DoctrineExtensions\Query\Postgresql\NowTime
                 concat_ws: DoctrineExtensions\Query\Mysql\ConcatWs
+                # concat: DoctrineExtensions\Query\Mysql\ConcatWs

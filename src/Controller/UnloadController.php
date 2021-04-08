@@ -5,8 +5,6 @@ declare(strict_types=1);
 namespace App\Controller;
 
 use App\Report\AbstractReport;
-use App\Report\Downtime\DowntimePdfReport;
-use App\Report\Downtime\DowntimeReport;
 use App\Report\Pocket\LastPocketUnloadPdfReport;
 use App\Report\Pocket\LastPocketUnloadReport;
 use App\Report\Pocket\PocketUnloadPdfReport;
@@ -14,7 +12,6 @@ use App\Report\Pocket\PocketUnloadReport;
 use App\Repository\BoardRepository;
 use App\Repository\PeopleRepository;
 use App\Repository\PocketDistanceRepository;
-use App\Repository\ShiftRepository;
 use App\Repository\UnloadRepository;
 use DateInterval;
 use DatePeriod;
