@@ -1,6 +1,7 @@
 <template>
   <v-container id="dashboard" fluid tag="section">
     <v-row>
+
       <v-col
         cols="12"
         sm="6"
@@ -18,34 +19,10 @@
           :durations="infoCard.duration"
         />
       </v-col>
-
-      <!-- <v-col cols="12" sm="6" lg="3">
-        <info-card
-          color="info"
-          icon="mdi-poll"
-          title="Объем досок за смену"
-          urlApi="/api/infocard/volumeBoardsCurrentShift"
-        />
+            <v-col cols="6" lg="6" sm="12">
+        <QualitiesBarChartCard>
+        </QualitiesBarChartCard>
       </v-col>
-
-      <v-col cols="12" sm="6" lg="3">
-        <info-card
-          color="info"
-          icon="mdi-poll"
-          title="Кол-во брёвен за смену"
-          urlApi="/api/infocard/countTimber/currentShift"
-        />
-      </v-col>
-
-      <v-col cols="12" sm="6" lg="3">
-        <info-card
-          color="orange"
-          icon="mdi-sofa"
-          title="Последний простой"
-          urlApi="/api/infocard/lastDowntime"
-          sub-icon="mdi-clock"
-        />
-      </v-col> -->
     </v-row>
     <!-- <v-row>
       <v-col cols="6" lg="6" sm="12">
@@ -135,8 +112,10 @@
 <script>
 // import LineChart from '../../components/base/chart/report/dashboard/VolumeBoardChart.js';
 // import LineChartCard from '../../components/base/ChartJsCard.vue';
+import QualitiesBarChartCard from './components/charts/QualitiesBarChartCard'
 export default {
   name: "DashboardDashboard",
+  components: {QualitiesBarChartCard},
   data() {
     return {
       loader: false,

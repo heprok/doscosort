@@ -34,9 +34,9 @@ class BoardRepository extends ServiceEntityRepository
             ->setParameter('start', $period->getStartDate()->format(DATE_RFC3339_EXTENDED))
             ->setParameter('end', $period->getEndDate()->format(DATE_RFC3339_EXTENDED))
             ->leftJoin('b.species', 's');
-            // ->leftJoin('b.nom_thickness', 't')
-            // ->leftJoin('b.nom_width', 'w')
-            // ->leftJoin('b.nom_length', 'l');
+        // ->leftJoin('b.nom_thickness', 't')
+        // ->leftJoin('b.nom_width', 'w')
+        // ->leftJoin('b.nom_length', 'l');
 
 
         foreach ($sqlWhere as $where) {
@@ -56,7 +56,7 @@ class BoardRepository extends ServiceEntityRepository
      * @return Board[] Returns an array of Board objects
      */
     public function findByPeriod(DatePeriod $period, array $sqlWhere = [])
-    {   
+    {
         return $this->getBaseQueryFromPeriod($period, $sqlWhere)
             ->setMaxResults(1000)
             ->getQuery()
@@ -83,25 +83,37 @@ class BoardRepository extends ServiceEntityRepository
             ->getResult();
     }
 
-
-    public function getVolumeBoardsByPeriod(DatePeriod $period, array $sqlWhere = []):float
+    public function getQualityVolumeByPeriod($period)
     {
-        $qb = $this->getBaseQueryFromPeriod($period, $sqlWhere);
-
+        $qb = $this->getBaseQueryFromPeriod($period);
         return $qb
-                ->select('sum(CAST(standard_length(b.nom_length) as real) / 1000 * CAST(b.nom_width as real) / 1000 * CAST(b.nom_thickness as real) / 1000) AS volume_boards')
-                ->getQuery()
-                ->getResult()[0]['volume_boards'] ?? 0.0;
+            ->select(
+                'b.quality_1_name as name_quality',
+                'sum(CAST(standard_length(b.nom_length) as real) / 1000 * CAST(b.nom_width as real) / 1000 * CAST(b.nom_thickness as real) / 1000) AS volume_boards'
+            )
+            ->addGroupBy('b.quality_1_name')
+            ->getQuery()
+            ->getResult();
     }
 
-    public function getCountBoardsByPeriod(DatePeriod $period, array $sqlWhere = []):int
+    public function getVolumeBoardsByPeriod(DatePeriod $period, array $sqlWhere = []): float
     {
         $qb = $this->getBaseQueryFromPeriod($period, $sqlWhere);
 
         return $qb
-                ->select('count(1) AS count_boards')
-                ->getQuery()
-                ->getResult()[0]['count_boards'] ?? 0;
+            ->select('sum(CAST(standard_length(b.nom_length) as real) / 1000 * CAST(b.nom_width as real) / 1000 * CAST(b.nom_thickness as real) / 1000) AS volume_boards')
+            ->getQuery()
+            ->getResult()[0]['volume_boards'] ?? 0.0;
+    }
+
+    public function getCountBoardsByPeriod(DatePeriod $period, array $sqlWhere = []): int
+    {
+        $qb = $this->getBaseQueryFromPeriod($period, $sqlWhere);
+
+        return $qb
+            ->select('count(1) AS count_boards')
+            ->getQuery()
+            ->getResult()[0]['count_boards'] ?? 0;
     }
 
     // /**

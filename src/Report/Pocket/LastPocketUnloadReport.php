@@ -49,7 +49,7 @@ final class LastPocketUnloadReport extends AbstractReport
 
     public function getNameReport(): string
     {
-        return "по браку";
+        return "по отбойнику";
     }
 
     protected function updateDataset(): bool

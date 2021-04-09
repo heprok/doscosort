@@ -109,7 +109,7 @@ export default {
           },
           {
             icon: "mdi-filter-remove-outline",
-            title: "Брак",
+            title: "Отбойник",
             to: "lastpocket",
           },
           {

@@ -91,7 +91,7 @@ export default new Router({
           component: () => import('@/views/dashboard/pages/report/Unload'),
         },              
         {
-          name: 'Брак',
+          name: 'Отбойник',
           path: 'report/lastpocket',
           component: () => import('@/views/dashboard/pages/report/LastPocket'),
         },              

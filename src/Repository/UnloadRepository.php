@@ -24,8 +24,8 @@ class UnloadRepository extends ServiceEntityRepository
     private function getBaseQueryFromPeriod(DatePeriod $period, array $sqlWhere = []): QueryBuilder
     {
 
-        $qb = $this->createQueryBuilder('b')
-            ->andWhere('b.drecTimestampKey BETWEEN :start AND :end')
+        $qb = $this->createQueryBuilder('u')
+            ->andWhere('u.drecTimestampKey BETWEEN :start AND :end')
             ->setParameter('start', $period->getStartDate()->format(DATE_ATOM))
             ->setParameter('end', $period->getEndDate()->format(DATE_ATOM));
 
@@ -46,7 +46,9 @@ class UnloadRepository extends ServiceEntityRepository
     public function findByPeriod(DatePeriod $period, array $sqlWhere = []): array
     {
         return $this->getBaseQueryFromPeriod($period, $sqlWhere)
-            ->orderBy('b.drecTimestampKey', 'ASC')
+            ->addSelect('standard_length(g.max_length)')
+            ->orderBy('u.drecTimestampKey', 'ASC')
+            ->leftJoin('u.group', 'g')
             ->getQuery()
             ->getResult();
     }
@@ -64,7 +66,7 @@ class UnloadRepository extends ServiceEntityRepository
     {
         $qb = $this->getBaseQueryFromPeriod($period, $sqlWhere);
         return $qb
-            ->select('sum(b.amount) as amountBoard')
+            ->select('sum(u.amount) as amountBoard')
             ->getQuery()
             ->getResult()[0]['amountBoard'] ?? 0;
     }    
@@ -73,7 +75,7 @@ class UnloadRepository extends ServiceEntityRepository
     {
         $qb = $this->getBaseQueryFromPeriod($period, $sqlWhere);
         return $qb
-            ->select('sum(b.volume) as volumeBoard')
+            ->select('sum(u.volume) as volumeBoard')
             ->getQuery()
             ->getResult()[0]['volumeBoard'] ?? 0.0;
     }
