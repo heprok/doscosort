@@ -91,6 +91,14 @@ final class BoardReport extends AbstractReport
             new Column(title: 'Процент, %', precentWidth: 20, group: false, align: 'R', total: true),
         ];
 
+        $qualityDatasetColumns = [
+            new Column(title: 'Качество, мм', precentWidth: 40, group: true, align: 'C', total: false),
+            // new Column(title: 'Длина, м', precentWidth: 15, group: false, align: 'C', total: false),
+            new Column(title: 'Кол-во, шт', precentWidth: 20, group: false, align: 'C', total: true),
+            new Column(title: 'Объем, м³', precentWidth: 20, group: false, align: 'R', total: true),
+            new Column(title: 'Процент, %', precentWidth: 20, group: false, align: 'R', total: true),
+        ];
+
         $mainDataset = new PdfDataset(
             columns: $mainDatasetColumns,
             textTotal: 'Общий итог',
@@ -105,8 +113,15 @@ final class BoardReport extends AbstractReport
         );
 
         $cutQualitySummaryPdfDataset = new SummaryPdfDataset(
-            nameSummary: 'Итог по качеству',
+            nameSummary: 'Итог по качеству и сечению',
             columns: $cutQualityDatasetColumns,
+            textTotal: 'Итого',
+            textSubTotal: 'Итог'
+        );
+
+        $qualitySummaryPdfDataset = new SummaryPdfDataset(
+            nameSummary: 'Итог по качеству',
+            columns: $qualityDatasetColumns,
             textTotal: 'Итого',
             textSubTotal: 'Итог'
         );
@@ -114,7 +129,7 @@ final class BoardReport extends AbstractReport
         $buff['name_species'] = '';
         $buff['cut'] = '';
         $buff['quality_1_name'] = '';
-        $buff['cutQualitySummary'] = [];
+        // $buff['cutQualitySummary'] = [];
         $totalVolume = 0;
 
         foreach ($boards as $key => $row) {
@@ -137,6 +152,8 @@ final class BoardReport extends AbstractReport
             // if ($buff['cut'] != $cut && $key != 0) {
             //     $cutSummaryPdfDataset->addSubTotal();
             // }
+            
+            $totalVolume += $volume_boards;
 
             $buff['name_species'] = $name_species;
             $buff['cut'] = $cut;
@@ -151,7 +168,16 @@ final class BoardReport extends AbstractReport
 
             $buff['cutSummary'][$cut]['volume'] += $volume_boards;
             $buff['cutSummary'][$cut]['count'] += $count_board;
-            $totalVolume += $volume_boards;
+
+            if (!isset($buff['qualitySummary'][$quality_1_name])) {
+                $buff['qualitySummary'][$quality_1_name] = [
+                    'volume' => 0,
+                    'count' => 0
+                ];
+            }
+
+            $buff['qualitySummary'][$quality_1_name]['volume'] += $volume_boards;
+            $buff['qualitySummary'][$quality_1_name]['count'] += $count_board;
 
             if (!isset($buff['cutQualitySummary'][$quality_1_name][$cut])) {
                 $buff['cutQualitySummary'][$quality_1_name][$cut] = [
@@ -172,6 +198,7 @@ final class BoardReport extends AbstractReport
                 $volume_boards
             ]);
         }
+
         foreach ($buff['cutQualitySummary'] as $quality => $cuts) {
             foreach ($cuts as $cut => $value) {
                 $cutQualitySummaryPdfDataset->addRow([
@@ -179,10 +206,19 @@ final class BoardReport extends AbstractReport
                     $cut,
                     $value['count'],
                     $value['volume'],
-                    round($value['volume'] / $totalVolume * 100, 2),
+                    $value['volume'] / $totalVolume * 100,
                 ]);
             }
             $cutQualitySummaryPdfDataset->addSubTotal();
+        }
+
+        foreach ($buff['qualitySummary'] as $quality => $value) {
+            $qualitySummaryPdfDataset->addRow([
+                $quality,
+                $value['count'],
+                $value['volume'],
+                $value['volume'] / $totalVolume * 100,
+            ]);
         }
 
         foreach ($buff['cutSummary'] as $cut => $value) {
@@ -190,17 +226,19 @@ final class BoardReport extends AbstractReport
                 $cut,
                 $value['count'],
                 $value['volume'],
-                round($value['volume'] / $totalVolume * 100, 2, PHP_ROUND_HALF_EVEN),
+                $value['volume'] / $totalVolume * 100,
             ]);
         }
         // $cutSummaryPdfDataset->addSubTotal();
         $cutSummaryPdfDataset->addTotal();
+        $qualitySummaryPdfDataset->addTotal();
         $cutQualitySummaryPdfDataset->addTotal();
         $mainDataset->addSubTotal();
         $mainDataset->addTotal();
         $this->addDataset($mainDataset);
         $this->addDataset($cutQualitySummaryPdfDataset);
         $this->addDataset($cutSummaryPdfDataset);
+        $this->addDataset($qualitySummaryPdfDataset);
 
         return true;
     }
