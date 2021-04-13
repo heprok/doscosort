@@ -9,13 +9,13 @@ use App\Dataset\ChartDataset;
 class Chart
 {
     const CHART_COLOR = [
-        'red' => 'rgb(255, 99, 132)',
-        'orange' => 'rgb(255, 159, 64)',
-        'yellow' => 'rgb(255, 205, 86)',
+        'red' => 'rgb(231, 76, 60)',
+        'orange' => 'rgb(230, 126, 34)',
+        'yellow' => 'rgb(241, 196, 15)',
         'green' => 'rgb(75, 192, 192)',
-        'blue' => 'rgb(54, 162, 235)',
-        'purple' => 'rgb(153, 102, 255)',
-        'grey' => 'rgb(201, 203, 207)'
+        'blue' => 'rgb(52, 152, 219)',
+        'purple' => 'rgb(142, 68, 173)',
+        'grey' => 'rgb(189, 195, 199)'
     ];
 
     public function __construct(

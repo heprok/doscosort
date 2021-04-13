@@ -10,6 +10,9 @@ const theme = {
   secondary: '#9C27b0',
   accent: '#9C27b0',
   info: '#00CAE3',
+  yellow: '#f1c40f',
+  black: '#1e1e1e',
+  greyLight: '#ecf0f1'
 }
 
 export default new Vuetify({

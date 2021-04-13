@@ -77,7 +77,7 @@ class ChartController extends AbstractController
                 $data[] = $precent;
             }
         }
-        $dataset = new ChartDataset('Объём, %', Chart::CHART_COLOR['red'], Chart::CHART_COLOR['orange']);
+        $dataset = new ChartDataset('Объём, %', '#000', '#00cae3');
         $dataset->setData($data);
         $chart = new Chart($labels, [$dataset]);
 
@@ -87,16 +87,32 @@ class ChartController extends AbstractController
         $chart->addOption(
             'legend',
             [
+                
                 'position' => 'right'
             ],
         );
-        $chart->addOption(
-            'title',
-            [
-                'display' => true,
-                'text' => 'Распределение по качеству'
-            ]
-        );
+        // $chart->addOption(
+        //     'title',
+        //     [
+        //         'display' => true,
+        //         'text' => 'Распределение по качеству'
+        //     ]
+        // );
+        // $chart->addOption(
+        //     'scales',
+        //     [
+        //         'xAxes' => [[
+        //             'gridLines' => [
+        //                 'color' => Chart::CHART_COLOR['purple'],
+        //             ],
+        //         ]],
+        //         'yAxes' => [[
+        //             'gridLines' => [
+        //                 'color' => Chart::CHART_COLOR['purple'],
+        //             ],
+        //         ]],
+        //     ]
+        // );
 
         $chart->addOption('maintainAspectRatio', false);
         return $this->json($chart->__serialize());

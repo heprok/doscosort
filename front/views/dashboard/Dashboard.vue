@@ -1,7 +1,6 @@
 <template>
   <v-container id="dashboard" fluid tag="section">
     <v-row>
-
       <v-col
         cols="12"
         sm="6"
@@ -9,7 +8,7 @@
         v-for="infoCard in infoCards"
         :key="infoCard.nameCard"
       >
-        <info-card
+        <InfoCard
           :color="infoCard.color"
           :icon="infoCard.icon"
           :sub-icon="infoCard.subIcon"
@@ -19,8 +18,33 @@
           :durations="infoCard.duration"
         />
       </v-col>
-            <v-col cols="6" lg="6" sm="12">
-        <QualitiesBarChartCard>
+      <v-col cols="6" lg="6" sm="12">
+        <QualitiesBarChartCard
+          title="Распределение качеств"
+        >
+          <template v-slot:reveal-actions>
+            <v-tooltip bottom>
+              <template v-slot:activator="{ attrs, on }">
+                <v-btn v-bind="attrs" color="info" icon v-on="on">
+                  <v-icon color="info">
+                    mdi-refresh
+                  </v-icon>
+                </v-btn>
+              </template>
+
+              <span>Refresh</span>
+            </v-tooltip>
+
+            <v-tooltip bottom>
+              <template v-slot:activator="{ attrs, on }">
+                <v-btn v-bind="attrs" light icon v-on="on">
+                  <v-icon>mdi-pencil</v-icon>
+                </v-btn>
+              </template>
+
+              <span>Change Date</span>
+            </v-tooltip>
+          </template>
         </QualitiesBarChartCard>
       </v-col>
     </v-row>
@@ -112,10 +136,10 @@
 <script>
 // import LineChart from '../../components/base/chart/report/dashboard/VolumeBoardChart.js';
 // import LineChartCard from '../../components/base/ChartJsCard.vue';
-import QualitiesBarChartCard from './components/charts/QualitiesBarChartCard'
+import QualitiesBarChartCard from "./components/charts/QualitiesBarChartCard";
 export default {
   name: "DashboardDashboard",
-  components: {QualitiesBarChartCard},
+  components: { QualitiesBarChartCard },
   data() {
     return {
       loader: false,
