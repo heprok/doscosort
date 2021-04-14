@@ -31,7 +31,7 @@ esac
 shift
 done
 
-mv doscosortweb.7z ~/VirtualBox\ VMs/share
+mv doscosortweb.7z ~/VirtualBox\ VMs/Share/
 
 cd src
 rm -rf Filter Identifier Dataset  Entity/BaseEntity.php Entity/Column.php

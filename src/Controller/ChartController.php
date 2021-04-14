@@ -50,7 +50,7 @@ class ChartController extends AbstractController
         ]);
     }
 
-    #[Route("/qualtites/currentShift", name: 'qualtites_chart_current_shift')]
+    #[Route("/qualtites/currentShift", name: 'qualtites_current_shift')]
     public function getQualitiesOnCurrentShift()
     {
         $currentShift = $this->shiftRepository->getCurrentShift();
@@ -77,43 +77,97 @@ class ChartController extends AbstractController
                 $data[] = $precent;
             }
         }
-        $dataset = new ChartDataset('Объём, %', '#000', '#00cae3');
+        $dataset = new ChartDataset('Объём, %', '#00cae3', '#000');
         $dataset->setData($data);
         $chart = new Chart($labels, [$dataset]);
 
         $chart->addOption('responsive', true);
         $chart->addOption('indexAxis', 'y',);
         $chart->addOption('elements', ['bar' => ['borderWidth' => 1]]);
-        $chart->addOption(
-            'legend',
-            [
-                
-                'position' => 'right'
-            ],
-        );
-        // $chart->addOption(
-        //     'title',
-        //     [
-        //         'display' => true,
-        //         'text' => 'Распределение по качеству'
-        //     ]
-        // );
-        // $chart->addOption(
-        //     'scales',
-        //     [
-        //         'xAxes' => [[
-        //             'gridLines' => [
-        //                 'color' => Chart::CHART_COLOR['purple'],
-        //             ],
-        //         ]],
-        //         'yAxes' => [[
-        //             'gridLines' => [
-        //                 'color' => Chart::CHART_COLOR['purple'],
-        //             ],
-        //         ]],
-        //     ]
-        // );
 
+        $chart->addOption('maintainAspectRatio', false);
+        return $this->json($chart->__serialize());
+    }
+
+
+    private function getPeriodForDuration(string $duration): ?DatePeriod
+    {
+        switch ($duration) {
+            case 'today':
+                $period = BaseEntity::getPeriodForDay();
+                break;
+
+            case 'weekly':
+                $period = BaseEntity::getPeriodForDay();
+                $lastMonday = new DateTime('last monday ' . $period->end->format(BaseEntity::DATE_FORMAT_DB));
+                $period = new DatePeriod($lastMonday, $period->getDateInterval(), $period->end);
+                break;
+
+            case 'mountly':
+                $period = BaseEntity::getPeriodForDay();
+                $start = $period->getStartDate();
+                $start->setDate((int)$start->format('Y'), (int)$start->format('n'), 1);
+                $period = new DatePeriod($start, $period->getDateInterval(), $period->getEndDate());
+                break;
+        }
+
+        return $period;
+    }
+
+    #[Route("/volume/shifts/{duration}", requirements: ["duration" => "mountly|weekly"], name: 'volume_for_duration')]
+    public function getVolumeForDuration(string $duration)
+    {
+        $period = $this->getPeriodForDuration($duration);
+        // $period = new DatePeriod(new DateTime('2021-03-19'), new DateInterval('P1D'), new DateTime('2021-03-26'));
+        $shifts = $this->shiftRepository->findByPeriod($period);
+        $peoples = $this->shiftRepository->getPeopleForByPeriod($period);
+        // dd(21);
+        if (!$shifts || !$peoples) {
+            $chart = new Chart(['1']);
+            $chart->addOption('responsive', true);
+            $chart->addOption('elements', ['bar' => ['borderWidth' => 1]]);
+
+            $chart->addOption('maintainAspectRatio', false);
+            return $this->json($chart->__serialize());
+        }
+        $colors = Chart::CHART_COLOR;
+        $datasets = [];
+        foreach ($peoples as $people) {
+            $datasets[$people->getId()] = new ChartDataset($people->getFio(), array_shift($colors));
+        }
+        $labels = [];
+        $data = [];
+        foreach ($period as $date) {
+            $end = clone $date;
+            $end->add(new DateInterval('P1D'));
+            $labels[] = $date->format('d.m');
+            $shifts = $this->shiftRepository->findByPeriod(new DatePeriod($date, new DateInterval('P1D'), $end));
+            // foreach()
+            foreach ($shifts as $shift) {
+                $data[$shift->getPeople()->getId()][$date->format('d.m')][] = $this->boardRepository->getVolumeBoardsByPeriod($shift->getPeriod());
+            }
+        }
+        $chartData = [];
+        foreach ($labels as $date) {
+            foreach ($peoples as $people) {
+                if ($data[$people->getId()][$date] ?? null)
+                    $chartData[$people->getId()][$date] = round(array_sum($data[$people->getId()][$date]), BaseEntity::PRECISION_FOR_FLOAT);
+                else
+                    $chartData[$people->getId()][$date] = 0;
+
+                unset($data[$people->getId()][$date]);
+            }
+        }
+        foreach ($datasets as $key => $dataset) {
+            $dataset->setData(array_values($chartData[$key]));
+        }
+        $chart = new Chart($labels, $datasets);
+
+        $chart->addOption('responsive', true);
+        $chart->addOption('elements', ['bar' => ['borderWidth' => 1]]);
+        // $chart->addOption('legend', [
+        //     'position' => 'right'
+        // ]);
         $chart->addOption('maintainAspectRatio', false);
         return $this->json($chart->__serialize());
     }

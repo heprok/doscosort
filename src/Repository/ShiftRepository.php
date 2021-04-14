@@ -30,7 +30,7 @@ class ShiftRepository extends ServiceEntityRepository
      */
     private function getQueryFromPeriod(DatePeriod $period): QueryBuilder
     {
-        
+
         return $this->createQueryBuilder('s')
             ->where('CAST(((COALESCE(s.stop, now()) - s.startTimestampKey) / 2 + s.startTimestampKey) as timestamp) BETWEEN :start AND :end')
             ->setParameter('start', $period->getStartDate()->format(DATE_ATOM))
@@ -48,6 +48,17 @@ class ShiftRepository extends ServiceEntityRepository
             ->setMaxResults(1)
             ->getQuery()
             ->getOneOrNullResult();
+    }
+
+    public function getPeopleForByPeriod(DatePeriod $period)
+    {
+        return $this->getQueryFromPeriod($period)
+            ->select('p')
+            ->leftJoin('App:People', 'p', \Doctrine\ORM\Query\Expr\Join::WITH, 's.people = p.id')
+            ->groupBy('p')
+            ->orderBy('p.fam')
+            ->getQuery()
+            ->getResult();
     }
 
     /**

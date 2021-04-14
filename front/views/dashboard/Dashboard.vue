@@ -19,33 +19,19 @@
         />
       </v-col>
       <v-col cols="6" lg="6" sm="12">
-        <QualitiesBarChartCard
+        <ChartCard
+          type="HBar"
+          urlApi="/api/charts/qualtites/currentShift"
           title="Распределение качеств"
-        >
-          <template v-slot:reveal-actions>
-            <v-tooltip bottom>
-              <template v-slot:activator="{ attrs, on }">
-                <v-btn v-bind="attrs" color="info" icon v-on="on">
-                  <v-icon color="info">
-                    mdi-refresh
-                  </v-icon>
-                </v-btn>
-              </template>
-
-              <span>Refresh</span>
-            </v-tooltip>
-
-            <v-tooltip bottom>
-              <template v-slot:activator="{ attrs, on }">
-                <v-btn v-bind="attrs" light icon v-on="on">
-                  <v-icon>mdi-pencil</v-icon>
-                </v-btn>
-              </template>
-
-              <span>Change Date</span>
-            </v-tooltip>
-          </template>
-        </QualitiesBarChartCard>
+        />
+      </v-col>
+      <v-col cols="6" lg="6" sm="12">
+        <ChartCard
+          type="Bar"
+          urlApi="/api/charts/volume/shifts/weekly"
+          subtitle="За неделю"
+          title="Выработка по операторам"
+        />
       </v-col>
     </v-row>
     <!-- <v-row>
@@ -136,10 +122,11 @@
 <script>
 // import LineChart from '../../components/base/chart/report/dashboard/VolumeBoardChart.js';
 // import LineChartCard from '../../components/base/ChartJsCard.vue';
-import QualitiesBarChartCard from "./components/charts/QualitiesBarChartCard";
+import ChartCard from "./components/charts/ChartCard";
+import LoaderTlc from "tlc-front-components/src/LoaderTlc";
 export default {
   name: "DashboardDashboard",
-  components: { QualitiesBarChartCard },
+  components: { ChartCard, LoaderTlc },
   data() {
     return {
       loader: false,

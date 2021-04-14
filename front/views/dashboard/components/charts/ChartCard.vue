@@ -7,13 +7,18 @@
     v-on="$listeners"
   >
     <template v-slot:heading>
-      <div class="container">
-        <QualitiesBarChart
+        <HBarChart
+          v-if="type === 'HBar'"
           :height="height"
           :chartdata="chartdata"
           :options="options"
         />
-      </div>
+        <BarChart
+          v-else-if="type === 'Bar'"
+          :height="height"
+          :chartdata="chartdata"
+          :options="options"
+        />
     </template>
 
     <slot slot="reveal-actions" name="reveal-actions" />
@@ -33,14 +38,17 @@
       >
     </template>
   </base-material-card>
+  <LoaderTlc v-else  />
 </template>
 
 <script>
 import Axios from "axios";
-import QualitiesBarChart from "./QualitiesBarChart";
+import HBarChart from "./HBarChart";
+import BarChart from "./BarChart";
+import LoaderTlc from "tlc-front-components/src/LoaderTlc"
 export default {
   name: "QualitiesBarChartCard",
-  components: { QualitiesBarChart },
+  components: { HBarChart, LoaderTlc, BarChart },
   data: () => ({
     loaded: false,
     options: null,
@@ -48,20 +56,21 @@ export default {
     interval: null,
     height: null,
     lastUpdateTime: -1,
-    urlApi: "/api/charts/qualtites/currentShift",
   }),
   computed: {
-    // cssStyles() {
-    //   return { 
-    //     position: 'relative',
-    //     height: '200px'
-    //   }
-    // }
   },
   props: {
+    urlApi: {
+      type: String,
+      required: true,
+    },
+    type: {
+      type: String,
+      required: true,
+    },
     intervalSecond: {
       type: Number,
-      default: 1000 * 60 * 2, // 5 минут
+      default: 1000 * 60 * 5, // 5 минут
     },
     title: {
       type: String,

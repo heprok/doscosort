@@ -15,7 +15,13 @@ class Chart
         'green' => 'rgb(75, 192, 192)',
         'blue' => 'rgb(52, 152, 219)',
         'purple' => 'rgb(142, 68, 173)',
-        'grey' => 'rgb(189, 195, 199)'
+        'grey' => 'rgb(189, 195, 199)',
+        'fuchsia' => 'rgb(255,0,255)',
+        'jotPink' => 'rgb(255,105,180)',
+        'indigo' => 'rgb(75,0,130)',
+        'Chartreuse' => 'rgb(127, 255, 0)',
+        'DarkRed' => 'rgb(139,0,0)'
+
     ];
 
     public function __construct(
