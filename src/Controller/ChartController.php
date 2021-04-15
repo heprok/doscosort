@@ -118,7 +118,7 @@ class ChartController extends AbstractController
     public function getVolumeForDuration(string $duration)
     {
         $period = $this->getPeriodForDuration($duration);
-        // $period = new DatePeriod(new DateTime('2021-03-19'), new DateInterval('P1D'), new DateTime('2021-03-26'));
+        $period = new DatePeriod(new DateTime('2021-03-19'), new DateInterval('P1D'), new DateTime('2021-03-26'));
         $shifts = $this->shiftRepository->findByPeriod($period);
         $peoples = $this->shiftRepository->getPeopleForByPeriod($period);
         // dd(21);
@@ -163,7 +163,7 @@ class ChartController extends AbstractController
         }
         $chart = new Chart($labels, $datasets);
 
-        $chart->addOption('responsive', true);
+        $chart->addOption('responsive', false);
         $chart->addOption('elements', ['bar' => ['borderWidth' => 1]]);
         // $chart->addOption('legend', [
         //     'position' => 'right'

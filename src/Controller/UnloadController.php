@@ -70,7 +70,6 @@ class UnloadController extends AbstractController
     #[Route("/lastPocket/{start}...{end}/people/{idsPeople}/pdf", name: "last_pocket_for_period_with_people_show_pdf")]
     public function showReportLastPocketForPeriodWithPeoplePdf(string $start, string $end, string $idsPeople)
     {
-        $request = Request::createFromGlobals();
         $lastPocket = $this->pocketDistanceRepository->getLastPocket();
         $sqlWhere = json_decode(/* $request->query->get('sqlWhere') ?? */
             '[{"id":"pocket","nameTable":"b.","logicalOperator":"AND","operator":"=","value":"'

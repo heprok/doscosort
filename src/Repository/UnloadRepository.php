@@ -53,6 +53,45 @@ class UnloadRepository extends ServiceEntityRepository
             ->getResult();
     }
 
+    public function findGroupByCutQualitiesByPeriod(DatePeriod $period):array
+    {
+        return $this->getBaseQueryFromPeriod($period)
+            ->select(
+                'concat_ws(\' \', u.qualities, concat_ws(\' × \', g.thickness, g.width)) as id',
+                'u.qualities',
+                'concat_ws(\' × \', g.thickness, g.width) AS cut',
+                'count(1) as unload_pocket',
+                'sum(u.volume) as total_volume',
+                'sum(u.amount) as total_amount'
+            )
+            ->leftJoin('u.group', 'g')
+            ->addGroupBy('u.qualities, cut')
+            ->getQuery()
+            ->getResult();
+    }
+
+
+    /**
+     * @return Unload[] Returns an array of Unload objects
+     */
+    public function findByCutQuality(DatePeriod $period, string $cut, string $qualities):array
+    {
+        $cut = explode(' × ', $cut);
+        return $this->getBaseQueryFromPeriod($period)
+
+            ->andWhere('u.qualities = :qualities')
+            ->andWhere('g.thickness = :thickness')
+            ->andWhere('g.width = :width')
+            ->setParameter('qualities', $qualities)
+            ->setParameter('width', $cut[1])
+            ->setParameter('thickness', $cut[0])
+            ->leftJoin('u.group', 'g')
+            ->getQuery()
+            ->getResult()
+        ;
+    }
+
+
     public function getCountUnloadPocketByPeriod(DatePeriod $period, array $sqlWhere = []): int
     {
         $qb = $this->getBaseQueryFromPeriod($period, $sqlWhere);
@@ -81,23 +120,6 @@ class UnloadRepository extends ServiceEntityRepository
     }
 
 
-
-    // /**
-    //  * @return Unload[] Returns an array of Unload objects
-    //  */
-    /*
-    public function findByExampleField($value)
-    {
-        return $this->createQueryBuilder('u')
-            ->andWhere('u.exampleField = :val')
-            ->setParameter('val', $value)
-            ->orderBy('u.id', 'ASC')
-            ->setMaxResults(10)
-            ->getQuery()
-            ->getResult()
-        ;
-    }
-    */
 
     /*
     public function findOneBySomeField($value): ?Unload
