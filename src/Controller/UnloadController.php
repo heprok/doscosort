@@ -5,6 +5,8 @@ declare(strict_types=1);
 namespace App\Controller;
 
 use App\Report\AbstractReport;
+use App\Report\Pocket\BalancePocketUnloadPdfReport;
+use App\Report\Pocket\BalancePocketUnloadReport;
 use App\Report\Pocket\LastPocketUnloadPdfReport;
 use App\Report\Pocket\LastPocketUnloadReport;
 use App\Report\Pocket\PocketUnloadPdfReport;
@@ -99,6 +101,39 @@ class UnloadController extends AbstractController
     {
         $report->init();
         $pdf = new LastPocketUnloadPdfReport($report);
+        $pdf->render();
+    }
+
+    #[Route("/balancePocket/{start}...{end}/people/{idsPeople}/pdf", name: "balance_pocket_for_period_with_people_show_pdf")]
+    public function showReportBalancePocketForPeriodWithPeoplePdf(string $start, string $end, string $idsPeople)
+    {
+        $request = Request::createFromGlobals();
+        $countPocket = $this->pocketDistanceRepository->count([]);
+        $sqlWhere = json_decode( $request->query->get('sqlWhere') ?? [] );
+
+        $idsPeople = explode('...', $idsPeople);
+        $peoples = [];
+        foreach ($idsPeople as $idPeople) {
+            if ($idPeople != '')
+                $peoples[] = $this->peopleRepository->find($idPeople);
+        }
+        $startDate = new DateTime($start);
+        $endDate = new DateTime($end);
+        $period = new DatePeriod($startDate, new DateInterval('P1D'), $endDate);
+        $report = new BalancePocketUnloadReport($period, $this->boardRepository, $this->unloadRepository, $countPocket, $peoples, $sqlWhere);
+        $this->showBalancePocketPdf($report);
+    }
+
+    #[Route("/balancePocket/{start}...{end}/pdf", name: "balance_pocket_for_period_show_pdf")]
+    public function showReportBalancePocketForPeriodPdf(string $start, string $end)
+    {
+        $this->showReportBalancePocketForPeriodWithPeoplePdf($start, $end, '');
+    }
+
+    private function showBalancePocketPdf(AbstractReport $report)
+    {
+        $report->init();
+        $pdf = new BalancePocketUnloadPdfReport($report);
         $pdf->render();
     }
 }

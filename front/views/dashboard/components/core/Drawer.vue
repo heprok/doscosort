@@ -118,6 +118,11 @@ export default {
             to: "downtimes",
           },
           {
+            icon: "mdi-cards-variant",
+            title: "Остатки в карманах",
+            to: "balancepocket",
+          },
+          {
             icon: "mdi-comment-alert-outline",
             title: "Аварии и сообщения",
             to: "alert",

@@ -70,6 +70,14 @@ class UnloadRepository extends ServiceEntityRepository
             ->getResult();
     }
 
+    public function findLastUnload(DatePeriod $period, array $sqlWhere = []): ?Unload
+    {
+        return $this->getBaseQueryFromPeriod($period, $sqlWhere)
+            ->orderBy('u.drecTimestampKey', 'DESC')
+            ->setMaxResults(1)
+            ->getQuery()
+            ->getOneOrNullResult();
+    }
 
     /**
      * @return Unload[] Returns an array of Unload objects
@@ -101,7 +109,7 @@ class UnloadRepository extends ServiceEntityRepository
             ->getResult()[0]['countUnloadPocket'] ?? 0;
     }    
     
-    public function getAmountUnloadBoradUnloadByPeriod(DatePeriod $period, array $sqlWhere = []): int
+    public function getAmountUnloadBoardUnloadByPeriod(DatePeriod $period, array $sqlWhere = []): int
     {
         $qb = $this->getBaseQueryFromPeriod($period, $sqlWhere);
         return $qb
@@ -110,7 +118,7 @@ class UnloadRepository extends ServiceEntityRepository
             ->getResult()[0]['amountBoard'] ?? 0;
     }    
 
-    public function getVolumeUnloadBoradUnloadByPeriod(DatePeriod $period, array $sqlWhere = []): float
+    public function getVolumeUnloadBoardUnloadByPeriod(DatePeriod $period, array $sqlWhere = []): float
     {
         $qb = $this->getBaseQueryFromPeriod($period, $sqlWhere);
         return $qb

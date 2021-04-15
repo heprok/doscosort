@@ -32,6 +32,13 @@ export default {
   data() {
     return {
       filters: ["thickness", "width", "species", "length", "pocket"],
+      headers: [
+        { text: "Причина", value: "cause.name" },
+        { text: "Место", value: "place.name" },
+        { text: "Начало", value: "startTime" },
+        { text: "Конец", value: "endTime" },
+        { text: "Продолжительность", value: "durationTime" },
+      ],
     };
   },
   mounted() {},

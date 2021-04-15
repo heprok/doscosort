@@ -43,15 +43,4 @@ class PocketDistanceRepository extends ServiceEntityRepository
             ->getQuery()
             ->getOneOrNullResult();
     }
-    /*
-    public function findOneBySomeField($value): ?PocketDistance
-    {
-        return $this->createQueryBuilder('p')
-            ->andWhere('p.exampleField = :val')
-            ->setParameter('val', $value)
-            ->getQuery()
-            ->getOneOrNullResult()
-        ;
-    }
-    */
 }

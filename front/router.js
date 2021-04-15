@@ -91,6 +91,11 @@ export default new Router({
           component: () => import('@/views/dashboard/pages/report/Unload'),
         },              
         {
+          name: 'Остатки в карманах',
+          path: 'report/balancepocket',
+          component: () => import('@/views/dashboard/pages/report/BalancePocket'),
+        },              
+        {
           name: 'Отбойник',
           path: 'report/lastpocket',
           component: () => import('@/views/dashboard/pages/report/LastPocket'),

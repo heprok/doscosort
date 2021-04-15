@@ -41,4 +41,55 @@ class UnloadApiController extends AbstractController
         $unloadsGroupByQualityCut["hydra:member"] = $unloadsGroupByQualityCut;
         return $this->json($unloadsGroupByQualityCut);
     }
+
+
+    #[Route('/balancepockets', name: "balance_pockets")]
+    public function balancePocket()
+    {
+        $result = [];
+        $todayPeriod = BaseEntity::getPeriodForDay();
+
+        $countPocket = $this->pocketDistanceRepository->count([]);
+        for ($i = 1; $i <= $countPocket; $i++) {
+            $sqlWhere = json_decode(/* $request->query->get('sqlWhere') ?? */
+                '[{"id":"pocket","nameTable":"u.","logicalOperator":"AND","operator":"=","value":"'
+                    . $i . '"}]'
+            );
+            $row = [
+                'pocket' => $i,
+                'name_species' => [],
+                'quality_1_name' => [],
+                'cut' => [],
+                'length' => [],
+                'count_boards' => 0,
+                'volume_boards' => 0.0
+            ];  
+
+            $unload = $this->unloadRepository->findLastUnload($todayPeriod, $sqlWhere);
+            if ($unload) {
+                $period = new DatePeriod($unload->getDrec(), new DateInterval('P1D'), $todayPeriod->getEndDate());
+                $sqlWhere = json_decode(
+                    '[{"id":"pocket","nameTable":"b.","logicalOperator":"AND","operator":"=","value":"'
+                        . $i . '"}]'
+                );
+                $boardsByQualties = $this->boardRepository->getReportVolumeBoardByPeriod($period, $sqlWhere);
+
+                foreach ($boardsByQualties as $boardReport) {
+                    $row['name_species'][] = $boardReport['name_species'];
+                    $row['quality_1_name'][] = $boardReport['quality_1_name'];
+                    $row['length'][] = $boardReport['length'];
+                    $row['cut'][] = $boardReport['cut'];
+                    $row['count_boards'] += $boardReport['count_board'];
+                    $row['volume_boards'] += round((float)$boardReport['volume_boards'], BaseEntity::PRECISION_FOR_FLOAT);
+                }
+            }
+            $row['name_species'] = implode(', ', array_unique($row['name_species']));
+            $row['quality_1_name'] = implode(', ', array_unique($row['quality_1_name']));
+            $row['length'] = implode(', ', array_unique($row['length']));
+            $row['cut'] = implode(', ', array_unique($row['cut']));
+            $result['hydra:member'][] = $row;
+        }
+
+        return $this->json($result);
+    }
 }

@@ -30,7 +30,7 @@ final class PocketUnloadReport extends AbstractReport
     public function getSummaryStatsMaterial(): array
     {
         $summaryStatsMaterial = [];
-        $summaryStatsMaterial['boards'] = new SummaryStatMaterial('Доски', $this->repository->getVolumeUnloadBoradUnloadByPeriod($this->period, $this->sqlWhere), $this->repository->getAmountUnloadBoradUnloadByPeriod($this->period, $this->sqlWhere), 'м³', 'шт');
+        $summaryStatsMaterial['boards'] = new SummaryStatMaterial('Доски', $this->repository->getVolumeUnloadBoardUnloadByPeriod($this->period, $this->sqlWhere), $this->repository->getAmountUnloadBoardUnloadByPeriod($this->period, $this->sqlWhere), 'м³', 'шт');
         // $summaryStatsMaterial['boards'] = new SummaryStatMaterial('Доски', '')
         return $summaryStatsMaterial;
     }
