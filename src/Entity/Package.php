@@ -21,12 +21,13 @@ use Symfony\Component\Serializer\Annotation\Groups;
  *      options={"comment":"Сформированные пакеты"})
  */
 #[
-ApiResource(
-    collectionOperations: ["get"],
-    itemOperations: ["get", 'put'],
-    normalizationContext: ["groups" => ["package:read"]],
-    denormalizationContext: ["groups" => ["package:write"], 'disable_type_enforcement' => true]
-)]
+    ApiResource(
+        collectionOperations: ["get"],
+        itemOperations: ["get", 'put'],
+        normalizationContext: ["groups" => ["package:read"]],
+        denormalizationContext: ["groups" => ["package:write"], 'disable_type_enforcement' => true]
+    )
+]
 class Package
 {
     /**
@@ -147,40 +148,41 @@ class Package
     public function getRangeLengths(): string
     {
         $min = $max = $this->boards[0]->length;
-        foreach ($this->boards as $board){
+        foreach ($this->boards as $board) {
             $max = $board->length >= $max ? $board->length : $max;
             $min = $board->length < $min ? $board->length : $min;
         }
-        return  ($max = number_format($max / 1000, 1) . 'м') == ($min = number_format($min / 1000, 1) . 'м') ? : "$min - $max";
+        return (($max = number_format($max / 1000, 1) . 'м') == ($min = number_format($min / 1000, 1) . 'м')) ? $max  : "$min - $max";
     }
 
     #[Groups(["package:read"])]
-    public function getCount() : int
+    public function getCount(): int
     {
         $result = 0;
-        foreach($this->boards as $board) {
+        foreach ($this->boards as $board) {
             $result += $board->amount;
         }
 
         return $result;
     }
     #[Groups(["package:read"])]
-    public function getCurrentLocation(){
+    public function getCurrentLocation()
+    {
         return $this->packageMoves->last() ? $this->packageMoves->last()?->getDst() : null;
     }
     #[Groups(["package:read"])]
-    public function getVolume() : ?float
+    public function getVolume(): ?float
     {
-        if($this->thickness && $this->width && $this->species && $this->qualities) {
+        if ($this->thickness && $this->width && $this->species && $this->qualities) {
 
             $result = 0.0;
-            
-            foreach ($this->boards as $board){
+
+            foreach ($this->boards as $board) {
                 $result += $board->length * $this->thickness * $this->width * $board->amount / 1e9;
             }
-            
+
             return round($result, BaseEntity::PRECISION_FOR_FLOAT);
-        }else{
+        } else {
             return null;
         }
     }

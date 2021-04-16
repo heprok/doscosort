@@ -60,28 +60,35 @@ class ChartController extends AbstractController
         $qualities = $this->boardRepository->getQualityVolumeByPeriod($currentShift->getPeriod());
         $total_volume = $this->boardRepository->getVolumeBoardsByPeriod($currentShift->getPeriod());
 
-        $labels = [];
+        $labels = [''];
         $datasets = [];
-        $data = [];
-        // foreach ($qualities as $key => $quality) {
-        //     $datasets[] = $dataset = new ChartDataset($quality['name_quality']);
-        //     $dataset->setData([(int)((float)$quality['volume_boards'] / $total_volume * 100)]);
-        //     $dataset->setBackgroundColor(Chart::CHART_COLOR[array_rand(Chart::CHART_COLOR)]);
-        //     // $labels[] = $quality['name_quality'];
-        // }
-        foreach ($qualities as $quality) {
+        $colors = Chart::CHART_COLOR;
+        foreach ($qualities as $key => $quality) {
             $precent = (int)((float)$quality['volume_boards'] / $total_volume * 100);
+            // dump($quality);
             if ($precent != 0) {
 
-                $labels[] = $quality['name_quality'];
-                $data[] = $precent;
-            }
+                //         $labels[] = $quality['name_quality'];
+                $datasets[] = $dataset = new ChartDataset($quality['name_quality']);
+                $dataset->setData([$precent]);
+                $dataset->setBackgroundColor(array_shift($colors));
+                //         $data[] = $precent;
+                    }
+            // $labels[] = $quality['name_quality'];
         }
-        $dataset = new ChartDataset('Объём, %', '#00cae3', '#000');
-        $dataset->setData($data);
-        $chart = new Chart($labels, [$dataset]);
+        // foreach ($qualities as $quality) {
+        //     $precent = (int)((float)$quality['volume_boards'] / $total_volume * 100);
+        //     if ($precent != 0) {
 
-        $chart->addOption('responsive', true);
+        //         $labels[] = $quality['name_quality'];
+        //         $data[] = $precent;
+        //     }
+        // }
+        // $dataset = new ChartDataset('Объём, %', '#00cae3', '#000');
+        // $dataset->setData($data);
+        $chart = new Chart($labels, $datasets);
+
+        // $chart->addOption('responsive', true);
         $chart->addOption('indexAxis', 'y',);
         $chart->addOption('elements', ['bar' => ['borderWidth' => 1]]);
 
@@ -118,12 +125,12 @@ class ChartController extends AbstractController
     public function getVolumeForDuration(string $duration)
     {
         $period = $this->getPeriodForDuration($duration);
-        $period = new DatePeriod(new DateTime('2021-03-19'), new DateInterval('P1D'), new DateTime('2021-03-26'));
+        // $period = new DatePeriod(new DateTime('2021-03-19'), new DateInterval('P1D'), new DateTime('2021-03-26'));
         $shifts = $this->shiftRepository->findByPeriod($period);
         $peoples = $this->shiftRepository->getPeopleForByPeriod($period);
         // dd(21);
         if (!$shifts || !$peoples) {
-            $chart = new Chart(['1']);
+            $chart = new Chart(['']);
             $chart->addOption('responsive', true);
             $chart->addOption('elements', ['bar' => ['borderWidth' => 1]]);
 

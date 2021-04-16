@@ -9,13 +9,13 @@
     <template v-slot:heading>
         <HBarChart
           v-if="type === 'HBar'"
-          :height="height"
+          :suffix="suffix"
           :chartdata="chartdata"
           :options="options"
         />
         <BarChart
           v-else-if="type === 'Bar'"
-          :height="height"
+          :suffix="suffix"
           :chartdata="chartdata"
           :options="options"
         />
@@ -63,6 +63,10 @@ export default {
     urlApi: {
       type: String,
       required: true,
+    },
+    suffix: {
+      type: String,
+      default: "",
     },
     type: {
       type: String,

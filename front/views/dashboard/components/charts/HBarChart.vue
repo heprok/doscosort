@@ -8,22 +8,32 @@ export default {
       type: Object,
       default: null,
     },
-    options: {
-      type: Object,
-      default: null,
+    suffix: {
+      type: String,
+      default: "",
     },
   },
   watch: {},
   mounted() {
-    this.options = {
+    const vm = this;
+    let options = {
       plugins: {
         datalabels: {
+          formatter: (value, context) => {
+            return value + vm.suffix;
+          },
           display: true,
+          // font: {
+          // size: 20,
+          // },
         },
       },
       scales: {
         yAxes: [
           {
+            // ticks: {
+            // fontSize: 20,
+            // },
             gridLines: {
               color: this.colorScale,
             },
@@ -39,8 +49,7 @@ export default {
         ],
       },
     };
-    // this.addPlugin([ChartDataLabels]);
-    this.renderChart(this.chartdata, this.options);
+    this.renderChart(this.chartdata, options);
   },
   computed: {
     colorScale() {

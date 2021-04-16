@@ -22,6 +22,7 @@
         <ChartCard
           type="HBar"
           urlApi="/api/charts/qualtites/currentShift"
+          suffix="%"
           title="Распределение качеств"
         />
       </v-col>
