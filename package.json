@@ -35,6 +35,7 @@
         "builder-query-vuetify": "file:../../library/vue/builder-query-vuetify",
         "chart.js": "2",
         "chartjs-plugin-datalabels": "^0.7.0",
+        "daterange-picker-vuetify": "file:../../library/vue/daterange-picker-vuetify",
         "moment-timezone": "^0.5.32",
         "tlc-front-components": "^1.0.6",
         "vee-validate": "^3.4.0",

@@ -108,6 +108,11 @@ export default {
             to: "unload",
           },
           {
+            icon: "mdi-account-multiple",
+            title: "Операторы",
+            to: "operators",
+          },
+          {
             icon: "mdi-filter-remove-outline",
             title: "Отбойник",
             to: "lastpocket",

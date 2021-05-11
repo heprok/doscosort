@@ -30,33 +30,21 @@ export default {
   },
   watch: {
     async dates(val) {
-      console.log(
-        this.dates[0],
-        new Date(this.dates[0]) >= new Date(this.dates[1]),
-        ">=",
-        this.dates[1]
-      );
-      console.log(
-        new Date(this.dates[0]),
-        new Date(this.dates[0]) === new Date(this.dates[1]),
-        "=",
-        new Date(this.dates[1])
-      );
       if (new Date(this.dates[0]) > new Date(this.dates[1])) {
         const tmp = this.dates[0];
         this.dates[0] = this.dates[1];
         this.dates[1] = tmp;
       } else if (new Date(this.dates[0]) == new Date(this.dates[1])) {
-        console.log(1111);
         const day = this.$store.getters.TIME_FOR_THE_DAY(this.dates[0]);
         this.dates = [day.start, day.end];
       }
       this.$emit("input", this.dates, this.textInterval);
-      console.log(this.dates);
     },
   },
   mounted() {
     this.timeDefaultDay = this.$store.state.timeForDay;
+  },
+  methods: {
   },
   computed: {
     today() {

@@ -76,6 +76,11 @@ export default new Router({
           component: () => import('@/views/dashboard/pages/report/event/Action'),
         },          
         {
+          name: 'Операторы',
+          path: 'report/operators',
+          component: () => import('@/views/dashboard/pages/report/Operator'),
+        },          
+        {
           name: 'Пиломатериалы',
           path: 'report/board',
           component: () => import('@/views/dashboard/pages/report/Board'),

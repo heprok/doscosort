@@ -28,6 +28,7 @@ class People
      * @ORM\GeneratedValue()
      * @ORM\Column(type="integer")
      */
+    #[Groups(["people:read", "shift:read"])]
     private int $id;
 
     /**

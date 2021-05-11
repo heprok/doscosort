@@ -72,8 +72,9 @@ class UnloadApiController extends AbstractController
                     '[{"id":"pocket","nameTable":"b.","logicalOperator":"AND","operator":"=","value":"'
                         . $i . '"}]'
                 );
+                
                 $boardsByQualties = $this->boardRepository->getReportVolumeBoardByPeriod($period, $sqlWhere);
-
+                
                 foreach ($boardsByQualties as $boardReport) {
                     $row['name_species'][] = $boardReport['name_species'];
                     $row['quality_1_name'][] = $boardReport['quality_1_name'];
@@ -88,6 +89,8 @@ class UnloadApiController extends AbstractController
             $row['length'] = implode(', ', array_unique($row['length']));
             $row['cut'] = implode(', ', array_unique($row['cut']));
             $result['hydra:member'][] = $row;
+            // if($i == 24)
+                // dd($sqlWhere, $todayPeriod, $period, $this->unloadRepository->findLastUnload($todayPeriod, $sqlWhere));
         }
 
         return $this->json($result);

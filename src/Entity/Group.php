@@ -122,11 +122,13 @@ class Group
         return $this->width;
     }
 
+    #[Groups(["unload:read"])]
     public function getCut(): string
     {
         return $this->thickness . ' × ' . $this->width;
     }
 
+    #[Groups(["unload:read"])]
     public function getIntervalLength(): string
     {
         return $this->min_length !== $this->max_length ? 

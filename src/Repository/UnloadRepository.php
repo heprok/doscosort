@@ -53,7 +53,7 @@ class UnloadRepository extends ServiceEntityRepository
             ->getResult();
     }
 
-    public function findGroupByCutQualitiesByPeriod(DatePeriod $period):array
+    public function findGroupByCutQualitiesByPeriod(DatePeriod $period): array
     {
         return $this->getBaseQueryFromPeriod($period)
             ->select(
@@ -70,19 +70,31 @@ class UnloadRepository extends ServiceEntityRepository
             ->getResult();
     }
 
-    public function findLastUnload(DatePeriod $period, array $sqlWhere = []): ?Unload
+    public function findLastUnload(DatePeriod $period, array $sqlWhere = [])
     {
-        return $this->getBaseQueryFromPeriod($period, $sqlWhere)
+        $qb = $this->createQueryBuilder('u')
             ->orderBy('u.drecTimestampKey', 'DESC')
+            ->leftJoin('u.group', 'g');
+
+
+        foreach ($sqlWhere as $where) {
+            $query = $where->nameTable . $where->id . ' ' . $where->operator . ' ' . $where->value;
+            if ($where->logicalOperator == 'AND')
+                $qb->andWhere($query);
+            else
+                $qb->orWhere($query);
+        }
+
+        return $qb->getQuery()
+            // ->getSQL();
             ->setMaxResults(1)
-            ->getQuery()
             ->getOneOrNullResult();
     }
 
     /**
      * @return Unload[] Returns an array of Unload objects
      */
-    public function findByCutQuality(DatePeriod $period, string $cut, string $qualities):array
+    public function findByCutQuality(DatePeriod $period, string $cut, string $qualities): array
     {
         $cut = explode(' × ', $cut);
         return $this->getBaseQueryFromPeriod($period)
@@ -95,8 +107,7 @@ class UnloadRepository extends ServiceEntityRepository
             ->setParameter('thickness', $cut[0])
             ->leftJoin('u.group', 'g')
             ->getQuery()
-            ->getResult()
-        ;
+            ->getResult();
     }
 
 
@@ -107,8 +118,8 @@ class UnloadRepository extends ServiceEntityRepository
             ->select('count(1) as countUnloadPocket')
             ->getQuery()
             ->getResult()[0]['countUnloadPocket'] ?? 0;
-    }    
-    
+    }
+
     public function getAmountUnloadBoardUnloadByPeriod(DatePeriod $period, array $sqlWhere = []): int
     {
         $qb = $this->getBaseQueryFromPeriod($period, $sqlWhere);
@@ -116,7 +127,7 @@ class UnloadRepository extends ServiceEntityRepository
             ->select('sum(u.amount) as amountBoard')
             ->getQuery()
             ->getResult()[0]['amountBoard'] ?? 0;
-    }    
+    }
 
     public function getVolumeUnloadBoardUnloadByPeriod(DatePeriod $period, array $sqlWhere = []): float
     {

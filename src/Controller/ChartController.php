@@ -64,7 +64,7 @@ class ChartController extends AbstractController
         $datasets = [];
         $colors = Chart::CHART_COLOR;
         foreach ($qualities as $key => $quality) {
-            $precent = (int)((float)$quality['volume_boards'] / $total_volume * 100);
+            $precent = round(((float)$quality['volume_boards'] / $total_volume * 100), 2);
             // dump($quality);
             if ($precent != 0) {
 

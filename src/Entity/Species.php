@@ -35,7 +35,7 @@ class Species
      * @ORM\Column(type="string", length=25,
      *      options={"comment":"Название"})
      */
-    #[Groups(["species:read", "package:read"])]
+    #[Groups(["species:read", "package:read", "unload:read"])]
     private string $name;
 
     /**
