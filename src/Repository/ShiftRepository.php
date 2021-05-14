@@ -37,6 +37,18 @@ class ShiftRepository extends ServiceEntityRepository
             ->setParameter('end', $period->getEndDate()->format(DATE_ATOM))
             ->orderBy('s.startTimestampKey', 'ASC');
     }
+    
+    public function getTimeWorkForOperator(DatePeriod $period, int $idOperator, string $format = 'hours' ) : int
+    {
+        return $this->getQueryFromPeriod($period)
+            ->select("date_part('$format', sum(age(s.stop, s.startTimestampKey))) as timework")
+            ->andWhere('s.people = :idOperator')
+            ->setParameter('idOperator', $idOperator)
+            ->orderBy('timework')
+            ->getQuery()
+            ->getResult()[0]['timework'] ?? 0;
+        
+    }
 
     /**
      * @return Shift

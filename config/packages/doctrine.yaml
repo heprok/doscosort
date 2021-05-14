@@ -38,5 +38,7 @@ doctrine:
                 cast: DoctrineExtensions\Query\Postgresql\Cast
                 array_length: DoctrineExtensions\Query\Postgresql\ArrayLength
                 now: DoctrineExtensions\Query\Postgresql\NowTime
+                age: DoctrineExtensions\Query\Postgresql\Age
+                date_part: DoctrineExtensions\Query\Postgresql\DatePart
                 concat_ws: DoctrineExtensions\Query\Mysql\ConcatWs
                 # concat: DoctrineExtensions\Query\Mysql\ConcatWs

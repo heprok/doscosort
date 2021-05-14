@@ -1,47 +1,17 @@
 <template>
   <v-container id="report_operators_dashboard" fluid tag="section">
-    <v-row>
+    <v-row class="card-info-operator">
       <v-col cols="6">
         <base-material-card title="Продолжительность">
-          <!-- <VBtnToggle
-            class="d-flex justify-space-between ma-6"
-            v-model="toggleDuration"
-            mandatory
-          >
-            <VBtn
-              group
-              tile
-              value="week"
-              color="secondary"
-              @click="swapDuration()"
-              >За неделю
-            </VBtn>
-            <VBtn
-              group
-              tile
-              color="secondary"
-              value="mount"
-              @click="swapDuration()"
-              >За месяц
-            </VBtn>
-            <VBtn
-              group
-              tile
-              color="secondary"
-              value="a half year"
-              @click="swapDuration()"
-              >За полгода
-            </VBtn>
-            <VBtn
-              group
-              tile
-              color="secondary"
-              value="year"
-              @click="swapDuration()"
-              >За год
-            </VBtn>
-          </VBtnToggle> -->
           <DatePickerPlugin v-model="dates" />
+          <VBtn
+            block
+            color="primary"
+            @click="executeReport"
+            :loading="loaded"
+            :disabled="selectedOperator.length <= 0 || loaded"
+            >Составить</VBtn
+          >
         </base-material-card>
       </v-col>
       <v-col cols="6">
@@ -60,20 +30,64 @@
         />
       </v-col>
     </v-row>
+    <!-- <v-row class="d-flex justify-space-around"> -->
+    <transition-group
+      class="d-flex flex-wrap justify-space-around my-16"
+      name="scale-transition"
+      tag="P"
+    >
+      <!-- <v-col cols="3" v-for="operator in selectedOperator" :key="operator.id">
+          <VSheet>
+            <OperatorInfoCard :operator="operator" />
+          </VSheet> -->
+      <!-- </v-col> -->
+      <span v-for="operator in currentOperators" :key="operator.id">
+        <OperatorInfoCard :duration="duration" :operator="operator" />
+      </span>
+    </transition-group>
+    <!-- </v-row> -->
+    <v-row>
+      <VCol cols="6" lg="6" sm="12">
+        <ChartCard
+          ref="chartVolume"
+          type="Bar"
+          urlApi="/api/charts/volumeOnOperator"
+          :query="queryChart"
+          :intervalSecond='0'
+          :subtitle="dates.start + ' по ' + dates.end"
+          title="Выработка по операторам, объём"
+        />
+      </VCol>
+      <VCol cols="6" lg="6" sm="12">
+        <ChartCard
+          ref="chartCount"
+          type="Bar"
+          urlApi="/api/charts/countOnOperator"
+          :query="queryChart"
+          :intervalSecond='0'
+          :subtitle="dates.start + ' по ' + dates.end"
+          title="Выработка по операторам, количество"
+        />
+      </VCol>
+    </v-row>
   </v-container>
 </template>
 
 <script>
+import ChartCard from "../../../../components/charts/ChartCard";
 export default {
   name: "report_operators_dashboard",
+  components: { ChartCard },
 
   data() {
     return {
       selectedOperator: [],
+      loaded: false,
       toggleDuration: null,
+      currentOperators: [],
       dates: {
-        start: this.$moment().format("YYYY-MM-DD"),
-        end: this.$moment().add(1, "days").format("YYYY-MM-DD"),
+        end: this.$moment().format("YYYY-MM-DD"),
+        start: this.$moment().subtract(3, "months").format("YYYY-MM-DD"),
       },
       headers: [
         { text: "Фамилия", value: "fam" },
@@ -86,22 +100,40 @@ export default {
     query() {
       return { start: this.dates.start, end: this.dates.end };
     },
+    duration() {
+      return {
+        start: this.$moment(this.dates.start).format("YYYY-MM-DDTHH:mm:ss"),
+        end: this.$moment(this.dates.end).format("YYYY-MM-DDTHH:mm:ss"),
+      };
+    },
+    queryChart() {
+      return {
+        operators: this.selectedOperator.map((operator) => operator.id),
+        duration: this.duration,
+      };
+    },
   },
   watch: {
     dates: {
       handler(value) {
-        this.$refs.operatorTable.update();
+        this.$nextTick(async () => {
+          await this.$refs.operatorTable.update();
+          this.selectedOperator = [];
+        });
       },
       deep: true,
     },
-    selectedOperator(){
-      console.log(this.selectedOperator);
-    }
+    selectedOperator() {},
   },
-  mounted() {
-    this.dates = this.$store.getters.TIME_FOR_THE_DAY(this.date);
-  },
+  mounted() {},
   methods: {
+    async executeReport() {
+      this.loaded = true;
+      this.currentOperators = [];
+      Object.assign(this.currentOperators, this.selectedOperator);
+      await this.$refs.chartVolume.update();
+      this.loaded = false;
+    },
     clickRow(item) {
       this.selectedOperator.indexOf(item) == -1
         ? this.selectedOperator.push(item)
@@ -110,3 +142,9 @@ export default {
   },
 };
 </script>
+
+<style>
+.card-info-operator {
+  z-index: 999;
+}
+</style>

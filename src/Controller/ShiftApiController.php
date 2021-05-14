@@ -4,11 +4,6 @@ declare(strict_types=1);
 
 namespace App\Controller;
 
-use App\Entity\BaseEntity;
-use App\Repository\BoardRepository;
-use App\Repository\PeopleRepository;
-use App\Repository\PocketDistanceRepository;
-use App\Repository\ShiftSheduleRepository;
 use App\Repository\ShiftRepository;
 use DateInterval;
 use DatePeriod;
@@ -20,14 +15,8 @@ use Symfony\Component\Routing\Annotation\Route;
 #[Route("api/shift", name: "api_shift_")]
 class ShiftApiController extends AbstractController
 {
-    // private PeopleRepository $peopleRepository;
-    // private ShiftRepository $unloadRepository;
-
     public function __construct(
-        private PeopleRepository $peopleRepository,
         private ShiftRepository $shiftRepository,
-        private PocketDistanceRepository $pocketDistanceRepository,
-        private BoardRepository $boardRepository,
     ) {
     }
 

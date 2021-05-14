@@ -27,7 +27,7 @@
             <v-simple-table>
               <tbody>
                 <tr>
-                  <td><p class="font-weight-regular">Смена</p></td>
+                  <td><p class="font-weight-regular mb-0">Смена</p></td>
                   <td align="center" v-for="shift in shifts" :key="shift.name">
                     <v-btn
                       @click="selectShift(shift)"
@@ -39,43 +39,43 @@
                   </td>
                 </tr>
                 <tr>
-                  <td><p class="font-weight-regular">Оператор</p></td>
+                  <td><p class="font-weight-regular mb-0">Оператор</p></td>
                   <td align="center" v-for="shift in shifts" :key="shift.name">
                     {{ shift.fioOperator }}
                   </td>
                 </tr>
                 <tr>
-                  <td><p class="font-weight-regular">Объём пил-мат м³</p></td>
+                  <td><p class="font-weight-regular mb-0">Объём пил-мат м³</p></td>
                   <td align="center" v-for="shift in shifts" :key="shift.name">
                     {{ shift.volumeBoards }}
                   </td>
                 </tr>
                 <tr>
-                  <td><p class="font-weight-regular">Итоговый объём м³</p></td>
+                  <td><p class="font-weight-regular mb-0">Итоговый объём м³</p></td>
                   <td align="center" :colspan="shifts.length">
                     <p class="font-weight-bold">{{ summary.volumeBoards }}</p>
                   </td>
                 </tr>
                 <tr>
-                  <td><p class="font-weight-regular">Кол-во пил-мат шт</p></td>
+                  <td><p class="font-weight-regular mb-0">Кол-во пил-мат шт</p></td>
                   <td align="center" v-for="shift in shifts" :key="shift.name">
                     {{ shift.countBoards }}
                   </td>
                 </tr>
                 <tr>
-                  <td><p class="font-weight-regular">Количество шт</p></td>
+                  <td><p class="font-weight-regular mb-0">Количество шт</p></td>
                   <td align="center" :colspan="shifts.length">
                     <p class="font-weight-bold">{{ summary.countBoards }}</p>
                   </td>
                 </tr>
                 <tr>
-                  <td><p class="font-weight-regular">Простой</p></td>
+                  <td><p class="font-weight-regular mb-0">Простой</p></td>
                   <td align="center" v-for="shift in shifts" :key="shift.name">
                     {{ shift.downtime }}
                   </td>
                 </tr>
                 <tr>
-                  <td><p class="font-weight-regular">Итоговый простой</p></td>
+                  <td><p class="font-weight-regular mb-0">Итоговый простой</p></td>
                   <td align="center" :colspan="shifts.length">
                     <p class="font-weight-bold">{{ summary.downtime }}</p>
                   </td>

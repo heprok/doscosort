@@ -1,24 +1,25 @@
 <template>
+  <div v-if="loaded && chartdata.datasets.length == 0"></div>
   <base-material-card
     class="v-card--material-chart"
     v-bind="$attrs"
     :color="$vuetify.theme.dark ? 'black' : 'grey'"
-    v-if="loaded"
+    v-else-if="loaded"
     v-on="$listeners"
   >
     <template v-slot:heading>
-        <HBarChart
-          v-if="type === 'HBar'"
-          :suffix="suffix"
-          :chartdata="chartdata"
-          :options="options"
-        />
-        <BarChart
-          v-else-if="type === 'Bar'"
-          :suffix="suffix"
-          :chartdata="chartdata"
-          :options="options"
-        />
+      <HBarChart
+        v-if="type === 'HBar'"
+        :suffix="suffix"
+        :chartdata="chartdata"
+        :options="options"
+      />
+      <BarChart
+        v-else-if="type === 'Bar'"
+        :suffix="suffix"
+        :chartdata="chartdata"
+        :options="options"
+      />
     </template>
 
     <slot slot="reveal-actions" name="reveal-actions" />
@@ -30,39 +31,43 @@
       {{ subtitle }}
     </p>
     <template v-slot:actions>
-      <v-icon class="mr-1" small>
-        mdi-clock-outline
-      </v-icon>
+      <v-icon class="mr-1" small> mdi-clock-outline </v-icon>
       <span class="caption grey--text font-weight-light"
         >обновлено {{ lastUpdateTime }} минут назад</span
       >
     </template>
   </base-material-card>
-  <LoaderTlc v-else  />
+  <VSheet v-else>
+    <LoaderTlc />
+  </VSheet>
 </template>
 
 <script>
 import Axios from "axios";
 import HBarChart from "./HBarChart";
 import BarChart from "./BarChart";
-import LoaderTlc from "tlc-front-components/src/LoaderTlc"
 export default {
   name: "QualitiesBarChartCard",
-  components: { HBarChart, LoaderTlc, BarChart },
+  components: { HBarChart, BarChart },
   data: () => ({
     loaded: false,
     options: null,
-    chartdata: null,
+    chartdata: {
+      datasets: []
+    },
     interval: null,
     height: null,
     lastUpdateTime: -1,
   }),
-  computed: {
-  },
+  computed: {},
   props: {
     urlApi: {
       type: String,
       required: true,
+    },
+    query: {
+      type: Object,
+      default: () => {},
     },
     suffix: {
       type: String,
@@ -78,12 +83,12 @@ export default {
     },
     title: {
       type: String,
-      default: ""
+      default: "",
     },
     subtitle: {
       type: String,
-      default: ""
-    }
+      default: "",
+    },
   },
   methods: {
     stopTimerRefresh() {
@@ -98,9 +103,12 @@ export default {
       }, this.intervalSecond);
     },
     async update() {
+      const config = {
+        params: this.query,
+      };
       this.loaded = false;
       try {
-        const { data } = await Axios.get(this.urlApi);
+        const { data } = await Axios.get(this.urlApi, config);
         this.chartdata = data.chartdata;
         this.options = data.options;
         this.height = data.chartdata.labels.length * 80;
@@ -114,15 +122,18 @@ export default {
     },
   },
   beforeDestroy() {
-    this.stopTimerRefresh();
+    if (this.intervalSecond) this.stopTimerRefresh();
   },
   async mounted() {
-    this.update();
-    setInterval(
-      () => (this.lastUpdateTime = this.lastUpdateTime + 1),
-      1000 * 60 * 1
-    );
-    this.startTimerRefresh();
+    // this.update();
+    // console.log(this.intervalSecond);
+    if (this.intervalSecond) {
+      setInterval(
+        () => (this.lastUpdateTime = this.lastUpdateTime + 1),
+        1000 * 60 * 1
+      );
+      this.startTimerRefresh();
+    }
     await this.update();
   },
 };

@@ -123,11 +123,10 @@
 <script>
 // import LineChart from '../../components/base/chart/report/dashboard/VolumeBoardChart.js';
 // import LineChartCard from '../../components/base/ChartJsCard.vue';
-import ChartCard from "./components/charts/ChartCard";
-import LoaderTlc from "tlc-front-components/src/LoaderTlc";
+import ChartCard from "../../components/charts/ChartCard";
 export default {
   name: "DashboardDashboard",
-  components: { ChartCard, LoaderTlc },
+  components: { ChartCard },
   data() {
     return {
       loader: false,

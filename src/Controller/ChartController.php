@@ -13,6 +13,7 @@ use App\Entity\Shift;
 use App\Entity\People;
 use App\Repository\DowntimeRepository;
 use App\Repository\BoardRepository;
+use App\Repository\PeopleRepository;
 use App\Repository\UnloadRepository;
 use App\Repository\VarsRepository;
 use DateInterval;
@@ -21,6 +22,7 @@ use DateTime;
 use DateTimeInterface;
 use DoctrineExtensions\Query\Mysql\Date;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
 
 #[Route("api/charts", name: "charts_")]
@@ -33,6 +35,7 @@ class ChartController extends AbstractController
         private DowntimeRepository $downtimeRepository,
         private VarsRepository $varsRepository,
         private UnloadRepository $unloadRepository,
+        private PeopleRepository $peopleRepository,
     ) {
     }
 
@@ -96,6 +99,137 @@ class ChartController extends AbstractController
         return $this->json($chart->__serialize());
     }
 
+    #[Route("/volumeOnOperator", name: 'volumes_on_operators_for_duration')]
+    public function getVolumeOnOperatorForDuration()
+    {
+        $request = Request::createFromGlobals();
+
+        $idsOperator = $request->query->get('operators'); //[1,4,6] id operator
+        $duration = json_decode($request->query->get('duration'), true);
+        
+        if (!$duration || !$idsOperator) {
+            $chart = new Chart(['']);
+            $chart->addOption('responsive', true);
+            $chart->addOption('elements', ['bar' => ['borderWidth' => 1]]);
+            
+            $chart->addOption('maintainAspectRatio', false);
+            return $this->json($chart->__serialize());
+        }
+
+        $operators = $this->peopleRepository->findBy(['id' => $idsOperator] );
+        
+        $startDate = new DateTime($duration['start']);
+        $endDate = new DateTime($duration['end']);
+        
+        //обнуляю до 1 дня текущего дня
+        $startDate->setDate((int)$startDate->format('Y'), (int)$startDate->format('m'), 1);
+        $endDate->setDate((int)$endDate->format('Y'), (int)$endDate->format('m'), 1);
+        $period = new DatePeriod($startDate, new DateInterval('P1M'), $endDate);
+        
+        $colors = Chart::CHART_COLOR;
+        $datasets = [];
+        foreach ($operators as $operator) {
+            $datasets[$operator->getId()] = new ChartDataset($operator->getFio(), array_shift($colors));
+        }
+
+        $labels = [];
+        $data = [];
+        foreach ($period as $date) {
+            $end = clone $date;
+            $end->add(new DateInterval('P1M'));
+            $labels[] = $date->format('m.y');
+            $period = new DatePeriod($date, new DateInterval('P1D'), $end);
+            foreach($operators as $operator){
+                $data[$operator->getId()][$date->format('m.y')][] = round($this->boardRepository->getVolumeOnOperatorForDuration($period, $operator->getId()), BaseEntity::PRECISION_FOR_FLOAT);
+            }
+        }
+        $chartData = [];
+        foreach ($labels as $date) {
+            foreach ($operators as $operator) {
+                if ($data[$operator->getId()][$date] ?? null)
+                    $chartData[$operator->getId()][$date] = round(array_sum($data[$operator->getId()][$date]), BaseEntity::PRECISION_FOR_FLOAT);
+                else
+                    $chartData[$operator->getId()][$date] = 0;
+
+                unset($data[$operator->getId()][$date]);
+            }
+        }
+
+        foreach ($datasets as $key => $dataset) {
+            $dataset->setData(array_values($chartData[$key]));
+        }
+        $chart = new Chart($labels, $datasets);
+        $chart->addOption('responsive', false);
+        $chart->addOption('elements', ['bar' => ['borderWidth' => 1]]);
+        $chart->addOption('maintainAspectRatio', false);
+        return $this->json($chart->__serialize());
+    }
+    
+    #[Route("/countOnOperator", name: 'count_on_operators_for_duration')]
+    public function getCountOnOperatorForDuration()
+    {
+        $request = Request::createFromGlobals();
+
+        $idsOperator = $request->query->get('operators'); //[1,4,6] id operator
+        $duration = json_decode($request->query->get('duration'), true);
+        
+        if (!$duration || !$idsOperator) {
+            $chart = new Chart(['']);
+            $chart->addOption('responsive', true);
+            $chart->addOption('elements', ['bar' => ['borderWidth' => 1]]);
+            
+            $chart->addOption('maintainAspectRatio', false);
+            return $this->json($chart->__serialize());
+        }
+
+        $operators = $this->peopleRepository->findBy(['id' => $idsOperator] );
+        
+        $startDate = new DateTime($duration['start']);
+        $endDate = new DateTime($duration['end']);
+        
+        //обнуляю до 1 дня текущего дня
+        $startDate->setDate((int)$startDate->format('Y'), (int)$startDate->format('m'), 1);
+        $endDate->setDate((int)$endDate->format('Y'), (int)$endDate->format('m'), 1);
+        $period = new DatePeriod($startDate, new DateInterval('P1M'), $endDate);
+        
+        $colors = Chart::CHART_COLOR;
+        $datasets = [];
+        foreach ($operators as $operator) {
+            $datasets[$operator->getId()] = new ChartDataset($operator->getFio(), array_shift($colors));
+        }
+
+        $labels = [];
+        $data = [];
+        foreach ($period as $date) {
+            $end = clone $date;
+            $end->add(new DateInterval('P1M'));
+            $labels[] = $date->format('m.y');
+            $period = new DatePeriod($date, new DateInterval('P1D'), $end);
+            foreach($operators as $operator){
+                $data[$operator->getId()][$date->format('m.y')][] = round($this->boardRepository->getCountOnOperatorForDuration($period, $operator->getId()), BaseEntity::PRECISION_FOR_FLOAT);
+            }
+        }
+        $chartData = [];
+        foreach ($labels as $date) {
+            foreach ($operators as $operator) {
+                if ($data[$operator->getId()][$date] ?? null)
+                    $chartData[$operator->getId()][$date] = round(array_sum($data[$operator->getId()][$date]), BaseEntity::PRECISION_FOR_FLOAT);
+                else
+                    $chartData[$operator->getId()][$date] = 0;
+
+                unset($data[$operator->getId()][$date]);
+            }
+        }
+
+        foreach ($datasets as $key => $dataset) {
+            $dataset->setData(array_values($chartData[$key]));
+        }
+        $chart = new Chart($labels, $datasets);
+        $chart->addOption('responsive', false);
+        $chart->addOption('elements', ['bar' => ['borderWidth' => 1]]);
+        $chart->addOption('maintainAspectRatio', false);
+        return $this->json($chart->__serialize());
+    }
 
     private function getPeriodForDuration(string $duration): ?DatePeriod
     {

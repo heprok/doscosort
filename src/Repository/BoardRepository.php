@@ -52,6 +52,116 @@ class BoardRepository extends ServiceEntityRepository
         // ->orderBy('b.drec', 'ASC');
     }
 
+    public function getCountOnOperatorForDuration(DatePeriod $period, int $idOperator):int
+    {
+        $sql =
+            "SELECT
+                *
+            FROM
+            ( SELECT count(1),         
+                (
+                SELECT
+                    people_id
+                FROM
+                    ds.shift
+                WHERE
+                    b.drec BETWEEN START
+                    AND stop
+                LIMIT 1) AS id
+            FROM
+                ds.board b
+            WHERE
+                drec BETWEEN :start
+                AND :end
+            GROUP BY
+                id) operator
+            WHERE
+                operator.id = :idOperator
+        ";
+        $params = [
+            'start' => $period->getStartDate()->format(DATE_RFC3339_EXTENDED),
+            'end' => $period->getEndDate()->format(DATE_RFC3339_EXTENDED),
+            'idOperator' => $idOperator,
+        ];
+        $query = $this->getEntityManager()->getConnection()->prepare($sql);
+        $query->execute($params);
+        return $query->fetchAllAssociative()[0]['count'] ?? 0;
+    }
+
+    public function getVolumeOnOperatorForDuration(DatePeriod $period, int $idOperator) :float
+    {
+        $sql =
+            "SELECT
+                *
+            FROM
+            ( SELECT
+                sum(CAST(ds.standard_length(b.nom_length) as real) / 1000 * CAST(b.nom_width as real) / 1000 * CAST(b.nom_thickness as real) / 1000) AS volume,   
+                (
+                SELECT
+                    people_id
+                FROM
+                    ds.shift
+                WHERE
+                    b.drec BETWEEN START
+                    AND stop
+                LIMIT 1) AS id
+            FROM
+                ds.board b
+            WHERE
+                drec BETWEEN :start
+                AND :end
+            GROUP BY
+                id) operator
+            WHERE
+                operator.id = :idOperator
+        ";
+        $params = [
+            'start' => $period->getStartDate()->format(DATE_RFC3339_EXTENDED),
+            'end' => $period->getEndDate()->format(DATE_RFC3339_EXTENDED),
+            'idOperator' => $idOperator,
+        ];
+        $query = $this->getEntityManager()->getConnection()->prepare($sql);
+        $query->execute($params);
+        return $query->fetchAllAssociative()[0]['volume'] ?? 0;
+    }
+
+    public function getInfoOperatorForDuration(DatePeriod $period, int $idOperator)
+    {
+        $sql =
+            "SELECT
+                *
+            FROM
+            ( SELECT 
+                count(1), 
+                sum(CAST(ds.standard_length(b.nom_length) as real) / 1000 * CAST(b.nom_width as real) / 1000 * CAST(b.nom_thickness as real) / 1000) AS volume,       
+                (
+                SELECT
+                    people_id
+                FROM
+                    ds.shift
+                WHERE
+                    b.drec BETWEEN START
+                    AND stop
+                LIMIT 1) AS id
+            FROM
+                ds.board b
+            WHERE
+                drec BETWEEN :start
+                AND :end
+            GROUP BY
+                id) operator
+            WHERE
+                operator.id = :idOperator
+        ";
+        $params = [
+            'start' => $period->getStartDate()->format(DATE_RFC3339_EXTENDED),
+            'end' => $period->getEndDate()->format(DATE_RFC3339_EXTENDED),
+            'idOperator' => $idOperator,
+        ];
+        $query = $this->getEntityManager()->getConnection()->prepare($sql);
+        $query->execute($params);
+        return $query->fetchAllAssociative()[0] ?? ['volume' => 0, 'count' => 0];
+    }
     /**
      * @return Board[] Returns an array of Board objects
      */

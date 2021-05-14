@@ -24,6 +24,7 @@ import i18n from './i18n'
 import Snotify, { SnotifyPosition } from 'vue-snotify'
 import moment from 'moment-timezone'
 import Chart from 'chart.js'
+import LoaderTlc from "tlc-front-components/src/LoaderTlc";
 
 Chart.defaults.global.defaultFontSize = 20;
 
@@ -38,7 +39,7 @@ Vue.use(Snotify, optionsNotification);
 
 Vue.prototype.$moment = moment
 Vue.config.productionTip = false
-
+Vue.component('LoaderTlc', LoaderTlc);
 new Vue({
   router,
   Snotify,
