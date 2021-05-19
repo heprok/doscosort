@@ -27,7 +27,7 @@ use Doctrine\ORM\Event\LifecycleEventArgs;
     )
 ]
 #[ApiFilter(DateFilter::class, properties: ["drecTimestampKey"])]
-#[ApiFilter(SearchFilter::class, properties: ["type" => "partial", "source" => "partial"])]
+#[ApiFilter(SearchFilter::class, properties: ["type.id" => "partial", "source.id" => "partial"])]
 
 class Event
 {
