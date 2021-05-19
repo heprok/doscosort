@@ -64,7 +64,7 @@ Encore
   }, {
 
   })
-  .enableVueLoader()
+  .enableVueLoader(() => {}, {  runtimeCompilerBuild: false })
 
   .copyFiles({
     from: './front/assets/images',

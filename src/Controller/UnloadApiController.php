@@ -81,12 +81,13 @@ class UnloadApiController extends AbstractController
                     $row['length'][] = $boardReport['length'];
                     $row['cut'][] = $boardReport['cut'];
                     $row['count_boards'] += $boardReport['count_board'];
-                    $row['volume_boards'] += round((float)$boardReport['volume_boards'], BaseEntity::PRECISION_FOR_FLOAT);
+                    $row['volume_boards'] += $boardReport['volume_boards'];
                 }
             }
             $row['name_species'] = implode(', ', array_unique($row['name_species']));
             $row['quality_1_name'] = implode(', ', array_unique($row['quality_1_name']));
             $row['length'] = implode(', ', array_unique($row['length']));
+            $row['volume_boards'] = round($row['volume_boards'], BaseEntity::PRECISION_FOR_FLOAT);
             $row['cut'] = implode(', ', array_unique($row['cut']));
             $result['hydra:member'][] = $row;
             // if($i == 24)

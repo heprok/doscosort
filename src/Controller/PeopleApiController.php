@@ -64,11 +64,14 @@ class PeopleApiController extends AbstractController
         
         $info = $this->boardRepository->getInfoOperatorForDuration($period, $idPeople);
         $info['hoursWork'] = $this->shiftRepository->getTimeWorkForOperator($period, $idPeople);
-
+        $info['timeDowntime'] = $this->shiftRepository->getTimeDowntimeForOperator($period, $idPeople);
+        $info['countShift'] = $this->shiftRepository->getCountShiftForOperator($period, $idPeople);
         $result = [
             'volume' => round((float)$info['volume'], BaseEntity::PRECISION_FOR_FLOAT),
             'count' => $info['count'],
-            'timeWork' => $info['hoursWork']
+            'timeWork' => $info['hoursWork'], 
+            'timeDowntime' => $info['timeDowntime'],
+            'countShift' => $info['countShift'],
         ];
 
         return $this->json($result);

@@ -53,8 +53,7 @@
           type="Bar"
           urlApi="/api/charts/volumeOnOperator"
           :query="queryChart"
-          :intervalSecond='0'
-          :subtitle="dates.start + ' по ' + dates.end"
+          :intervalSecond="0"
           title="Выработка по операторам, объём"
         />
       </VCol>
@@ -64,8 +63,7 @@
           type="Bar"
           urlApi="/api/charts/countOnOperator"
           :query="queryChart"
-          :intervalSecond='0'
-          :subtitle="dates.start + ' по ' + dates.end"
+          :intervalSecond="0"
           title="Выработка по операторам, количество"
         />
       </VCol>
@@ -131,6 +129,7 @@ export default {
       this.loaded = true;
       this.currentOperators = [];
       Object.assign(this.currentOperators, this.selectedOperator);
+      this.$refs.chartCount.update();
       await this.$refs.chartVolume.update();
       this.loaded = false;
     },

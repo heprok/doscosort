@@ -9,8 +9,7 @@ export default {
       default: null,
     },
   },
-  watch: {
-  },
+  watch: {},
   mounted() {
     this.options = {
       plugins: {
@@ -19,11 +18,17 @@ export default {
         },
       },
       legend: {
-        position: 'right'
+        position: "right",
+        labels: {
+          fontColor: this.colorFont,
+        },
       },
       scales: {
         yAxes: [
           {
+            ticks: {
+              fontColor: this.colorFont,
+            },
             gridLines: {
               color: this.colorScale,
             },
@@ -32,6 +37,9 @@ export default {
 
         xAxes: [
           {
+            ticks: {
+              fontColor: this.colorFont,
+            },
             gridLines: {
               color: this.colorScale,
             },
@@ -44,8 +52,13 @@ export default {
   },
   computed: {
     colorScale() {
-      return this.$vuetify.theme.dark ? this.$vuetify.theme.themes.dark.secondary : this.$vuetify.theme.themes.light.greyLight
-    }
-  }
+      return this.$vuetify.theme.dark
+        ? this.$vuetify.theme.themes.dark.secondary
+        : this.$vuetify.theme.themes.light.greyLight;
+    },
+    colorFont() {
+      return this.$vuetify.theme.dark ? "#fff" : "#000";
+    },
+  },
 };
 </script>

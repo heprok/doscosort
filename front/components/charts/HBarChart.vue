@@ -19,21 +19,28 @@ export default {
     let options = {
       plugins: {
         datalabels: {
+          color: '#000',
           formatter: (value, context) => {
             return value + vm.suffix;
           },
           display: true,
-          // font: {
-          // size: 20,
-          // },
+          font: {
+            // size: 20,
+          },
+        },
+      },
+      legend: {
+        labels: {
+          fontColor: this.colorFont,
         },
       },
       scales: {
         yAxes: [
           {
-            // ticks: {
-            // fontSize: 20,
-            // },
+            ticks: {
+              // fontSize: 20,
+              fontColor: this.colorFont,
+            },
             gridLines: {
               color: this.colorScale,
             },
@@ -42,6 +49,9 @@ export default {
 
         xAxes: [
           {
+            ticks: {
+              fontColor: this.colorFont,
+            },
             gridLines: {
               color: this.colorScale,
             },
@@ -56,6 +66,9 @@ export default {
       return this.$vuetify.theme.dark
         ? this.$vuetify.theme.themes.dark.secondary
         : this.$vuetify.theme.themes.light.greyLight;
+    },
+    colorFont() {
+      return this.$vuetify.theme.dark ? "#fff" : "#000";
     },
   },
 };

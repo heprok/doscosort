@@ -19,6 +19,26 @@
           <td><p class="font-weight-regular mb-0">Часов отработано</p></td>
           <td>{{ timeWork }} ч.</td>
         </tr>
+        <tr>
+          <td><p class="font-weight-regular mb-0">Кол-во смен</p></td>
+          <td>{{ countShift }}</td>
+        </tr>
+        <tr>
+          <td>
+            <p class="font-weight-regular mb-0">
+              Время простоя
+              <v-tooltip bottom>
+                <template v-slot:activator="{ on, attrs }">
+                  <v-icon color="primary" dark v-bind="attrs" v-on="on">
+                    mdi-help
+                  </v-icon>
+                </template>
+                <span>Время указано без технологических простоев</span>
+              </v-tooltip>
+            </p>
+          </td>
+          <td>{{ timeDowntime }}</td>
+        </tr>
       </tbody>
     </VSimpleTable>
   </BaseMaterialCard>
@@ -34,6 +54,8 @@ export default {
       entryPointApi: this.$store.state.apiEntryPoint,
       volume: 0.0,
       count: 0,
+      countShift: 0,
+      timeDowntime: "00:00:00",
       timeWork: 0,
       precent: 0,
       loading: true,
@@ -42,7 +64,7 @@ export default {
   props: {
     duration: {
       type: Object,
-      required: true
+      required: true,
     },
     operator: {
       type: Object,
@@ -65,13 +87,18 @@ export default {
       };
       try {
         request = await Axios.get(
-          this.entryPointApi +  '/peoples/' + this.operator.id + '/infoForDuration', 
+          this.entryPointApi +
+            "/peoples/" +
+            this.operator.id +
+            "/infoForDuration",
           config
         );
         let data = request.data;
         this.volume = data.volume;
         this.count = data.count;
+        this.countShift = data.countShift;
         this.timeWork = data.timeWork;
+        this.timeDowntime = data.timeDowntime;
       } catch (err) {
         console.log(err);
         let data = err.response.data;

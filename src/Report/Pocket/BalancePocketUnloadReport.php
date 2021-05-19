@@ -56,7 +56,7 @@ final class BalancePocketUnloadReport extends AbstractReport
 
     public function getNameReport(): string
     {
-        return "выгруженных карманов";
+        return "по остаткам в карманах";
     }
 
     protected function updateDataset(): bool
@@ -116,7 +116,6 @@ final class BalancePocketUnloadReport extends AbstractReport
                 'count_boards' => 0,
                 'volume_boards' => 0.0
             ];
-
             $unload = $this->unloadRepository->findLastUnload($this->getPeriod(), $sqlWhere);
             if ($unload) {
                 $period = new DatePeriod($unload->getDrec(), new DateInterval('P1D'), $this->getPeriod()->getEndDate());
@@ -136,11 +135,11 @@ final class BalancePocketUnloadReport extends AbstractReport
 
                     if($buff['summaryUnload'][$species][$length][$cut] ?? null )
                     {
-                        $buff['summaryUnload'][$species][$length][$cut]['volume'] += $boardReport['volume_boards'];
+                        $buff['summaryUnload'][$species][$length][$cut]['volume'] += round((float)$boardReport['volume_boards'], BaseEntity::PRECISION_FOR_FLOAT);
                         $buff['summaryUnload'][$species][$length][$cut]['count'] += $boardReport['count_board'];
                     }
                     else{
-                        $buff['summaryUnload'][$species][$length][$cut]['volume'] = $boardReport['volume_boards'];
+                        $buff['summaryUnload'][$species][$length][$cut]['volume'] = round((float)$boardReport['volume_boards'], BaseEntity::PRECISION_FOR_FLOAT);
                         $buff['summaryUnload'][$species][$length][$cut]['count'] = $boardReport['count_board'];
                     }
                 }

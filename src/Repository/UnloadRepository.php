@@ -74,6 +74,8 @@ class UnloadRepository extends ServiceEntityRepository
     {
         $qb = $this->createQueryBuilder('u')
             ->orderBy('u.drecTimestampKey', 'DESC')
+            ->andWhere('u.drecTimestampKey <= :end')
+            ->setParameter('end', $period->getEndDate()->format(DATE_ATOM))
             ->leftJoin('u.group', 'g');
 
 

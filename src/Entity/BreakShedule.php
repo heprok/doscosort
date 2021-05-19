@@ -25,37 +25,37 @@ use Doctrine\ORM\Mapping\UniqueConstraint;
       itemOperations:["get", "put"],
       normalizationContext:["groups"=>["break_shedule:read"]],
       denormalizationContext:["groups"=>["break_shedule:write"]]
- )]
+)]
 class BreakShedule
 {
     /**
      * @ORM\Id
-     #[ApiProperty(identifier:true)]
      * @ORM\Column(type="integer", unique=true,
      *      options={"comment":"Начало перерыва в формате HHMM"})
-     #[Groups(["break_shedule:read", "break_shedule:write", "downtime_place:read"])]
      */
+    #[ApiProperty(identifier:true)]
+    #[Groups(["break_shedule:read", "break_shedule:write", "downtime_place:read"])]
     private int $start;
 
     /**
      * @ORM\Column(type="integer", unique=true,
      *      options={"comment":"Конец перерыва в формате HHMM"})
-     #[Groups(["break_shedule:read", "break_shedule:write", "downtime_place:read"])]
      */
+    #[Groups(["break_shedule:read", "break_shedule:write", "downtime_place:read"])]
     private int $stop;
 
     /**
      * @ORM\ManyToOne(targetEntity=DowntimePlace::class, cascade={"persist", "refresh"}, inversedBy="breakShedules")
      * @ORM\JoinColumn(nullable=false, onDelete="CASCADE")
-     #[Groups(["break_shedule:read", "break_shedule:write", "downtime_place:read"])]
      */
+    #[Groups(["break_shedule:read", "break_shedule:write", "downtime_place:read"])]
     private DowntimePlace $place;
 
     /**
      * @ORM\ManyToOne(targetEntity=DowntimeCause::class, cascade={"persist", "refresh"}, inversedBy="breakShedules")
      * @ORM\JoinColumn(nullable=false, onDelete="CASCADE")
-     #[Groups(["break_shedule:read", "break_shedule:write", "downtime_place:read"])]
      */
+    #[Groups(["break_shedule:read", "break_shedule:write", "downtime_place:read"])]
     private DowntimeCause $cause;
 
     public function __construct(string $startTime, string $stopTime, DowntimeCause $cause, DowntimePlace $place)
