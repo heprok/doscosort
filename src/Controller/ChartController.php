@@ -67,28 +67,15 @@ class ChartController extends AbstractController
         $datasets = [];
         $colors = Chart::CHART_COLOR;
         foreach ($qualities as $key => $quality) {
-            $precent = round(((float)$quality['volume_boards'] / $total_volume * 100), 2);
+            $precent = round(((float)$quality['volume_boards'] / ($total_volume ?: 1) * 100), 2);
             // dump($quality);
             if ($precent != 0) {
-
-                //         $labels[] = $quality['name_quality'];
                 $datasets[] = $dataset = new ChartDataset($quality['name_quality']);
                 $dataset->setData([$precent]);
                 $dataset->setBackgroundColor(array_shift($colors));
-                //         $data[] = $precent;
-                    }
-            // $labels[] = $quality['name_quality'];
+            }
         }
-        // foreach ($qualities as $quality) {
-        //     $precent = (int)((float)$quality['volume_boards'] / $total_volume * 100);
-        //     if ($precent != 0) {
 
-        //         $labels[] = $quality['name_quality'];
-        //         $data[] = $precent;
-        //     }
-        // }
-        // $dataset = new ChartDataset('Объём, %', '#00cae3', '#000');
-        // $dataset->setData($data);
         $chart = new Chart($labels, $datasets);
 
         // $chart->addOption('responsive', true);
@@ -106,26 +93,26 @@ class ChartController extends AbstractController
 
         $idsOperator = $request->query->get('operators'); //[1,4,6] id operator
         $duration = json_decode($request->query->get('duration'), true);
-        
+
         if (!$duration || !$idsOperator) {
             $chart = new Chart(['']);
             $chart->addOption('responsive', true);
             $chart->addOption('elements', ['bar' => ['borderWidth' => 1]]);
-            
+
             $chart->addOption('maintainAspectRatio', false);
             return $this->json($chart->__serialize());
         }
 
-        $operators = $this->peopleRepository->findBy(['id' => $idsOperator] );
-        
+        $operators = $this->peopleRepository->findBy(['id' => $idsOperator]);
+
         $startDate = new DateTime($duration['start']);
         $endDate = new DateTime($duration['end']);
-        
+
         //обнуляю до 1 дня текущего дня
         $startDate->setDate((int)$startDate->format('Y'), (int)$startDate->format('m'), 1);
         $endDate->setDate((int)$endDate->format('Y'), (int)$endDate->format('m'), 1);
         $period = new DatePeriod($startDate, new DateInterval('P1M'), $endDate);
-        
+
         $colors = Chart::CHART_COLOR;
         $datasets = [];
         foreach ($operators as $operator) {
@@ -139,7 +126,7 @@ class ChartController extends AbstractController
             $end->add(new DateInterval('P1M'));
             $labels[] = $date->format('m.y');
             $period = new DatePeriod($date, new DateInterval('P1D'), $end);
-            foreach($operators as $operator){
+            foreach ($operators as $operator) {
                 $data[$operator->getId()][$date->format('m.y')][] = round($this->boardRepository->getVolumeOnOperatorForDuration($period, $operator->getId()), BaseEntity::PRECISION_FOR_FLOAT);
             }
         }
@@ -164,7 +151,7 @@ class ChartController extends AbstractController
         $chart->addOption('maintainAspectRatio', false);
         return $this->json($chart->__serialize());
     }
-    
+
     #[Route("/countOnOperator", name: 'count_on_operators_for_duration')]
     public function getCountOnOperatorForDuration()
     {
@@ -172,26 +159,26 @@ class ChartController extends AbstractController
 
         $idsOperator = $request->query->get('operators'); //[1,4,6] id operator
         $duration = json_decode($request->query->get('duration'), true);
-        
+
         if (!$duration || !$idsOperator) {
             $chart = new Chart(['']);
             $chart->addOption('responsive', true);
             $chart->addOption('elements', ['bar' => ['borderWidth' => 1]]);
-            
+
             $chart->addOption('maintainAspectRatio', false);
             return $this->json($chart->__serialize());
         }
 
-        $operators = $this->peopleRepository->findBy(['id' => $idsOperator] );
-        
+        $operators = $this->peopleRepository->findBy(['id' => $idsOperator]);
+
         $startDate = new DateTime($duration['start']);
         $endDate = new DateTime($duration['end']);
-        
+
         //обнуляю до 1 дня текущего дня
         $startDate->setDate((int)$startDate->format('Y'), (int)$startDate->format('m'), 1);
         $endDate->setDate((int)$endDate->format('Y'), (int)$endDate->format('m'), 1);
         $period = new DatePeriod($startDate, new DateInterval('P1M'), $endDate);
-        
+
         $colors = Chart::CHART_COLOR;
         $datasets = [];
         foreach ($operators as $operator) {
@@ -205,7 +192,7 @@ class ChartController extends AbstractController
             $end->add(new DateInterval('P1M'));
             $labels[] = $date->format('m.y');
             $period = new DatePeriod($date, new DateInterval('P1D'), $end);
-            foreach($operators as $operator){
+            foreach ($operators as $operator) {
                 $data[$operator->getId()][$date->format('m.y')][] = round($this->boardRepository->getCountOnOperatorForDuration($period, $operator->getId()), BaseEntity::PRECISION_FOR_FLOAT);
             }
         }
