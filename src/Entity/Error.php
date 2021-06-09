@@ -15,12 +15,13 @@ use Symfony\Component\Serializer\Annotation\Groups;
  *          options={"comment":"Ошибки"})
  */
 #[
-ApiResource(
-    collectionOperations: ["get", ],
-    itemOperations: ["get", "put"],
-    normalizationContext: ["groups" => ["error:read"]],
-    denormalizationContext: ["groups" => ["error:write"]]
-)]
+    ApiResource(
+        collectionOperations: ["get", "post"],
+        itemOperations: ["get", "put"],
+        normalizationContext: ["groups" => ["error:read"]],
+        denormalizationContext: ["groups" => ["error:write"]]
+    )
+]
 class Error
 {
     /**
@@ -28,7 +29,7 @@ class Error
      * @ORM\Column(type="smallint", 
      *      options={"comment":"Код ошибки"})
      */
-    #[Groups(["error:read"])]
+    #[Groups(["error:read", "error:write"])]
     private int $id;
 
     /**
@@ -47,6 +48,12 @@ class Error
     public function getId(): ?int
     {
         return $this->id;
+    }
+
+    public function setId(int $id): self
+    {
+        $this->id = $id;
+        return $this;
     }
 
     public function getText(): ?string
