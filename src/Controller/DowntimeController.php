@@ -5,8 +5,8 @@ declare(strict_types=1);
 namespace App\Controller;
 
 use Tlc\ReportBundle\Report\AbstractReport;
-use App\Report\Downtime\DowntimePdfReport;
-use App\Report\Downtime\DowntimeReport;
+use Tlc\ManualBundle\Report\Downtime\DowntimePdfReport;
+use Tlc\ManualBundle\Report\Downtime\DowntimeReport;
 use App\Repository\DowntimeRepository;
 use App\Repository\PeopleRepository;
 use App\Repository\ShiftRepository;

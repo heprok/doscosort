@@ -171,8 +171,8 @@ class InfoCardController extends AbstractController
 
         $cause = $lastDowntime->getCause();
 
-        $startTime = $lastDowntime->getDrec();
-        $endTime = $lastDowntime->getFinish();
+        $startTime = $lastDowntime->getStartDate();
+        $endTime = $lastDowntime->getFinishDate();
         $nowTime = new DateTime();
         // BaseEntity::intervalToString()
         $duration = $endTime ? BaseEntity::intervalToString($endTime->diff($startTime, true)) : 'Продолжается(' . BaseEntity::intervalToString($nowTime->diff($startTime, true)) . ')';

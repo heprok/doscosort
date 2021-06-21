@@ -7,6 +7,7 @@ use DatePeriod;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\ORM\QueryBuilder;
 use Doctrine\Persistence\ManagerRegistry;
+use Tlc\ReportBundle\Entity\BaseEntity;
 
 /**
  * @method Board|null find($id, $lockMode = null, $lockVersion = null)
@@ -32,8 +33,8 @@ class BoardRepository extends ServiceEntityRepository
         $qb = $this->createQueryBuilder('b')
             ->andWhere('b.drecTimestampKey BETWEEN :start AND :end')
             ->setParameter('start', $period->getStartDate()->format(DATE_RFC3339_EXTENDED))
-            ->setParameter('end', $period->getEndDate()->format(DATE_RFC3339_EXTENDED))
-            ->leftJoin('b.species', 's');
+            ->setParameter('end', $period->end ? $period->getEndDate()->format(DATE_RFC3339_EXTENDED) : date(DATE_RFC3339_EXTENDED))
+            ->leftJoin('b.species', 's'); 
         // ->leftJoin('b.nom_thickness', 't')
         // ->leftJoin('b.nom_width', 'w')
         // ->leftJoin('b.nom_length', 'l');
@@ -65,8 +66,8 @@ class BoardRepository extends ServiceEntityRepository
                 FROM
                     ds.shift
                 WHERE
-                    b.drec BETWEEN START
-                    AND stop
+                    b.drec BETWEEN lower(period)
+                    AND upper(period)
                 LIMIT 1) AS id
             FROM
                 ds.board b
@@ -102,8 +103,8 @@ class BoardRepository extends ServiceEntityRepository
                 FROM
                     ds.shift
                 WHERE
-                    b.drec BETWEEN START
-                    AND stop
+                    b.drec BETWEEN lower(period)
+                    AND upper(period)
                 LIMIT 1) AS id
             FROM
                 ds.board b
@@ -140,8 +141,8 @@ class BoardRepository extends ServiceEntityRepository
                 FROM
                     ds.shift
                 WHERE
-                    b.drec BETWEEN START
-                    AND stop
+                    b.drec BETWEEN lower(period)
+                    AND upper(period)
                 LIMIT 1) AS id
             FROM
                 ds.board b

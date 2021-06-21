@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "4254a3b5b6f993100076064f7eec8e20",
+    "content-hash": "12de074626c7d5543636d2ebfe745d6f",
     "packages": [
         {
             "name": "api-platform/core",
@@ -6558,16 +6558,10 @@
         {
             "name": "tlc/doctrineextensions",
             "version": "dev-master",
-            "source": {
-                "type": "git",
-                "url": "git@github.com:technolescom/DoctrineExtensions.git",
-                "reference": "beba86c9d754606edde587b8333d225a1ca2f627"
-            },
             "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/technolescom/DoctrineExtensions/zipball/beba86c9d754606edde587b8333d225a1ca2f627",
-                "reference": "beba86c9d754606edde587b8333d225a1ca2f627",
-                "shasum": ""
+                "type": "path",
+                "url": "/home/ok/prj/library/php/DoctrineExtensions",
+                "reference": "532482d465124760fdfc24fb537014cec33016f9"
             },
             "require": {
                 "doctrine/orm": "^2.7",
@@ -6582,7 +6576,6 @@
                 "zf1/zend-date": "^1.12",
                 "zf1/zend-registry": "^1.12"
             },
-            "default-branch": true,
             "type": "library",
             "autoload": {
                 "psr-4": {
@@ -6621,11 +6614,9 @@
                 "doctrine",
                 "orm"
             ],
-            "support": {
-                "source": "https://github.com/technolescom/DoctrineExtensions/tree/master",
-                "issues": "https://github.com/technolescom/DoctrineExtensions/issues"
-            },
-            "time": "2021-06-17T14:57:44+00:00"
+            "transport-options": {
+                "relative": false
+            }
         },
         {
             "name": "tlc/manual-bundle",

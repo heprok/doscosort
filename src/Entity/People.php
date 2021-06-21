@@ -21,7 +21,7 @@ use Tlc\ManualBundle\Entity\People as BasePeople;
 class People extends BasePeople
 {
     #[ORM\ManyToMany(targetEntity: Duty::class)]
-    #[ORM\JoinTable(name: "people_to_duty")]
+    #[ORM\JoinTable(schema: "ds", name: "people_to_duty")]
     #[Groups(["people:write", "people:read"])]
     protected $duty;
 }

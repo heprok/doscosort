@@ -27,7 +27,7 @@ class UnloadRepository extends ServiceEntityRepository
         $qb = $this->createQueryBuilder('u')
             ->andWhere('u.drecTimestampKey BETWEEN :start AND :end')
             ->setParameter('start', $period->getStartDate()->format(DATE_ATOM))
-            ->setParameter('end', $period->getEndDate()->format(DATE_ATOM));
+            ->setParameter('end', $period->end ? $period->getEndDate()->format(DATE_ATOM) : date(DATE_ATOM));
 
         foreach ($sqlWhere as $where) {
             $query = $where->nameTable . $where->id . ' ' . $where->operator . ' ' . $where->value;
