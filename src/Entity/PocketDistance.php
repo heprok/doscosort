@@ -5,27 +5,23 @@ namespace App\Entity;
 use App\Repository\PocketDistanceRepository;
 use Doctrine\ORM\Mapping as ORM;
 
-/**
- * @ORM\Entity(repositoryClass=PocketDistanceRepository::class)
- * @ORM\Table(name="ds.pocket_distance",
- *      options={"comment":"Дистанция до карманов"})
- */
+
+#[ORM\Entity(repositoryClass: PocketDistanceRepository::class)]
+#[ORM\Table(schema: "ds", name: "pocket_distance", options: ["comment" => "Дистанция до карманов"])]
+
 class PocketDistance
 {
-    /**
-     * @ORM\Id
-     * @ORM\Column(type="smallint")
-     */
+
+    #[ORM\Id]
+    #[ORM\Column(type: "smallint")]
     private $pocket;
 
-    /**
-     * @ORM\Column(type="smallint")
-     */
+
+    #[ORM\Column(type: "smallint")]
     private $integral;
 
-    /**
-     * @ORM\Column(type="smallint")
-     */
+
+    #[ORM\Column(type: "smallint")]
     private $decimal;
 
     public function getPocket(): ?int

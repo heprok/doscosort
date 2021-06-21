@@ -6,17 +6,15 @@ use ApiPlatform\Core\Annotation\ApiResource;
 use App\Repository\UnloadRepository;
 use ApiPlatform\Core\Annotation\ApiFilter;
 use DateTime;
-use App\Filter\DateFilter;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Serializer\Annotation\Groups;
 use Doctrine\ORM\Event\LifecycleEventArgs;
+use Tlc\ManualBundle\Filter\DateFilter;
+use Tlc\ReportBundle\Entity\BaseEntity;
 
-/**
- * @ORM\Entity(repositoryClass=UnloadRepository::class)
- * @ORM\Table(name="ds.unload",
- *      options={"comment":"Выгруженные карманы"})
- * @ORM\HasLifecycleCallbacks()
- */
+#[ORM\Entity(repositoryClass: UnloadRepository::class)]
+#[ORM\Table(schema: "ds", name: "unload", options: ["comment" => "Выгруженные карманы"])]
+#[ORM\HasLifecycleCallbacks()]
 #[ApiFilter(DateFilter::class, properties: ["drecTimestampKey"])]
 #[
     ApiResource(
@@ -28,54 +26,36 @@ use Doctrine\ORM\Event\LifecycleEventArgs;
 ]
 class Unload
 {
-
     private DateTime $drec;
 
-    /**
-     * @ORM\Id
-     * @ORM\Column(name="drec", type="string", 
-     *      options={"comment":"Время выгрузки"})
-     */
+    #[ORM\Id]
+    #[ORM\Column(name: "drec", type: "string", options: ["comment" => "Время выгрузки"])]
     #[Groups(["unload:read"])]
     private string $drecTimestampKey;
 
-
-    /**
-     * @ORM\Column(type="string", length=255, 
-     *      options={"comment":"Название качеств"})
-     */
+    #[ORM\Column(type: "string", length: 255, options: ["comment" => "Название качеств"])]
     #[Groups(["unload:read"])]
     private string $qualities;
 
-    /**
-     * @ORM\Column(type="smallint", 
-     *      options={"comment":"Количество досок"})
-     */
+
+    #[ORM\Column(type: "smallint", options: ["comment" => "Количество досок"])]
     #[Groups(["unload:read"])]
     private int $amount;
 
-    /**
-     * @ORM\Column(type="smallint", 
-     *      options={"comment":"Карман"})
-     */
+
+    #[ORM\Column(type: "smallint", options: ["comment" => "Карман"])]
     #[Groups(["unload:read"])]
     private int $pocket;
 
-    /**
-     * @ORM\ManyToOne(targetEntity=Group::class)
-     * @ORM\JoinColumn(nullable=false, name="group")
-     */
+
+    #[ORM\ManyToOne(targetEntity: Group::class)]
+    #[ORM\JoinColumn(nullable: false, name: "group")]
     #[Groups(["unload:read"])]
     private Group $group;
 
-    /**
-     * @ORM\Column(type="float",
-     *      options={"comment":"Объём выгруженного кармана"})
-     */
+    #[ORM\Column(type: "float", options: ["comment" => "Объём выгруженного кармана"])]
     #[Groups(["unload:read"])]
     private float $volume;
-
-    
 
     public function getDrecTimestampKey(): ?int
     {
@@ -87,8 +67,6 @@ class Unload
         return $this->drec;
     }
 
-    /**
-     */
     #[Groups(["unload:read"])]
     public function getTime(): ?string
     {
@@ -150,10 +128,9 @@ class Unload
         return $this;
     }
 
-    /**
-     * @ORM\PrePersist
-     * @ORM\PreUpdate
-     */
+
+    #[ORM\PrePersist]
+    #[ORM\PreUpdate]
     public function syncDrecTodrecTimestampKey(LifecycleEventArgs $event)
     {
         $entityManager = $event->getEntityManager();
@@ -162,9 +139,8 @@ class Unload
         $this->drecTimestampKey = $this->drec->format($platform->getDateTimeFormatString());
     }
 
-    /**
-     * @ORM\PostLoad
-     */
+
+    #[ORM\PostLoad]
     public function syncDrecTimestampKeyToDrec(LifecycleEventArgs $event)
     {
         $entityManager = $event->getEntityManager();

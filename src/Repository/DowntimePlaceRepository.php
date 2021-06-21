@@ -3,8 +3,8 @@
 namespace App\Repository;
 
 use App\Entity\DowntimePlace;
-use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
+use Tlc\ManualBundle\Repository\DowntimePlaceRepository as BaseDowntimePlaceRepository;
 
 /**
  * @method DowntimePlace|null find($id, $lockMode = null, $lockVersion = null)
@@ -12,39 +12,11 @@ use Doctrine\Persistence\ManagerRegistry;
  * @method DowntimePlace[]    findAll()
  * @method DowntimePlace[]    findBy(array $criteria, array $orderBy = null, $limit = null, $offset = null)
  */
-class DowntimePlaceRepository extends ServiceEntityRepository
+class DowntimePlaceRepository extends BaseDowntimePlaceRepository
 {
     public function __construct(ManagerRegistry $registry)
     {
-        parent::__construct($registry, DowntimePlace::class);
+        $this->nameClass = DowntimePlace::class;
+        parent::__construct($registry);
     }
-
-    // /**
-    //  * @return DowntimePlace[] Returns an array of DowntimePlace objects
-    //  */
-    /*
-    public function findByExampleField($value)
-    {
-        return $this->createQueryBuilder('d')
-            ->andWhere('d.exampleField = :val')
-            ->setParameter('val', $value)
-            ->orderBy('d.id', 'ASC')
-            ->setMaxResults(10)
-            ->getQuery()
-            ->getResult()
-        ;
-    }
-    */
-
-    /*
-    public function findOneBySomeField($value): ?DowntimePlace
-    {
-        return $this->createQueryBuilder('d')
-            ->andWhere('d.exampleField = :val')
-            ->setParameter('val', $value)
-            ->getQuery()
-            ->getOneOrNullResult()
-        ;
-    }
-    */
 }

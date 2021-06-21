@@ -6,7 +6,7 @@ namespace App\Controller;
 
 use App\Chart\Chart;
 use Tlc\ReportBundle\Dataset\ChartDataset;
-use App\Entity\BaseEntity;
+use Tlc\ReportBundle\Entity\BaseEntity;
 use App\Entity\Downtime;
 use App\Repository\ShiftRepository;
 use App\Entity\Shift;

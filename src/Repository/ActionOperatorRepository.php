@@ -3,10 +3,8 @@
 namespace App\Repository;
 
 use App\Entity\ActionOperator;
-use DatePeriod;
-use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
-use Doctrine\ORM\QueryBuilder;
 use Doctrine\Persistence\ManagerRegistry;
+use Tlc\ManualBundle\Repository\ActionOperatorRepository as BaseActionOperatorRepository;
 
 /**
  * @method ActionOperator|null find($id, $lockMode = null, $lockVersion = null)
@@ -14,39 +12,11 @@ use Doctrine\Persistence\ManagerRegistry;
  * @method ActionOperator[]    findAll()
  * @method ActionOperator[]    findBy(array $criteria, array $orderBy = null, $limit = null, $offset = null)
  */
-class ActionOperatorRepository extends ServiceEntityRepository
+class ActionOperatorRepository extends BaseActionOperatorRepository
 {
     public function __construct(ManagerRegistry $registry)
     {
-        parent::__construct($registry, ActionOperator::class);
+        $this->nameClass = ActionOperator::class;
+        parent::__construct($registry);
     }
-
-
-    // /**
-    //  * @return ActionOperator[] Returns an array of ActionOperator objects
-    //  */
-    // public function findByExampleField($value)
-    // {
-    //     return $this->createQueryBuilder('a')
-    //         ->andWhere('a.exampleField = :val')
-    //         ->setParameter('val', $value)
-    //         ->orderBy('a.id', 'ASC')
-    //         ->setMaxResults(10)
-    //         ->getQuery()
-    //         ->getResult()
-    //     ;
-    // }
-    
-
-    /*
-    public function findOneBySomeField($value): ?ActionOperator
-    {
-        return $this->createQueryBuilder('a')
-            ->andWhere('a.exampleField = :val')
-            ->setParameter('val', $value)
-            ->getQuery()
-            ->getOneOrNullResult()
-        ;
-    }
-    */
 }

@@ -5,6 +5,7 @@ namespace App\Repository;
 use App\Entity\Species;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
+use Tlc\ManualBundle\Repository\SpeciesRepository as BaseSpeciesRepository;
 
 /**
  * @method Species|null find($id, $lockMode = null, $lockVersion = null)
@@ -12,11 +13,12 @@ use Doctrine\Persistence\ManagerRegistry;
  * @method Species[]    findAll()
  * @method Species[]    findBy(array $criteria, array $orderBy = null, $limit = null, $offset = null)
  */
-class SpeciesRepository extends ServiceEntityRepository
+class SpeciesRepository extends BaseSpeciesRepository
 {
     public function __construct(ManagerRegistry $registry)
     {
-        parent::__construct($registry, Species::class);
+        $this->nameClass = Species::class;
+        parent::__construct($registry);
     }
 
     // /**

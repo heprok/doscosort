@@ -5,6 +5,7 @@ namespace App\Repository;
 use App\Entity\People;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
+use Tlc\ManualBundle\Repository\PeopleRepository as BasePeopleRepository;
 
 /**
  * @method People|null find($id, $lockMode = null, $lockVersion = null)
@@ -12,39 +13,11 @@ use Doctrine\Persistence\ManagerRegistry;
  * @method People[]    findAll()
  * @method People[]    findBy(array $criteria, array $orderBy = null, $limit = null, $offset = null)
  */
-class PeopleRepository extends ServiceEntityRepository
+class PeopleRepository extends BasePeopleRepository
 {
     public function __construct(ManagerRegistry $registry)
     {
-        parent::__construct($registry, People::class);
+        $this->nameClass = People::class;
+        parent::__construct($registry);
     }
-
-    // /**
-    //  * @return People[] Returns an array of People objects
-    //  */
-    /*
-    public function findByExampleField($value)
-    {
-        return $this->createQueryBuilder('p')
-            ->andWhere('p.exampleField = :val')
-            ->setParameter('val', $value)
-            ->orderBy('p.id', 'ASC')
-            ->setMaxResults(10)
-            ->getQuery()
-            ->getResult()
-        ;
-    }
-    */
-
-    /*
-    public function findOneBySomeField($value): ?People
-    {
-        return $this->createQueryBuilder('p')
-            ->andWhere('p.exampleField = :val')
-            ->setParameter('val', $value)
-            ->getQuery()
-            ->getOneOrNullResult()
-        ;
-    }
-    */
 }

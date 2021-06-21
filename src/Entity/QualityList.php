@@ -7,25 +7,18 @@ namespace App\Entity;
 use App\Repository\QualityListRepository;
 use Doctrine\ORM\Mapping as ORM;
 
-/**
- * @ORM\Entity(repositoryClass=QualityListRepository::class)
- * @ORM\Table(name="ds.quality_list", 
- *      options={"comment":"Списки качеств"})
- */
+#[ORM\Entity(repositoryClass: QualityListRepository::class)]
+#[ORM\Table(schema: "ds", name: "quality_list", options: ["comment" => "Списки качеств"])]
 class QualityList
 {
-    /**
-     * @ORM\Id
-     * @ORM\GeneratedValue
-     * @ORM\Column(type="smallint", 
-     *      options={"check":"BETWEEN 0 AND 15", "unsigned":true})
-     */
+
+    #[ORM\Id]
+    #[ORM\GeneratedValue]
+    #[ORM\Column(type: "smallint", options: ["check" => "BETWEEN 0 AND 15", "unsigned" => true])]
     private int $id;
 
-    /**
-     * @ORM\Column(type="string", length=32,
-     *      options={"comment":"Название списка"})
-     */
+
+    #[ORM\Column(type: "string", length: 32, options: ["comment" => "Название списка"])]
     private string $name;
 
     public function __toString()

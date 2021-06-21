@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Report\Board;
 
-use App\Entity\BaseEntity;
+use Tlc\ReportBundle\Entity\BaseEntity;
 use Tlc\ReportBundle\Dataset\PdfDataset;
 use Tlc\ReportBundle\Dataset\SummaryPdfDataset;
 use Tlc\ReportBundle\Entity\Column;

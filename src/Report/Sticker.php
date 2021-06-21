@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Report;
 
-use App\Entity\BaseEntity;
+use Tlc\ReportBundle\Entity\BaseEntity;
 use App\Entity\Package;
 use TCPDF;
 

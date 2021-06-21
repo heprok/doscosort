@@ -4,66 +4,53 @@ namespace App\Entity;
 
 use ApiPlatform\Core\Annotation\ApiProperty;
 use ApiPlatform\Core\Annotation\ApiResource;
-use ApiPlatform\Core\Annotation\ApiFilter;
-use ApiPlatform\Core\Bridge\Doctrine\MongoDbOdm\Filter\OrderFilter;
-use App\Filter\DateFilter;
 use App\Repository\PackageMoveRepository;
 use DateTime;
 use Doctrine\ORM\Event\LifecycleEventArgs;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Serializer\Annotation\Groups;
+use Tlc\ReportBundle\Entity\BaseEntity;
 
-/**
- * @ORM\Entity(repositoryClass=PackageMoveRepository::class)
- * @ORM\HasLifecycleCallbacks()
- * @ORM\Table(name="ds.package_move",
- *      options={"comment":"Информация о передвежениях"})
- */
+#[ORM\Entity(repositoryClass: PackageMoveRepository::class)]
+#[ORM\HasLifecycleCallbacks()]
+#[ORM\Table(schema: "ds", name: "package_move", options: ["comment" => "Информация о передвежениях"])]
 #[
-ApiResource(
-    collectionOperations: ["get", "post"],
-    itemOperations: ["get"],
-    normalizationContext: ["groups" => ["package_move:read"]],
-    denormalizationContext: ["groups" => ["package_move:write"]]
-)]
+    ApiResource(
+        collectionOperations: ["get", "post"],
+        itemOperations: ["get"],
+        normalizationContext: ["groups" => ["package_move:read"]],
+        denormalizationContext: ["groups" => ["package_move:write"]]
+    )
+]
 class PackageMove
 {
     private DateTime $drec;
 
-    /**
-     * @ORM\Id
-     * @ORM\Column(name="drec", type="string",
-     *      options={"comment":"Время передвежения пакета"})
-     */
+
+    #[ORM\Id]
+    #[ORM\Column(name: "drec", type: "string", options: ["comment" => "Время передвежения пакета"])]
     #[Groups(["package_move:read"])]
-    #[ApiProperty(identifier:true)]
+    #[ApiProperty(identifier: true)]
     private $drecTimestampKey;
 
-    /**
-     * @ORM\ManyToOne(targetEntity=PackageLocation::class)
-     * @ORM\JoinColumn(referencedColumnName="id", name="src", nullable=false)
-     */
-    #[Groups(["package:read", "package_move:write","package_move:read"])]
+    #[ORM\ManyToOne(targetEntity: PackageLocation::class)]
+    #[ORM\JoinColumn(referencedColumnName: "id", name: "src", nullable: false)]
+    #[Groups(["package:read", "package_move:write", "package_move:read"])]
     private $src;
 
-    /**
-     * @ORM\ManyToOne(targetEntity=PackageLocation::class)
-     * @ORM\JoinColumn(referencedColumnName="id", name="dst", nullable=false)
-     */
-    #[Groups(["package:read", "package_move:write","package_move:read"])]
+    #[ORM\ManyToOne(targetEntity: PackageLocation::class)]
+    #[ORM\JoinColumn(referencedColumnName: "id", name: "dst", nullable: false)]
+    #[Groups(["package:read", "package_move:write", "package_move:read"])]
     private $dst;
 
-    /**
-     * @ORM\Column(type="string", length=255, nullable=true)
-     */
-    #[Groups(["package:read", "package_move:write","package_move:read"])]
+    #[ORM\Column(type: "string", length: 255, nullable: true)]
+    #[Groups(["package:read", "package_move:write", "package_move:read"])]
     private $comment;
 
-    /**
-     * @ORM\ManyToOne(targetEntity=Package::class, inversedBy="packageMoves")
-     * @ORM\JoinColumn(nullable=false)
-     */
-    #[Groups(["package_move:write",])]
+    #[ORM\ManyToOne(targetEntity: Package::class, inversedBy: "packageMoves")]
+    #[ORM\JoinColumn(nullable: false)]
+
+    #[Groups(["package_move:write"])]
     private $package;
 
     public function __construct()
@@ -116,11 +103,10 @@ class PackageMove
 
         return $this;
     }
-    
-    /**
-     * @ORM\PrePersist
-     * @ORM\PreUpdate
-     */
+
+
+    #[ORM\PrePersist]
+    #[ORM\PreUpdate]
     public function syncDrecTodrecTimestampKey(LifecycleEventArgs $event)
     {
         $entityManager = $event->getEntityManager();
@@ -129,9 +115,8 @@ class PackageMove
         $this->drecTimestampKey = $this->drec->format($platform->getDateTimeFormatString());
     }
 
-    /**
-     * @ORM\PostLoad
-     */
+
+    #[ORM\PostLoad]
     public function syncDrecTimestampKeyToDrec(LifecycleEventArgs $event)
     {
         $entityManager = $event->getEntityManager();

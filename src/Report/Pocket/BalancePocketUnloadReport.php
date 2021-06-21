@@ -6,7 +6,7 @@ namespace App\Report\Pocket;
 
 use Tlc\ReportBundle\Dataset\PdfDataset;
 use Tlc\ReportBundle\Dataset\SummaryPdfDataset;
-use App\Entity\BaseEntity;
+use Tlc\ReportBundle\Entity\BaseEntity;
 use Tlc\ReportBundle\Entity\Column;
 use Tlc\ReportBundle\Entity\SummaryStat;
 use Tlc\ReportBundle\Entity\SummaryStatMaterial;

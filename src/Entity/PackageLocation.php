@@ -7,11 +7,10 @@ use App\Repository\PackageLocationRepository;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Serializer\Annotation\Groups;
 
-/**
- * @ORM\Entity(repositoryClass=PackageLocationRepository::class)
- * @ORM\Table(name="ds.package_location",
- *      options={"comment":"Локация пакета"})
- */
+
+#[ORM\Entity(repositoryClass: PackageLocationRepository::class)]
+#[ORM\Table(schema: "ds", name: "package_location", options: ["comment" => "Локация пакета"])]
+
 #[ApiResource(
     collectionOperations: ["get", "post"],
     itemOperations: ["get", 'put'],
@@ -20,18 +19,17 @@ use Symfony\Component\Serializer\Annotation\Groups;
 )]
 class PackageLocation
 {
-    /**
-     * @ORM\Id
-     * @ORM\GeneratedValue
-     * @ORM\Column(type="integer")
-     */
+
+    #[ORM\Id]
+    #[ORM\GeneratedValue]
+    #[ORM\Column(type: "integer")]
+
     #[Groups(["package_location:write", "package_location:read", "package:read"])]
     private int $id;
 
-    /**
-     * @ORM\Column(type="string", length=255,
-     *      options={"comment":"Название"})
-     */
+
+    #[ORM\Column(type: "string", length: 255, options: ["comment" => "Название"])]
+
     #[Groups(["package_location:write", "package_location:read", "package:read"])]
     private string $name;
 

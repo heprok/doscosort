@@ -9,11 +9,9 @@ use Doctrine\ORM\Mapping as ORM;
 use ApiPlatform\Core\Annotation\ApiResource;
 use Symfony\Component\Serializer\Annotation\Groups;
 
-/**
- * @ORM\Entity(repositoryClass=ThicknessRepository::class)
- * @ORM\Table(name="ds.thickness", 
- *      options={"comment":"Справочник толщин"})
- */
+
+#[ORM\Entity(repositoryClass: ThicknessRepository::class)]
+#[ORM\Table(schema: "ds", name: "thickness", options: ["comment" => "Справочник толщин"])]
 #[
     ApiResource(
         collectionOperations: ["get", "post"],
@@ -24,26 +22,18 @@ use Symfony\Component\Serializer\Annotation\Groups;
 ]
 class Thickness
 {
-
-    /**
-     * @ORM\Id
-     * @ORM\Column(type="smallint", 
-     *      options={"comment":"Номинальная толщина"})
-     */
+    #[ORM\Id]
+    #[ORM\Column(type: "smallint", options: ["comment" => "Номинальная толщина"])]
     #[Groups(["thickness:read", "thickness:write"])]
     private int $nom;
 
-    /**
-     * @ORM\Column(type="smallint", 
-     *      options={"comment":"Минимальная толщина"})
-     */
+
+    #[ORM\Column(type: "smallint", options: ["comment" => "Минимальная толщина"])]
     #[Groups(["thickness:read", "thickness:write"])]
     private int $min;
 
-    /**
-     * @ORM\Column(type="smallint", 
-     *      options={"comment":"Максимальная толщина"})
-     */
+
+    #[ORM\Column(type: "smallint", options: ["comment" => "Максимальная толщина"])]
     #[Groups(["thickness:read", "thickness:write"])]
     private int $max;
 

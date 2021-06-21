@@ -4,9 +4,7 @@ declare(strict_types=1);
 
 namespace App\Entity;
 
-use ApiPlatform\Core\Annotation\ApiFilter;
 use ApiPlatform\Core\Annotation\ApiResource;
-use ApiPlatform\Core\Bridge\Doctrine\MongoDbOdm\Filter\OrderFilter;
 use App\Repository\PackageRepository;
 use DateTime;
 use Doctrine\Common\Collections\ArrayCollection;
@@ -14,12 +12,10 @@ use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use DoctrineExtensions\Types\Leam;
 use Symfony\Component\Serializer\Annotation\Groups;
+use Tlc\ReportBundle\Entity\BaseEntity;
 
-/**
- * @ORM\Entity(repositoryClass=PackageRepository::class)
- * @ORM\Table(name="ds.package",
- *      options={"comment":"Сформированные пакеты"})
- */
+#[ORM\Entity(repositoryClass: PackageRepository::class)]
+#[ORM\Table(schema: "ds", name: "package", options: ["comment" => "Сформированные пакеты"])]
 #[
     ApiResource(
         collectionOperations: ["get"],
@@ -30,65 +26,51 @@ use Symfony\Component\Serializer\Annotation\Groups;
 ]
 class Package
 {
-    /**
-     * @ORM\Id
-     * @ORM\GeneratedValue
-     * @ORM\Column(type="integer")
-     */
+
+    #[ORM\Id]
+    #[ORM\GeneratedValue]
+    #[ORM\Column(type: "integer")]
     #[Groups(["package:read"])]
     private int $id;
 
-    /**
-     * @ORM\Column(type="datetimetz",
-     *      options={"comment":"Время формирования пакета"})
-     */
+
+    #[ORM\Column(type: "datetimetz", options: ["comment" => "Время формирования пакета"])]
     #[Groups(["package:read"])]
     private DateTime $drec;
 
-    /**
-     * @ORM\ManyToOne(targetEntity=Species::class)
-     */
+
+    #[ORM\ManyToOne(targetEntity: Species::class)]
     #[Groups(["package:read", "package:write"])]
     private ?Species $species;
 
-    /**
-     * @ORM\Column(type="smallint", nullable=true,
-     *      options={"comment":"Толщина"})
-     */
+
+    #[ORM\Column(type: "smallint", nullable: true, options: ["comment" => "Толщина"])]
+
     #[Groups(["package:read", "package:write"])]
     private ?int $thickness;
 
-    /**
-     * @ORM\Column(type="smallint", nullable=true,
-     *      options={"comment":"Ширина"})
-     */
+
+    #[ORM\Column(type: "smallint", nullable: true, options: ["comment" => "Ширина"])]
     #[Groups(["package:read", "package:write"])]
     private ?int $width;
 
-    /**
-     * @ORM\Column(type="string", length=32, nullable=true,
-     *      options={"comment":"Качество"})
-     */
+
+    #[ORM\Column(type: "string", length: 32, nullable: true, options: ["comment" => "Качество"])]
     #[Groups(["package:read", "package:write"])]
     private ?string $qualities;
 
-    /**
-     * @ORM\Column(type="leam[]",
-     *      options={"comment":"Массив досок"})
-     */
+
+    #[ORM\Column(type: "leam[]", options: ["comment" => "Массив досок"])]
     #[Groups(["package:read", "package:write"])]
     private $boards = [];
 
-    /**
-     * @ORM\Column(type="boolean",
-     *      options={"comment":"Сухая или сырая"})
-     */
+
+    #[ORM\Column(type: "boolean", options: ["comment" => "Сухая или сырая"])]
     #[Groups(["package:read", "package:write"])]
     private bool $dry;
 
-    /**
-     * @ORM\OneToMany(targetEntity=PackageMove::class, mappedBy="package")
-     */
+
+    #[ORM\OneToMany(targetEntity: PackageMove::class, mappedBy: "package")]
     #[Groups(["package:read", "package:write"])]
     private $packageMoves;
 

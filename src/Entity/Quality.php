@@ -7,11 +7,8 @@ use App\Repository\QualityRepository;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Serializer\Annotation\Groups;
 
-/**
- * @ORM\Entity(repositoryClass=QualityRepository::class)
- * @ORM\Table(name="ds.quality", 
- *      options={"comment":"Качества доски"})
- */
+#[ORM\Entity(repositoryClass: QualityRepository::class)]
+#[ORM\Table(schema: "ds", name: "quality", options: ["comment" => "Качества доски"])]
 #[
     ApiResource(
         collectionOperations: ["get"],
@@ -22,25 +19,20 @@ use Symfony\Component\Serializer\Annotation\Groups;
 ]
 class Quality
 {
-    /**
-     * @ORM\Id
-     * @ORM\GeneratedValue
-     * @ORM\Column(type="smallint",
-     *      options={"comment":"ID доски, 1 бит"})
-     */
+
+    #[ORM\Id]
+    #[ORM\GeneratedValue]
+    #[ORM\Column(type: "smallint", options: ["comment" => "ID доски, 1 бит"])]
     #[Groups(['quality:read'])]
     private int $id;
 
-    /**
-     * @ORM\ManyToOne(targetEntity=QualityList::class)
-     * @ORM\JoinColumn(nullable=false)
-     */
+
+    #[ORM\ManyToOne(targetEntity: QualityList::class)]
+    #[ORM\JoinColumn(nullable: false)]
     private QualityList $list;
 
-    /**
-     * @ORM\Column(type="string", length=32,
-     *      options={"comment":"Название качества"})
-     */
+
+    #[ORM\Column(type: "string", length: 32, options: ["comment" => "Название качества"])]
     #[Groups(['quality:read'])]
     private string $name;
 

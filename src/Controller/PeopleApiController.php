@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Controller;
 
-use App\Entity\BaseEntity;
+use Tlc\ReportBundle\Entity\BaseEntity;
 use App\Repository\BoardRepository;
 use App\Repository\PeopleRepository;
 use App\Repository\PocketDistanceRepository;

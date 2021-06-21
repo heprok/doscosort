@@ -4,16 +4,11 @@ namespace App\Entity;
 
 use ApiPlatform\Core\Annotation\ApiResource;
 use App\Repository\DowntimeLocationRepository;
-use Doctrine\Common\Collections\ArrayCollection;
-use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
-use Symfony\Component\Serializer\Annotation\Groups;
+use Tlc\ManualBundle\Entity\DowntimeLocation as BaseDowntimeLocation;
 
-/**
- * @ORM\Entity(repositoryClass=DowntimeLocationRepository::class)
- * @ORM\Table(name="ds.downtime_location",
- *      options={"comment":"Локации простоя"})
- */
+#[ORM\Entity(repositoryClass: DowntimeLocationRepository::class)]
+#[ORM\Table(schema: "ds", name: "downtime_location", options: ["comment" => "Локации простоя"])]
 #[
     ApiResource(
         collectionOperations: ["get", "post"],
@@ -22,110 +17,8 @@ use Symfony\Component\Serializer\Annotation\Groups;
         denormalizationContext: ["groups" => ["downtime_location:write"]]
     )
 ]
-class DowntimeLocation
+class DowntimeLocation extends BaseDowntimeLocation
 {
-    /**
-     * @ORM\Id()
-     * @ORM\GeneratedValue()
-     * @ORM\Column(type="integer", name="id")
-     */
-    #[Groups(["downtime_location:read", "downtime_location:write", "downtime_place:read"])]
-    private int $code;
-
-    /**
-     * @ORM\Column(type="string", length=128, name="text",
-     *      options={"comment":"Название причины"})
-     */
-    #[Groups(["downtime_location:read", "downtime_location:write", "downtime_place:read"])]
-    private string $name;
-
-    /**
-     * @ORM\Column(type="boolean",
-     *      options={"comment":"Используется", "default":"true"})
-     */
-    #[Groups(["downtime_location:read", "downtime_location:write"])]
-    private bool $enabled = true;
-
-    /**
-     * @ORM\OneToMany(targetEntity=DowntimePlace::class, mappedBy="location")
-     */
-    private $downtimePlaces;
-
-    public function __construct(string $name)
-    {
-        $this->name = $name;
-        $this->downtimePlaces = new ArrayCollection();
-        $this->downtimes = new ArrayCollection();
-    }
-
-    public function getCode(): ?int
-    {
-        return $this->code;
-    }
-
-    public function setCode(int $code): self
-    {
-        $this->code = $code;
-
-        return $this;
-    }
-    public function __toString()
-    {
-        return $this->getName();
-    }
-
-    public function getName(): string
-    {
-        return $this->name ?? '';
-    }
-
-    public function setName(string $name): self
-    {
-        $this->name = $name;
-
-        return $this;
-    }
-
-
-    public function getEnabled(): ?bool
-    {
-        return $this->enabled;
-    }
-
-    public function setEnabled(bool $enabled): self
-    {
-        $this->enabled = $enabled;
-
-        return $this;
-    }
-
-    /**
-     * @return Collection|DowntimePlace[]
-     */
-    public function getDowntimePlaces(): Collection
-    {
-        return $this->downtimePlaces;
-    }
-
-    public function addDowntimePlace(DowntimePlace $downtimePlace): self
-    {
-        if (!$this->downtimePlaces->contains($downtimePlace)) {
-            $this->downtimePlaces[] = $downtimePlace;
-            $downtimePlace->setLocation($this);
-        }
-
-        return $this;
-    }
-
-    public function removeDowntimePlace(DowntimePlace $downtimePlace): self
-    {
-        if ($this->downtimePlaces->removeElement($downtimePlace)) {
-            // set the owning side to null (unless already changed)
-            if ($downtimePlace->getLocation() === $this) {
-                $downtimePlace->setLocation(null);
-            }
-        }
-
-        return $this;
-    }
+    #[ORM\OneToMany(targetEntity: DowntimePlace::class, mappedBy: "location")]
+    protected $downtimePlaces;
 }

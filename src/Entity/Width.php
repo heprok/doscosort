@@ -7,11 +7,8 @@ use Doctrine\ORM\Mapping as ORM;
 use ApiPlatform\Core\Annotation\ApiResource;
 use Symfony\Component\Serializer\Annotation\Groups;
 
-/**
- * @ORM\Entity(repositoryClass=WidthRepository::class)
- * @ORM\Table(name="ds.width", 
- *      options={"comment":"Справочник ширин"})
- */
+#[ORM\Entity(repositoryClass: WidthRepository::class)]
+#[ORM\Table(schema: "ds", name: "width", options: ["comment" => "Справочник ширин"])]
 #[
     ApiResource(
         collectionOperations: ["get", "post"],
@@ -22,25 +19,16 @@ use Symfony\Component\Serializer\Annotation\Groups;
 ]
 class Width
 {
-    /**
-     * @ORM\Id
-     * @ORM\Column(type="smallint", 
-     *      options={"comment":"Номинальная ширина"})
-     */
+    #[ORM\Id]
+    #[ORM\Column(type: "smallint", options: ["comment" => "Номинальная ширина"])]
     #[Groups(["width:read", "width:write"])]
     private int $nom;
 
-    /**
-     * @ORM\Column(type="smallint", 
-     *      options={"comment":"Минимальная ширина"})
-     */
+    #[ORM\Column(type: "smallint", options: ["comment" => "Минимальная ширина"])]
     #[Groups(["width:read", "width:write"])]
     private int $min;
 
-    /**
-     * @ORM\Column(type="smallint", 
-     *      options={"comment":"Максимальная ширина", "check":"min <= max"})
-     */
+    #[ORM\Column(type: "smallint", options: ["comment" => "Максимальная ширина", "check" => "min <= max"])]
     #[Groups(["width:read", "width:write"])]
     private int $max;
 
