@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace App\Controller;
 
 use App\Chart\Chart;
-use App\Dataset\ChartDataset;
+use Tlc\ReportBundle\Dataset\ChartDataset;
 use App\Entity\BaseEntity;
 use App\Entity\Downtime;
 use App\Repository\ShiftRepository;

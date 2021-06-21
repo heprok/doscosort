@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Controller;
 
-use App\Report\AbstractReport;
+use Tlc\ReportBundle\Report\AbstractReport;
 use App\Report\Board\BoardPdfReport;
 use App\Report\Board\BoardReport;
 use App\Report\Board\RegistryBoardPdfReport;

@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Chart;
 
-use App\Dataset\ChartDataset;
+use Tlc\ReportBundle\Dataset\ChartDataset;
 
 class Chart
 {

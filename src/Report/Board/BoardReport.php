@@ -4,12 +4,13 @@ declare(strict_types=1);
 
 namespace App\Report\Board;
 
-use App\Dataset\PdfDataset;
-use App\Dataset\SummaryPdfDataset;
-use App\Entity\Column;
-use App\Entity\SummaryStat;
-use App\Entity\SummaryStatMaterial;
-use App\Report\AbstractReport;
+use App\Entity\BaseEntity;
+use Tlc\ReportBundle\Dataset\PdfDataset;
+use Tlc\ReportBundle\Dataset\SummaryPdfDataset;
+use Tlc\ReportBundle\Entity\Column;
+use Tlc\ReportBundle\Entity\SummaryStat;
+use Tlc\ReportBundle\Entity\SummaryStatMaterial;
+use Tlc\ReportBundle\Report\AbstractReport;
 use App\Repository\BoardRepository;
 use DatePeriod;
 
@@ -206,7 +207,7 @@ final class BoardReport extends AbstractReport
                     $cut,
                     $value['count'],
                     $value['volume'],
-                    $value['volume'] / $totalVolume * 100,
+                    BaseEntity::percentageOf($value['volume'], $totalVolume),
                 ]);
             }
             $cutQualitySummaryPdfDataset->addSubTotal();
@@ -217,7 +218,7 @@ final class BoardReport extends AbstractReport
                 $quality,
                 $value['count'],
                 $value['volume'],
-                $value['volume'] / $totalVolume * 100,
+                BaseEntity::percentageOf($value['volume'], $totalVolume),
             ]);
         }
 
@@ -226,7 +227,7 @@ final class BoardReport extends AbstractReport
                 $cut,
                 $value['count'],
                 $value['volume'],
-                $value['volume'] / $totalVolume * 100,
+                BaseEntity::percentageOf($value['volume'], $totalVolume),
             ]);
         }
         // $cutSummaryPdfDataset->addSubTotal();

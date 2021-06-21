@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Controller;
 
-use App\Report\AbstractReport;
+use Tlc\ReportBundle\Report\AbstractReport;
 use App\Report\Event\EventPdfReport;
 use App\Report\Event\AlertEventReport;
 use App\Repository\EventRepository;

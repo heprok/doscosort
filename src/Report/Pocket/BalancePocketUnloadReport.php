@@ -4,13 +4,13 @@ declare(strict_types=1);
 
 namespace App\Report\Pocket;
 
-use App\Dataset\PdfDataset;
-use App\Dataset\SummaryPdfDataset;
+use Tlc\ReportBundle\Dataset\PdfDataset;
+use Tlc\ReportBundle\Dataset\SummaryPdfDataset;
 use App\Entity\BaseEntity;
-use App\Entity\Column;
-use App\Entity\SummaryStat;
-use App\Entity\SummaryStatMaterial;
-use App\Report\AbstractReport;
+use Tlc\ReportBundle\Entity\Column;
+use Tlc\ReportBundle\Entity\SummaryStat;
+use Tlc\ReportBundle\Entity\SummaryStatMaterial;
+use Tlc\ReportBundle\Report\AbstractReport;
 use App\Repository\BoardRepository;
 use App\Repository\UnloadRepository;
 use DateInterval;

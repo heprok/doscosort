@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace App\Report\Pocket;
 
-use App\Report\AbstractPdf;
-use App\Report\AbstractReport;
+use Tlc\ReportBundle\Report\AbstractPdf;
+use Tlc\ReportBundle\Report\AbstractReport;
 
 final class PocketUnloadPdfReport extends AbstractPdf
 {
