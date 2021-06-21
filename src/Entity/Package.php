@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Entity;
 
+use ApiPlatform\Core\Annotation\ApiProperty;
 use ApiPlatform\Core\Annotation\ApiResource;
 use App\Repository\PackageRepository;
 use DateTime;
@@ -30,6 +31,7 @@ class Package
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column(type: "integer")]
+    #[ApiProperty(identifier: true)]
     #[Groups(["package:read"])]
     private int $id;
 

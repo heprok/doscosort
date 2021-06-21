@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Entity;
 
+use ApiPlatform\Core\Annotation\ApiProperty;
 use App\Repository\ThicknessRepository;
 use Doctrine\ORM\Mapping as ORM;
 use ApiPlatform\Core\Annotation\ApiResource;
@@ -24,6 +25,7 @@ class Thickness
 {
     #[ORM\Id]
     #[ORM\Column(type: "smallint", options: ["comment" => "Номинальная толщина"])]
+    #[ApiProperty(identifier: true)]
     #[Groups(["thickness:read", "thickness:write"])]
     private int $nom;
 

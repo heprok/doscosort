@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Entity;
 
+use ApiPlatform\Core\Annotation\ApiProperty;
 use ApiPlatform\Core\Annotation\ApiResource;
 use App\Repository\BoardRepository;
 use DateTime;
@@ -22,6 +23,7 @@ class Board
 
     #[ORM\Id]
     #[ORM\Column(name: "drec", type: "string", options: ["comment" => "Дата записи"])]
+    #[ApiProperty(identifier: true)]
     private $drecTimestampKey;
 
 

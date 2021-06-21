@@ -2,6 +2,7 @@
 
 namespace App\Entity;
 
+use ApiPlatform\Core\Annotation\ApiProperty;
 use ApiPlatform\Core\Annotation\ApiResource;
 use App\Repository\QualityRepository;
 use Doctrine\ORM\Mapping as ORM;
@@ -23,6 +24,7 @@ class Quality
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column(type: "smallint", options: ["comment" => "ID доски, 1 бит"])]
+    #[ApiProperty(identifier: true)]
     #[Groups(['quality:read'])]
     private int $id;
 

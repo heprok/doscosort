@@ -5,6 +5,7 @@ namespace App\Entity;
 use ApiPlatform\Core\Annotation\ApiResource;
 use App\Repository\UnloadRepository;
 use ApiPlatform\Core\Annotation\ApiFilter;
+use ApiPlatform\Core\Annotation\ApiProperty;
 use DateTime;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Serializer\Annotation\Groups;
@@ -31,6 +32,7 @@ class Unload
     #[ORM\Id]
     #[ORM\Column(name: "drec", type: "string", options: ["comment" => "Время выгрузки"])]
     #[Groups(["unload:read"])]
+    #[ApiProperty(identifier: true)]
     private string $drecTimestampKey;
 
     #[ORM\Column(type: "string", length: 255, options: ["comment" => "Название качеств"])]
@@ -41,7 +43,6 @@ class Unload
     #[ORM\Column(type: "smallint", options: ["comment" => "Количество досок"])]
     #[Groups(["unload:read"])]
     private int $amount;
-
 
     #[ORM\Column(type: "smallint", options: ["comment" => "Карман"])]
     #[Groups(["unload:read"])]

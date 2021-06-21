@@ -2,6 +2,7 @@
 
 namespace App\Entity;
 
+use ApiPlatform\Core\Annotation\ApiProperty;
 use App\Repository\WidthRepository;
 use Doctrine\ORM\Mapping as ORM;
 use ApiPlatform\Core\Annotation\ApiResource;
@@ -21,6 +22,7 @@ class Width
 {
     #[ORM\Id]
     #[ORM\Column(type: "smallint", options: ["comment" => "Номинальная ширина"])]
+    #[ApiProperty(identifier: true)]
     #[Groups(["width:read", "width:write"])]
     private int $nom;
 
