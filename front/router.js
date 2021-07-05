@@ -33,7 +33,7 @@ export default new Router({
           name: 'Люди',
           path: 'manual/people',
           component: () => import('@/views/dashboard/pages/manual/People'),
-        },        
+        },               
         {
           name: 'Рабочее расписание',
           path: 'manual/workschedule',
@@ -111,5 +111,9 @@ export default new Router({
       path: '/showpackage',
       component: () => import('@/views/singlePages/Package'),
     },
+    {
+      path: '/preloader',
+      component: () => import('@/views/Preloader'),
+    }, 
   ],
 })

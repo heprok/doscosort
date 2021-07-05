@@ -249,7 +249,6 @@ class ChartController extends AbstractController
         // $period = new DatePeriod(new DateTime('2021-03-19'), new DateInterval('P1D'), new DateTime('2021-03-26'));
         $shifts = $this->shiftRepository->findByPeriod($period);
         $peoples = $this->shiftRepository->getPeopleForByPeriod($period);
-        // dd(21);
         if (!$shifts || !$peoples) {
             $chart = new Chart(['']);
             $chart->addOption('responsive', true);
