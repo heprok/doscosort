@@ -1,1 +1,1 @@
-/home/ok/prjTechno/mill-250/web/front/views/dashboard/pages/report/Downtime.vue
+/home/ok/prj/mill-250/web/front/views/dashboard/pages/report/Downtime.vue
