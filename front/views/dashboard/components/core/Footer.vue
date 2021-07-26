@@ -30,7 +30,7 @@
           md="auto"
         >
           <div class="body-1 font-weight-light pt-6 pt-md-0 text-center">
-            &copy; 2020, made with
+            &copy; 2020-{{ new Date().getFullYear() }}, made with
             <v-icon size="18">
               mdi-heart
             </v-icon>
