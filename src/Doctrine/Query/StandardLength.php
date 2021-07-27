@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Query;
+namespace App\Doctrine\Query;
 
 use DoctrineExtensions\Query\Postgresql\StandardLength as BaseQueryStandardLength;
 
