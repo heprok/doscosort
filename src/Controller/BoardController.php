@@ -4,92 +4,113 @@ declare(strict_types=1);
 
 namespace App\Controller;
 
-use Tlc\ReportBundle\Report\AbstractReport;
 use App\Report\Board\BoardPdfReport;
 use App\Report\Board\BoardReport;
 use App\Report\Board\RegistryBoardPdfReport;
 use App\Report\Board\RegistryBoardReport;
 use App\Repository\BoardRepository;
 use App\Repository\PeopleRepository;
-use DateInterval;
-use DatePeriod;
-use DateTime;
-use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
-use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
+use Tlc\ReportBundle\Controller\AbstractReportController;
 
 #[Route("report/board", name: "report_board_")]
-class BoardController extends AbstractController
+class BoardController extends AbstractReportController
 {
     public function __construct(
-        private PeopleRepository $peopleRepository,
+        PeopleRepository $peopleRepository,
         private BoardRepository $boardRepository
     ) {
-        $this->peopleRepository = $peopleRepository;
-        $this->boardRepository = $boardRepository;
+        parent::__construct($peopleRepository);
     }
 
-    #[Route("/{start}...{end}/people/{idsPeople}/pdf", name: "for_period_with_people_show_pdf")]
-    public function showReportForPeriodWithPeoplePdf(string $start, string $end, string $idsPeople)
+    #[Route("/pdf", name: "show_pdf")]
+    public function showReportPdf()
     {
-        $request = Request::createFromGlobals();
-        $sqlWhere = json_decode($request->query->get('sqlWhere') ?? '[]');
-
-        $idsPeople = explode('...', $idsPeople);
-        $peoples = [];
-        foreach ($idsPeople as $idPeople) {
-            if ($idPeople != '')
-                $peoples[] = $this->peopleRepository->find($idPeople);
-        }
-        $startDate = new DateTime($start);
-        $endDate = new DateTime($end);
-        $period = new DatePeriod($startDate, new DateInterval('P1D'), $endDate);
-        $report = new BoardReport($period, $this->boardRepository, $peoples, $sqlWhere);
-        $this->showPdf($report);
-    }
-
-    #[Route("/{start}...{end}/pdf", name: "for_period_show_pdf")]
-    public function showReportForPeriodPdf(string $start, string $end)
-    {
-        $this->showReportForPeriodWithPeoplePdf($start, $end, '');
-    }
-
-    private function showPdf(AbstractReport $report)
-    {
-        $report->init();
+        $report = new BoardReport($this->period, $this->boardRepository, $this->peoples, $this->sqlWhere);
         $pdf = new BoardPdfReport($report);
         $pdf->render();
     }
 
-    #[Route("_registry/{start}...{end}/people/{idsPeople}/pdf", name: "registry_for_period_with_people_show_pdf")]
-    public function showReportRegistryForPeriodPeoplePdf(string $start, string $end, string $idsPeople)
+    #[Route("_registry/pdf", name: "registry_show_pdf`")]
+    public function showReportRegistryPdf()
     {
-        $request = Request::createFromGlobals();
-        $sqlWhere = json_decode($request->query->get('sqlWhere') ?? '[]');
-
-        $idsPeople = explode('...', $idsPeople);
-        $peoples = [];
-        foreach ($idsPeople as $idPeople) {
-            if ($idPeople != '')
-                $peoples[] = $this->peopleRepository->find($idPeople);
-        }
-        $startDate = new DateTime($start);
-        $endDate = new DateTime($end);
-        $period = new DatePeriod($startDate, new DateInterval('P1D'), $endDate);
-        $report = new RegistryBoardReport($period, $this->boardRepository, $peoples, $sqlWhere);
-        $this->showRegistryPdf($report);
-    }
-
-    #[Route("_registry/{start}...{end}/pdf", name: "registry_for_period_show_pdf")]
-    public function showReportRegistryForPeriodPdf(string $start, string $end)
-    {
-        $this->showReportRegistryForPeriodPeoplePdf($start, $end, '');
-    }
-
-    private function showRegistryPdf(AbstractReport $report)
-    {
-        $report->init();
+        $report = new RegistryBoardReport($this->period, $this->boardRepository, $this->peoples, $this->sqlWhere);
         $pdf = new RegistryBoardPdfReport($report);
         $pdf->render();
     }
+
+    // #[Route("/{start}...{end}/people/{idsPeople}/api", name: "for_period_with_people_api")]
+    // public function getDataApiReport(string $start, string $end, string $idsPeople)
+    // {
+    //     $request = Request::createFromGlobals();
+    //     $sqlWhere = json_decode($request->query->get('sqlWhere') ?? '[]');
+
+    //     $idsPeople = explode('...', $idsPeople);
+    //     $peoples = [];
+    //     foreach ($idsPeople as $idPeople) {
+    //         if ($idPeople != '')
+    //             $peoples[] = $this->peopleRepository->find($idPeople);
+    //     }
+    //     $startDate = new DateTime($start);
+    //     $endDate = new DateTime($end);
+    //     $period = new DatePeriod($startDate, new DateInterval('P1D'), $endDate);
+    //     $report = new BoardReport($this->period, $this->boardRepository, $this->peoples, $this->sqlWhere);
+    //     $report->init();
+    //     $mainDataset = $report->getMainDataset();
+
+    //     $keysSubTotal = $mainDataset->getKeysSubTotal();
+    //     $data = array_filter(
+    //         $mainDataset->getData(),
+    //         function ($key) use (&$keysSubTotal) {
+    //             return !in_array($key, $keysSubTotal);
+    //         },
+    //         ARRAY_FILTER_USE_KEY
+    //     );
+
+
+    //     $result = [
+    //         'columns' => $mainDataset->getColumns(),
+    //         'data' => array_values($data),
+    //     ];
+    //     return $this->json($result);
+    //     $this->showPdf($report);
+    // }
+
+
+    // #[Route("_registry/{start}...{end}/people/{idsPeople}/api", name: "registry_for_period_with_people_show_Api")]
+    // public function showReportRegistryForPeriodPeopleApi(string $start, string $end, string $idsPeople)
+    // {
+    //     $request = Request::createFromGlobals();
+    //     $sqlWhere = json_decode($request->query->get('sqlWhere') ?? '[]');
+
+    //     $idsPeople = explode('...', $idsPeople);
+    //     $peoples = [];
+    //     foreach ($idsPeople as $idPeople) {
+    //         if ($idPeople != '')
+    //             $peoples[] = $this->peopleRepository->find($idPeople);
+    //     }
+    //     $startDate = new DateTime($start);
+    //     $endDate = new DateTime($end);
+    //     $period = new DatePeriod($startDate, new DateInterval('P1D'), $endDate);
+    //     $report = new RegistryBoardReport($this->period, $this->boardRepository, $this->peoples, $this->sqlWhere);
+    //     $report->init();
+    //     $mainDataset = $report->getMainDataset();
+
+    //     $keysSubTotal = $mainDataset->getKeysSubTotal();
+    //     $data = array_filter(
+    //         $mainDataset->getData(),
+    //         function ($key) use (&$keysSubTotal) {
+    //             return !in_array($key, $keysSubTotal);
+    //         },
+    //         ARRAY_FILTER_USE_KEY
+    //     );
+
+
+    //     $result = [
+    //         'columns' => $mainDataset->getColumns(),
+    //         'data' => array_values($data),
+    //     ];
+    //     return $this->json($result);
+    //     $this->showRegistryPdf($report);
+    // }
 }

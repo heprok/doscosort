@@ -4,56 +4,27 @@ declare(strict_types=1);
 
 namespace App\Controller;
 
-use Tlc\ReportBundle\Report\AbstractReport;
-use App\Report\Event\ActionOperatorEventReport;
-use App\Report\Event\EventPdfReport;
 use App\Repository\EventRepository;
 use App\Repository\PeopleRepository;
-use App\Repository\ShiftRepository;
-use DateInterval;
-use DatePeriod;
-use DateTime;
-use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
-use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
+use Tlc\ManualBundle\Report\Event\ActionOperatorEventReport;
+use Tlc\ManualBundle\Report\Event\EventPdfReport;
+use Tlc\ReportBundle\Controller\AbstractReportController;
 
 #[Route("report/event/action_operator", name: "report_event_action_operator_")]
-class ActionOperatorEventController extends AbstractController
+class ActionOperatorEventController extends AbstractReportController
 {
     public function __construct(
-        private PeopleRepository $peopleRepository,
+        PeopleRepository $peopleRepository,
         private EventRepository $eventRepository
     ) {
+        parent::__construct($peopleRepository);
     }
 
-    #[Route("/{start}...{end}/people/{idsPeople}/pdf", name: "for_period_with_people_show_pdf")]
-    public function showReportForPeriodWithPeoplePdf(string $start, string $end, string $idsPeople)
+    #[Route("/pdf", name: "show_pdf")]
+    public function showReportPdf()
     {
-        $request = Request::createFromGlobals();
-        $sqlWhere = json_decode($request->query->get('sqlWhere') ?? '[]');
-
-        $idsPeople = explode('...', $idsPeople);
-        $peoples = [];
-        foreach ($idsPeople as $idPeople) {
-            if ($idPeople != '')
-                $peoples[] = $this->peopleRepository->find($idPeople);
-        }
-        $startDate = new DateTime($start);
-        $endDate = new DateTime($end);
-        $period = new DatePeriod($startDate, new DateInterval('P1D'), $endDate);
-        $report = new ActionOperatorEventReport($period, $this->eventRepository, $peoples, $sqlWhere);
-        $this->showPdf($report);
-    }
-
-    #[Route("/{start}...{end}/pdf", name: "for_period_show_pdf")]
-    public function showReportForPeriodPdf(string $start, string $end)
-    {
-        $this->showReportForPeriodWithPeoplePdf($start, $end, '');
-    }
-
-    private function showPdf(AbstractReport $report)
-    {
-        $report->init();
+        $report = new ActionOperatorEventReport($this->period, $this->eventRepository, $this->peoples, $this->sqlWhere);
         $pdf = new EventPdfReport($report);
         $pdf->render();
     }

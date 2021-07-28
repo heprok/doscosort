@@ -13,13 +13,13 @@ use Tlc\ManualBundle\Entity\StandardLength as BaseStandardLength;
 #[ORM\Table(schema: "ds",name: "standard_length", options: ["comment" => "Cтандартные длины"])]
 #[ApiResource(
     collectionOperations: [
-        'get' => ['method' => 'GET', 'path' => '/lengths'],
-        'post' => ['method' => 'POST', 'path' => '/lengths']
+        'get' => ['method' => 'GET', 'path' => '/standard_lengths'],
+        'post' => ['method' => 'POST', 'path' => '/standard_lengths']
     ],
     itemOperations: [
-        'get' => ['method' => 'GET', 'path' => '/lengths/{standard}'],
-        'put' => ['method' => 'PUT', 'path' => '/lengths/{standard}'],
-        'delete' => ['method' => 'DELETE', 'path' => '/lengths/{standard}'],
+        'get' => ['method' => 'GET', 'path' => '/standard_lengths/{standard}'],
+        'put' => ['method' => 'PUT', 'path' => '/standard_lengths/{standard}'],
+        'delete' => ['method' => 'DELETE', 'path' => '/standard_lengths/{standard}'],
     ],
     normalizationContext: [
         "groups" => ['standard_length:read']

@@ -34,7 +34,7 @@ doctrine:
                 alias: App
         dql:
             numeric_functions:
-                standard_length: App\Query\StandardLength
+                standard_length: App\Doctrine\Query\StandardLength
                 unnest: DoctrineExtensions\Query\Postgresql\Unnest
                 volume_boards: DoctrineExtensions\Query\Postgresql\VolumeBoard
                 get_json_filed_by_key: DoctrineExtensions\Query\Postgresql\GetJsonFieldByKey
