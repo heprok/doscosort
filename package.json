@@ -1,26 +1,34 @@
 {
     "devDependencies": {
-        "@mdi/font": "^5.6.55",
         "@symfony/webpack-encore": "^1.5.0",
         "axios": "^0.21.1",
+        "builder-query-vuetify": "file:../../library/vue/builder-query-vuetify",
+        "chart.js": "2",
+        "chartjs-plugin-datalabels": "^0.7.0",
         "core-js": "^3.0.0",
         "css-loader": "^4.2.1",
+        "daterange-picker-vuetify": "file:../../library/vue/daterange-picker-vuetify",
         "deepmerge": "^4.2.2",
         "fibers": "^5.0.0",
         "file-loader": "^6.2.0",
-        "material-design-icons-iconfont": "^5.0.1",
+        "moment-timezone": "^0.5.32",
         "regenerator-runtime": "^0.13.2",
         "sass": "^1.26.12",
         "sass-loader": "^12.0.0",
         "style-loader": "^1.3.0",
-        "typeface-roboto": "0.0.75",
+        "tlc-front-components": "^1.0.6",
+        "vee-validate": "^3.4.0",
         "vue": "^2.6.12",
         "vue-chart": "^2.0.0",
+        "vue-chartist": "^2.3.1",
         "vue-chartjs": "^3.5.1",
         "vue-i18n": "^8.22.0",
         "vue-loader": "^15.9.3",
+        "vue-qrcode-reader": "^2.3.18",
         "vue-router": "^3.1.3",
+        "vue-snotify": "^3.2.1",
         "vue-template-compiler": "^2.6.12",
+        "vuetify": "^2.3.13",
         "vuex": "^3.1.2",
         "webpack-notifier": "^1.6.0"
     },
@@ -33,16 +41,8 @@
         "build": "encore production --progress"
     },
     "dependencies": {
-        "builder-query-vuetify": "file:../../library/vue/builder-query-vuetify",
-        "chart.js": "2",
-        "chartjs-plugin-datalabels": "^0.7.0",
-        "daterange-picker-vuetify": "file:../../library/vue/daterange-picker-vuetify",
-        "moment-timezone": "^0.5.32",
-        "tlc-front-components": "^1.0.6",
-        "vee-validate": "^3.4.0",
-        "vue-chartist": "^2.3.1",
-        "vue-qrcode-reader": "^2.3.18",
-        "vue-snotify": "^3.2.1",
-        "vuetify": "^2.3.13"
+        "@mdi/font": "^5.6.55",
+        "material-design-icons-iconfont": "^5.0.1",
+        "typeface-roboto": "0.0.75"
     }
 }
