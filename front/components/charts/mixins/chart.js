@@ -3,6 +3,7 @@ export const chart = {
     return {
       series: [],
       intervalUpdate: null,
+      loading: false,
     }
   },
   props: {
@@ -10,13 +11,26 @@ export const chart = {
       type: String,
       required: true
     },
-    secondUpdate: {
+    minuteUpdate: {
       type: Number,
-      default: 1000 * 5, // 5 секунд
+      default: 5, // 5 минут
     },
     suffix: {
       type: String,
-      default: '%', // 5 секунд
+      default: '',
+    },
+    showDialogPeople: {
+      type: Boolean,
+      default: false,
+    },
+    showDialogPeriod: {
+      type: Boolean,
+      default: false,
+    }
+  },
+  watch: {
+    loading() {
+      this.$emit('toggle-loaded');
     },
   },
   methods: {
@@ -32,9 +46,53 @@ export const chart = {
     updateSeries(datasets) {
       this.$refs.chart.updateSeries(datasets);
     },
+    appendIconSelectPeople() {
+      const self = this;
+      this.$refs.chart.updateOptions({
+          toolbar: {
+            show: true,
+            tools: {
+              customIcons: [
+                {
+                  icon: '<span class="mdi mdi-18px mdi-account-group"></span>',
+                  index: 1,
+                  title: "Выбранные персонал",
+                  class: "custom-icon",
+                  click: () => {
+                    self.$emit("open-menu-people");
+                  },
+                },
+              ],
+            }
+          },
+      })
+    },
+    appendIconSelectPeriod() {
+      const self = this;
+      this.$refs.chart.updateOptions({
+        chart: {
+          toolbar: {
+            show: true,
+            tools: {
+              customIcons: [
+                {
+                  icon: '<span class="mdi mdi-18px mdi-calendar"></span>',
+                  index: 1,
+                  title: "Период",
+                  class: "custom-icon",
+                  click: () => {
+                    self.$emit("open-menu-date");
+                  },
+                },
+              ],
+            }
+          },
+        }
+      })
+    },
     changeTheme() {
       const mode =
-      localStorage.getItem("dark_theme") === "true" ? "dark" : "light";
+        localStorage.getItem("dark_theme") === "true" ? "dark" : "light";
       this.$refs.chart.updateOptions({
         theme: {
           mode: mode,
@@ -54,19 +112,20 @@ export const chart = {
       this.stopTimerUpdate();
       this.intervalUpdate = window.setInterval(() => {
         this.setup();
-      }, this.secondUpdate);
+      }, this.minuteUpdate * 60 * 1000);
     },
 
   },
   beforeDestroy() {
-    if (this.secondUpdate) this.stopTimerUpdate();
-    this.stopTimerRefresh();
+    if (this.minuteUpdate) this.stopTimerUpdate();
     this.$refs.chart.destroy();
     this.$eventBus.$off("change-theme");
   },
   async mounted() {
     this.startTimerUpdate();
     await this.setup();
+    if (this.showDialogPeople) this.appendIconSelectPeople();
+    if (this.showDialogPeriod) this.appendIconSelectPeriod();
     this.$eventBus.$on("change-theme", () => {
       this.changeTheme();
     });
