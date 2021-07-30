@@ -63,26 +63,20 @@ class ChartController extends AbstractController
         $qualities = $this->boardRepository->getQualityVolumeByPeriod($currentShift->getPeriod());
         $total_volume = $this->boardRepository->getVolumeBoardsByPeriod($currentShift->getPeriod());
 
-        $labels = [''];
+        $labels = [];
         $datasets = [];
-        $colors = Chart::CHART_COLOR;
         foreach ($qualities as $key => $quality) {
+            
             $precent = round(((float)$quality['volume_boards'] / ($total_volume ?: 1) * 100), 2);
-            // dump($quality);
             if ($precent != 0) {
-                $datasets[] = $dataset = new ChartDataset($quality['name_quality']);
-                $dataset->setData([$precent]);
-                $dataset->setBackgroundColor(array_shift($colors));
+                $labels[] = $quality['name_quality'];
+                $datasets[] = $dataset = new ChartDataset();
+                $dataset->appendData($precent);
             }
         }
-
         $chart = new Chart($labels, $datasets);
 
         // $chart->addOption('responsive', true);
-        $chart->addOption('indexAxis', 'y',);
-        $chart->addOption('elements', ['bar' => ['borderWidth' => 1]]);
-
-        $chart->addOption('maintainAspectRatio', false);
         return $this->json($chart->__serialize());
     }
 

@@ -90,6 +90,8 @@ export default {
   methods: {
     switchTheme(){
       localStorage.setItem("dark_theme", this.$vuetify.theme.dark);
+      this.$eventBus.$emit("change-theme", this.$vuetify.theme.dark ? 'dark' : 'light');
+
     },
     ...mapMutations({
       setDrawer: "SET_DRAWER",

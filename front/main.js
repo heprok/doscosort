@@ -23,9 +23,10 @@ import vuetify from './plugins/vuetify'
 import i18n from './i18n'
 import Snotify, { SnotifyPosition } from 'vue-snotify'
 import moment from 'moment-timezone'
+import VueApexCharts from 'vue-apexcharts';
 import Chart from 'chart.js'
 import LoaderTlc from "tlc-front-components/src/LoaderTlc";
-
+import axios from 'axios'
 Chart.defaults.global.defaultFontSize = 20;
 
 const optionsNotification = {
@@ -38,8 +39,11 @@ moment.tz.setDefault(store.state.timezone)
 Vue.use(Snotify, optionsNotification);
 
 Vue.prototype.$moment = moment
+Vue.prototype.$axios = axios
+Vue.prototype.$eventBus = new Vue();
 Vue.config.productionTip = false
 Vue.component('LoaderTlc', LoaderTlc);
+Vue.component('apexchart', VueApexCharts)
 new Vue({
   router,
   Snotify,

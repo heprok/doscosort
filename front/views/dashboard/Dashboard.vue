@@ -20,20 +20,19 @@
       </v-col>
       <v-col cols="6" lg="6" sm="12">
         <ChartCard
-          type="HBar"
-          urlApi="/api/charts/qualtites/currentShift"
-          suffix="%"
           title="Распределение качеств"
-        />
+        >
+        <BarChartApex urlApi="/api/charts/qualtites/currentShiftApex" suffix="%" ref="chart" />
+        </ChartCard>
       </v-col>
-      <v-col cols="6" lg="6" sm="12">
+      <!-- <v-col cols="6" lg="6" sm="12">
         <ChartCard
           type="Bar"
           urlApi="/api/charts/volume/shifts/weekly"
           subtitle="За неделю"
           title="Выработка по операторам"
         />
-      </v-col>
+      </v-col> -->
     </v-row>
     <!-- <v-row>
       <v-col cols="6" lg="6" sm="12">
@@ -124,9 +123,10 @@
 // import LineChart from '../../components/base/chart/report/dashboard/VolumeBoardChart.js';
 // import LineChartCard from '../../components/base/ChartJsCard.vue';
 import ChartCard from "../../components/charts/ChartCard";
+import BarChartApex from "../../components/charts/BarChartApex.vue"
 export default {
   name: "DashboardDashboard",
-  components: { ChartCard },
+  components: { ChartCard, BarChartApex },
   data() {
     return {
       loader: false,
