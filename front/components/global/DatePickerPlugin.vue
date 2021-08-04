@@ -8,6 +8,7 @@
     :presets="presets"
     v-on="$listeners"
     v-bind="$attrs"
+    :max="maxDate"
   >
   </VDaterange>
 </template>
@@ -32,6 +33,13 @@ export default {
   },
   mounted() {
     // this.range = this.value
+  },
+  computed: {
+    maxDate() {
+      let currentDate = new Date();
+      currentDate.setDate(currentDate.getDate() + 1);
+      return currentDate.toISOString();
+    },
   },
   data() {
     return {

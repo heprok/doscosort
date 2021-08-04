@@ -21,14 +21,18 @@
       <v-col cols="6" lg="6" sm="12">
         <ChartCard
           title="Распределение качеств"
+          @update-query="(query) => queryChartQualities = query"
           subtitle="Текущая смена"
           ref="chartCardQualitites"
         >
           <BarChart
             urlApi="/api/charts/qualtites/currentShift"
             @toggle-loaded="$refs.chartCardQualitites.toggleLoaded()"
+            @open-menu-period="$refs.chartChartQualitites.openMenuPeriod()"
             @update-chart="$refs.chartCardQualitites.refreshUpdate()"
+            :query="queryChartQualities"
             :minuteUpdate="5"
+            showDialogPeriod
             horizontal
             suffix="%"
           />
@@ -36,16 +40,21 @@
       </v-col>
       <v-col cols="6" lg="6" sm="12">
         <ChartCard
+          @update-query="(query) => queryChartVolume = query"
           subtitle="За неделю"
           title="Выработка по операторам"
           ref="chartCardVolume"
         >
-          <BarChart
+          <ColumnChart
+            urlApi="/api/charts/volume/shifts"
             showDialogPeriod
+            ref="chartVolume"
             showDialogPeople
-            urlApi="/api/charts/volume/shifts/weekly"
+            :query="queryChartVolume"
             :minuteUpdate="1"
             @toggle-loaded="$refs.chartCardVolume.toggleLoaded()"
+            @open-menu-period="$refs.chartCardVolume.openMenuPeriod()"
+            @open-menu-people="$refs.chartCardVolume.openMenuPeople()"
             @update-chart="$refs.chartCardVolume.refreshUpdate()"
           />
         </ChartCard>
@@ -57,12 +66,15 @@
 <script>
 import ChartCard from "../../components/charts/ChartCard";
 import BarChart from "../../components/charts/BarChart.vue";
+import ColumnChart from "../../components/charts/ColumnChart.vue";
 export default {
   name: "DashboardDashboard",
-  components: { ChartCard, BarChart },
+  components: { ChartCard, ColumnChart, BarChart },
   data() {
     return {
       loader: false,
+      queryChartQualities: {},
+      queryChartVolume: {},
       infoCards: [
         {
           nameCard: "Кол-во пил-мат",

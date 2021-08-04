@@ -23,12 +23,19 @@ export const chart = {
       type: Boolean,
       default: false,
     },
+    query: {
+      type: Object,
+      default: () => {}
+    },
     showDialogPeriod: {
       type: Boolean,
       default: false,
     }
   },
   watch: {
+    query() {
+      this.setup();
+    },
     loading() {
       this.$emit('toggle-loaded');
     },
@@ -46,49 +53,29 @@ export const chart = {
     updateSeries(datasets) {
       this.$refs.chart.updateSeries(datasets);
     },
-    appendIconSelectPeople() {
+    iconSelectPeople() {
       const self = this;
-      this.$refs.chart.updateOptions({
-          toolbar: {
-            show: true,
-            tools: {
-              customIcons: [
-                {
-                  icon: '<span class="mdi mdi-18px mdi-account-group"></span>',
-                  index: 1,
-                  title: "Выбранные персонал",
-                  class: "custom-icon",
-                  click: () => {
-                    self.$emit("open-menu-people");
-                  },
-                },
-              ],
-            }
-          },
-      })
+      return {
+        icon: '<span class="mdi mdi-18px mdi-account-group"></span>',
+        index: 1,
+        title: "Выбранные персонал",
+        class: "custom-icon",
+        click: () => {
+          self.$emit("open-menu-people");
+        },
+      }
     },
-    appendIconSelectPeriod() {
+    iconSelectPeriod() {
       const self = this;
-      this.$refs.chart.updateOptions({
-        chart: {
-          toolbar: {
-            show: true,
-            tools: {
-              customIcons: [
-                {
-                  icon: '<span class="mdi mdi-18px mdi-calendar"></span>',
-                  index: 1,
-                  title: "Период",
-                  class: "custom-icon",
-                  click: () => {
-                    self.$emit("open-menu-date");
-                  },
-                },
-              ],
-            }
-          },
-        }
-      })
+      return {
+        icon: '<span class="mdi mdi-18px mdi-calendar"></span>',
+        index: 1,
+        title: "Период",
+        class: "custom-icon",
+        click: () => {
+          self.$emit("open-menu-period");
+        },
+      }
     },
     changeTheme() {
       const mode =
@@ -104,6 +91,23 @@ export const chart = {
           theme: mode,
         },
       });
+    },
+    updateIcons() {
+      const self = this;
+      let icons = [];
+      if (this.showDialogPeriod) icons.push(this.iconSelectPeriod());
+      if (this.showDialogPeople) icons.push(this.iconSelectPeople())
+      this.$refs.chart.updateOptions({
+        chart: {
+          toolbar: {
+            show: true,
+            tools: {
+              customIcons: icons
+            }
+          },
+        }
+      })
+
     },
     stopTimerUpdate() {
       window.clearInterval(this.intervalUpdate);
@@ -123,9 +127,7 @@ export const chart = {
   },
   async mounted() {
     this.startTimerUpdate();
-    await this.setup();
-    if (this.showDialogPeople) this.appendIconSelectPeople();
-    if (this.showDialogPeriod) this.appendIconSelectPeriod();
+    this.updateIcons();
     this.$eventBus.$on("change-theme", () => {
       this.changeTheme();
     });

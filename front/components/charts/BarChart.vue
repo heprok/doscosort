@@ -1,8 +1,5 @@
 <template>
-  <div>
     <apexchart type="bar" ref="chart" :options="options" :series="series" />
-    
-  </div>
 </template>
 
 <script>
@@ -33,7 +30,7 @@ export default {
           enabled: true,
           textAnchor: "start",
           style: {
-            colors: ["#000"],
+            colors: ["#304758"],
             fontSize: "14px",
           },
           formatter: function (val, opt) {
@@ -77,14 +74,11 @@ export default {
       default: false,
     },
   },
-  mounted() {
-
-  },
   methods: {
     async setup() {
       try {
         this.loading = false;
-        const { data } = await this.$axios.get(this.urlApi);
+        const { data } = await this.$axios.get(this.urlApi, {params: this.query});
         const values = data.datasets.map((dataset) => dataset.data[0]);
         this.$refs.chart.updateOptions({
           xaxis: {
