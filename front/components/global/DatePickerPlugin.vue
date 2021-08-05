@@ -9,6 +9,7 @@
     v-on="$listeners"
     v-bind="$attrs"
     :max="maxDate"
+    highlight-color="blue lighten-3"
   >
   </VDaterange>
 </template>

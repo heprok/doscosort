@@ -62,12 +62,22 @@ export default {
       type: String,
       default: "",
     },
-    subtitle: {
-      type: String,
-      default: "",
-    },
   },
   computed: {
+    subtitle() {
+      if (this.period.selected.isCurrentShift) return "Текущая смена";
+
+      const start = this.$moment(this.period.selected.start);
+      const end = this.$moment(this.period.selected.end);
+      const duration = this.$moment.duration(end.diff(start));
+
+      const months = end.diff(start, 'months', false);
+      start.add(months, 'months');
+      const days = end.diff(start, 'days', false);
+      let result = months > 0 ? months  + ' ' + this.getNumEnding(months, ['месяц', 'месяца', 'месяцев']) + ' и ' : '';
+      return result += days + ' ' + this.getNumEnding(days, ['день', 'дня', 'дней'])
+      
+    },
     query() {
       return {
         "period[start]": this.period.selected.start,

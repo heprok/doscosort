@@ -28,34 +28,13 @@
           <BarChart
             urlApi="/api/charts/qualtites/currentShift"
             @toggle-loaded="$refs.chartCardQualitites.toggleLoaded()"
-            @open-menu-period="$refs.chartChartQualitites.openMenuPeriod()"
+            @open-menu-period="$refs.chartCardQualitites.openMenuPeriod()"
             @update-chart="$refs.chartCardQualitites.refreshUpdate()"
             :query="queryChartQualities"
             :minuteUpdate="5"
             showDialogPeriod
             horizontal
             suffix="%"
-          />
-        </ChartCard>
-      </v-col>
-      <v-col cols="6" lg="6" sm="12">
-        <ChartCard
-          @update-query="(query) => queryChartVolume = query"
-          subtitle="За неделю"
-          title="Выработка по операторам"
-          ref="chartCardVolume"
-        >
-          <ColumnChart
-            urlApi="/api/charts/volume/shifts"
-            showDialogPeriod
-            ref="chartVolume"
-            showDialogPeople
-            :query="queryChartVolume"
-            :minuteUpdate="5"
-            @toggle-loaded="$refs.chartCardVolume.toggleLoaded()"
-            @open-menu-period="$refs.chartCardVolume.openMenuPeriod()"
-            @open-menu-people="$refs.chartCardVolume.openMenuPeople()"
-            @update-chart="$refs.chartCardVolume.refreshUpdate()"
           />
         </ChartCard>
       </v-col>

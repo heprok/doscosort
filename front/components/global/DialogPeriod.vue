@@ -42,12 +42,11 @@ export default {
   },
   mounted() {
     this.period = this.selected;
-    console.log(this.selected)
   },
   methods: {
     saveDialogPeriod() {
       
-      if ((!this.period.start || !this.period.end) && !tthis.isCurrentShift) {
+      if ((!this.period.start || !this.period.end) && !this.isCurrentShift) {
         this.$snotify.error("Интервал не выбран!");
         return;
       }
