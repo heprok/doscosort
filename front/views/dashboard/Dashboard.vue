@@ -51,11 +51,32 @@
             ref="chartVolume"
             showDialogPeople
             :query="queryChartVolume"
-            :minuteUpdate="1"
+            :minuteUpdate="5"
             @toggle-loaded="$refs.chartCardVolume.toggleLoaded()"
             @open-menu-period="$refs.chartCardVolume.openMenuPeriod()"
             @open-menu-people="$refs.chartCardVolume.openMenuPeople()"
             @update-chart="$refs.chartCardVolume.refreshUpdate()"
+          />
+        </ChartCard>
+      </v-col>
+      <v-col cols="6" lg="6" sm="12">
+        <ChartCard
+          @update-query="(query) => queryAreaChartVolume = query"
+          subtitle="За неделю"
+          title="Выработка по операторам"
+          ref="areaChartCardVolume"
+        >
+          <AreaChart
+            urlApi="/api/charts/area/volume"
+            showDialogPeriod
+            ref="areaChartVolume"
+            showDialogPeople
+            :query="queryAreaChartVolume"
+            :minuteUpdate="1"
+            @toggle-loaded="$refs.areaChartCardVolume.toggleLoaded()"
+            @open-menu-period="$refs.areaChartCardVolume.openMenuPeriod()"
+            @open-menu-people="$refs.areaChartCardVolume.openMenuPeople()"
+            @update-chart="$refs.areaChartCardVolume.refreshUpdate()"
           />
         </ChartCard>
       </v-col>
@@ -67,14 +88,16 @@
 import ChartCard from "../../components/charts/ChartCard";
 import BarChart from "../../components/charts/BarChart.vue";
 import ColumnChart from "../../components/charts/ColumnChart.vue";
+import AreaChart from "../../components/charts/AreaChart.vue";
 export default {
   name: "DashboardDashboard",
-  components: { ChartCard, ColumnChart, BarChart },
+  components: { ChartCard, ColumnChart, BarChart, AreaChart },
   data() {
     return {
       loader: false,
       queryChartQualities: {},
       queryChartVolume: {},
+      queryAreaChartVolume: {},
       infoCards: [
         {
           nameCard: "Кол-во пил-мат",

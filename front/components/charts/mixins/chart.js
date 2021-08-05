@@ -57,7 +57,7 @@ export const chart = {
       const self = this;
       return {
         icon: '<span class="mdi mdi-18px mdi-account-group"></span>',
-        index: 1,
+        index: 0,
         title: "Выбранные персонал",
         class: "custom-icon",
         click: () => {
@@ -69,7 +69,7 @@ export const chart = {
       const self = this;
       return {
         icon: '<span class="mdi mdi-18px mdi-calendar"></span>',
-        index: 1,
+        index: 0,
         title: "Период",
         class: "custom-icon",
         click: () => {
