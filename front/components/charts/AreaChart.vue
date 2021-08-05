@@ -4,6 +4,7 @@
 
 <script>
 import { chart } from "./mixins/chart";
+import ru from "apexcharts/dist/locales/ru.json";
 export default {
   name: "AreaChart",
   mixins: [chart],
@@ -12,6 +13,8 @@ export default {
     return {
       options: {
         chart: {
+          locales: [ru],
+          defaultLocale: "ru",
           zoom: {
             autoScaleYaxis: true,
           },
@@ -27,6 +30,9 @@ export default {
           type: "datetime",
           min: new Date("01 Mar 2012").getTime(),
           tickAmount: 6,
+          labels: {
+            datetimeUTC: false,
+          },
         },
         tooltip: {
           x: {
@@ -69,10 +75,10 @@ export default {
         } else throw new Error("Значения не найдены");
       } catch (e) {
         this.loading = true;
-        this.$snotify.error('Значения не найдены, поменяйте интервал или измините список операторов')
-               this.$refs.chart.updateSeries(
-            [{}]
-          );
+        this.$snotify.error(
+          "Значения не найдены, поменяйте интервал или измините список операторов"
+        );
+        this.$refs.chart.updateSeries([{}]);
         console.error(e);
       }
     },

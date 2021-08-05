@@ -25,7 +25,7 @@ export const chart = {
     },
     query: {
       type: Object,
-      default: () => {}
+      default: () => { }
     },
     showDialogPeriod: {
       type: Boolean,
