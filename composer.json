@@ -8,11 +8,11 @@
         },
         {
             "type": "path",
-            "url": "/home/ok/prj/sobr-ii/web/bundles/ManualBundle"
+            "url": "/home/ok/prj/library/php/ManualBundle"
         },
         {
             "type": "path",
-            "url": "/home/ok/prj/sobr-ii/web/bundles/ReportBundle"
+            "url": "/home/ok/prj/library/php/ReportBundle"
         }
     ],
     "require": {

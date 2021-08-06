@@ -31,6 +31,7 @@
             @update-chart="$refs.chartCardQualitites.refreshUpdate()"
             :query="queryChartQualities"
             stacked
+            barHeight="30%"
             :minuteUpdate="5"
             showDialogPeriod
             horizontal
