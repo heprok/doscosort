@@ -18,7 +18,7 @@ export default {
         },
         plotOptions: {
           bar: {
-            barHeight: "80%",
+            barHeight: self.barHeight + '%',
             horizontal: self.horizontal,
           },
         },
@@ -75,6 +75,10 @@ export default {
     stacked: {
       type: Boolean,
       default: false,
+    },
+    barHeight: {
+      type: String,
+      default: "80%",
     },
   },
   methods: {
