@@ -23,8 +23,13 @@ class Chart
     private function getDatasetsJson()
     {
         $result = [];
-        foreach ($this->datasets as $dataset) {
-            $result[] = $dataset->__serialize();
+        foreach ($this->datasets as $key => $dataset) {
+            if (is_array($dataset)) {
+                foreach ($dataset as $subDataset) {
+                    $result[$key][] = $subDataset->__serialize();
+                }
+            } else
+                $result[] = $dataset->__serialize();
         }
         return $result;
     }

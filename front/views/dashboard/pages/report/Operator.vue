@@ -49,6 +49,40 @@
     <v-row>
       <VCol cols="6" lg="6" sm="12">
         <ChartCard
+          v-if="isShowChart"
+          title="Выработка по операторам (объём)"
+          ref="barChartCardVolume"
+        >
+          <BarChart
+            urlApi="/api/charts/volumeOnOperator"
+            ref="barChartVolume"
+            :query="queryChart"
+            stacked
+            suffix="м³"
+            horizontal
+            :minuteUpdate="99"
+            @toggle-loaded="$refs.barChartCardVolume.toggleLoaded()"
+          />
+        </ChartCard>
+      </VCol>
+      <VCol cols="6" lg="6" sm="12">
+        <ChartCard
+          v-if="isShowChart"
+          title="Выработка по операторам (количество)"
+          ref="barChartCardCount"
+        >
+          <BarChart
+            urlApi="/api/charts/countOnOperator"
+            ref="barChartCount"
+            :query="queryChart"
+            suffix="шт"
+            stacked
+            horizontal
+            :minuteUpdate="99"
+            @toggle-loaded="$refs.barChartCardCount.toggleLoaded()"
+          />
+        </ChartCard>
+        <!-- <ChartCard
           ref="chartVolume"
           type="Bar"
           urlApi="/api/charts/volumeOnOperator"
@@ -65,23 +99,25 @@
           :query="queryChart"
           :intervalSecond="0"
           title="Выработка по операторам, количество"
-        />
+        /> -->
       </VCol>
     </v-row>
   </v-container>
 </template>
 
 <script>
-import ChartCard from "../../../../components/charts/ChartCard";
+import ChartCard from "@/components/charts/ChartCard";
+import BarChart from "@/components/charts/BarChart";
 export default {
   name: "report_operators_dashboard",
-  components: { ChartCard },
+  components: { ChartCard, BarChart },
 
   data() {
     return {
       selectedOperator: [],
       loaded: false,
       toggleDuration: null,
+      isShowChart: false,
       currentOperators: [],
       dates: {
         end: this.$moment().format("YYYY-MM-DD"),
@@ -106,14 +142,16 @@ export default {
     },
     queryChart() {
       return {
-        operators: this.selectedOperator.map((operator) => operator.id),
-        duration: this.duration,
+        people: this.selectedOperator.map((operator) => operator.id),
+        "period[start]": this.duration.start,
+        "period[end]": this.duration.end,
       };
     },
   },
   watch: {
     dates: {
       handler(value) {
+        this.isShowChart = false;
         this.$nextTick(async () => {
           await this.$refs.operatorTable.update();
           this.selectedOperator = [];
@@ -121,7 +159,9 @@ export default {
       },
       deep: true,
     },
-    selectedOperator() {},
+    selectedOperator() {
+      this.isShowChart = false;
+    },
   },
   mounted() {},
   methods: {
@@ -129,8 +169,11 @@ export default {
       this.loaded = true;
       this.currentOperators = [];
       Object.assign(this.currentOperators, this.selectedOperator);
-      this.$refs.chartCount.update();
-      await this.$refs.chartVolume.update();
+      this.isShowChart = true;
+      this.$nextTick(() => {
+        this.$refs.barChartVolume.setup();
+        this.$refs.barChartCount.setup();
+      });
       this.loaded = false;
     },
     clickRow(item) {

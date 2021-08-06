@@ -93,7 +93,6 @@ export const chart = {
       });
     },
     updateIcons() {
-      const self = this;
       let icons = [];
       if (this.showDialogPeriod) icons.push(this.iconSelectPeriod());
       if (this.showDialogPeople) icons.push(this.iconSelectPeople())
@@ -127,7 +126,7 @@ export const chart = {
   },
   async mounted() {
     this.startTimerUpdate();
-    this.updateIcons();
+    if (this.showDialogPeriod || this.showDialogPeople) this.updateIcons();
     this.$eventBus.$on("change-theme", () => {
       this.changeTheme();
     });

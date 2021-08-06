@@ -63,14 +63,13 @@ class ChartController extends AbstractController
         $qualities = $this->boardRepository->getQualityVolumeByPeriod($currentShift->getPeriod());
         $total_volume = $this->boardRepository->getVolumeBoardsByPeriod($currentShift->getPeriod());
 
-        $labels = [];
+        $labels = [''];
         $datasets = [];
         foreach ($qualities as $key => $quality) {
 
             $precent = round(((float)$quality['volume_boards'] / ($total_volume ?: 1) * 100), 2);
             if ($precent != 0) {
-                $labels[] = $quality['name_quality'];
-                $datasets[] = $dataset = new ChartDataset();
+                $datasets[] = $dataset = new ChartDataset($quality['name_quality']);
                 $dataset->appendData($precent);
             }
         }
@@ -80,135 +79,103 @@ class ChartController extends AbstractController
         return $this->json($chart->__serialize());
     }
 
-    #[Route("/volumeOnOperator", name: 'volumes_on_operators_for_duration')]
-    public function getVolumeOnOperatorForDuration()
+    #[Route("/volumeOnOperator", name: 'volume_on_operators_for_duration')]
+    public function getVolumeOnOperatorForDuration(Request $request)
     {
-        $request = Request::createFromGlobals();
-
-        $idsOperator = $request->query->get('operators'); //[1,4,6] id operator
-        $duration = json_decode($request->query->get('duration'), true);
-
-        if (!$duration || !$idsOperator) {
+        $period = BaseEntity::getPeriodFromArray((array)$request->query->get('period'));
+        $idsOperator = $request->query->get('people'); //[1,4,6] id operator
+        if (!$period || !$idsOperator) {
             $chart = new Chart(['']);
-            $chart->addOption('responsive', true);
-            $chart->addOption('elements', ['bar' => ['borderWidth' => 1]]);
-
-            $chart->addOption('maintainAspectRatio', false);
-            return $this->json($chart->__serialize());
+            return $this->json(['value' => 'Данные недоступны', 'color' => 'error'], 204);
         }
 
         $operators = $this->peopleRepository->findBy(['id' => $idsOperator]);
 
-        $startDate = new DateTime($duration['start']);
-        $endDate = new DateTime($duration['end']);
+        $startDate = $period->getStartDate();
+        $endDate = $period->getEndDate();
 
-        //обнуляю до 1 дня текущего дня
+        //обнуляю до 1 дня текущего месяца
         $startDate->setDate((int)$startDate->format('Y'), (int)$startDate->format('m'), 1);
         $endDate->setDate((int)$endDate->format('Y'), (int)$endDate->format('m'), 1);
         $period = new DatePeriod($startDate, new DateInterval('P1M'), $endDate);
-
-        $colors = Chart::CHART_COLOR;
-        $datasets = [];
         foreach ($operators as $operator) {
-            $datasets[$operator->getId()] = new ChartDataset($operator->getFio(), array_shift($colors));
+            $datasets[$operator->getId()] = new ChartDataset($operator->getFio());
         }
-
         $labels = [];
-        $data = [];
+        // foreach ($operators as $operator) {
+        //     $labels[] = $operator->getFio();
+        //     foreach ($period as $startDayMounth) {
+        //         $end = clone $startDayMounth;
+        //         $end->add(new DateInterval('P1M'));
+        //         $periodWork = new DatePeriod($startDayMounth, new DateInterval('P1D'), $end);
+        //         $productionOperatorOnDate = $this->boardRepository->getInfoOperatorForDuration($periodWork, $operator->getId());
+        //         $datasetVolume->appendData(round((float)$productionOperatorOnDate['volume'], BaseEntity::PRECISION_FOR_FLOAT));
+        //         $datasetCount->appendData($productionOperatorOnDate['count']);
+        //     }
+        // }
+
         foreach ($period as $date) {
             $end = clone $date;
             $end->add(new DateInterval('P1M'));
             $labels[] = $date->format('m.y');
-            $period = new DatePeriod($date, new DateInterval('P1D'), $end);
+            $periodWork = new DatePeriod($date, new DateInterval('P1D'), $end);
             foreach ($operators as $operator) {
-                $data[$operator->getId()][$date->format('m.y')][] = round($this->boardRepository->getVolumeOnOperatorForDuration($period, $operator->getId()), BaseEntity::PRECISION_FOR_FLOAT);
-            }
-        }
-        $chartData = [];
-        foreach ($labels as $date) {
-            foreach ($operators as $operator) {
-                if ($data[$operator->getId()][$date] ?? null)
-                    $chartData[$operator->getId()][$date] = round(array_sum($data[$operator->getId()][$date]), BaseEntity::PRECISION_FOR_FLOAT);
-                else
-                    $chartData[$operator->getId()][$date] = 0;
-
-                unset($data[$operator->getId()][$date]);
+                $volume = $this->boardRepository->getVolumeOnOperatorForDuration($periodWork, $operator->getId());
+                $datasets[$operator->getId()]->appendData(round($volume, BaseEntity::PRECISION_FOR_FLOAT));
             }
         }
 
-        foreach ($datasets as $key => $dataset) {
-            $dataset->setData(array_values($chartData[$key]));
-        }
         $chart = new Chart($labels, $datasets);
-        $chart->addOption('responsive', false);
-        $chart->addOption('elements', ['bar' => ['borderWidth' => 1]]);
-        $chart->addOption('maintainAspectRatio', false);
         return $this->json($chart->__serialize());
     }
 
     #[Route("/countOnOperator", name: 'count_on_operators_for_duration')]
-    public function getCountOnOperatorForDuration()
+    public function getCountOnOperatorForDuration(Request $request)
     {
-        $request = Request::createFromGlobals();
-
-        $idsOperator = $request->query->get('operators'); //[1,4,6] id operator
-        $duration = json_decode($request->query->get('duration'), true);
-
-        if (!$duration || !$idsOperator) {
+        $period = BaseEntity::getPeriodFromArray((array)$request->query->get('period'));
+        $idsOperator = $request->query->get('people'); //[1,4,6] id operator
+        if (!$period || !$idsOperator) {
             $chart = new Chart(['']);
-            $chart->addOption('responsive', true);
-            $chart->addOption('elements', ['bar' => ['borderWidth' => 1]]);
-
-            $chart->addOption('maintainAspectRatio', false);
-            return $this->json($chart->__serialize());
+            return $this->json(['value' => 'Данные недоступны', 'color' => 'error'], 204);
         }
 
         $operators = $this->peopleRepository->findBy(['id' => $idsOperator]);
 
-        $startDate = new DateTime($duration['start']);
-        $endDate = new DateTime($duration['end']);
+        $startDate = $period->getStartDate();
+        $endDate = $period->getEndDate();
 
-        //обнуляю до 1 дня текущего дня
+        //обнуляю до 1 дня текущего месяца
         $startDate->setDate((int)$startDate->format('Y'), (int)$startDate->format('m'), 1);
         $endDate->setDate((int)$endDate->format('Y'), (int)$endDate->format('m'), 1);
         $period = new DatePeriod($startDate, new DateInterval('P1M'), $endDate);
-
-        $colors = Chart::CHART_COLOR;
-        $datasets = [];
         foreach ($operators as $operator) {
-            $datasets[$operator->getId()] = new ChartDataset($operator->getFio(), array_shift($colors));
+            $datasets[$operator->getId()] = new ChartDataset($operator->getFio());
         }
-
         $labels = [];
-        $data = [];
+        // foreach ($operators as $operator) {
+        //     $labels[] = $operator->getFio();
+        //     foreach ($period as $startDayMounth) {
+        //         $end = clone $startDayMounth;
+        //         $end->add(new DateInterval('P1M'));
+        //         $periodWork = new DatePeriod($startDayMounth, new DateInterval('P1D'), $end);
+        //         $productionOperatorOnDate = $this->boardRepository->getInfoOperatorForDuration($periodWork, $operator->getId());
+        //         $datasetVolume->appendData(round((float)$productionOperatorOnDate['volume'], BaseEntity::PRECISION_FOR_FLOAT));
+        //         $datasetCount->appendData($productionOperatorOnDate['count']);
+        //     }
+        // }
+
         foreach ($period as $date) {
             $end = clone $date;
             $end->add(new DateInterval('P1M'));
             $labels[] = $date->format('m.y');
-            $period = new DatePeriod($date, new DateInterval('P1D'), $end);
+            $periodWork = new DatePeriod($date, new DateInterval('P1D'), $end);
             foreach ($operators as $operator) {
-                $data[$operator->getId()][$date->format('m.y')][] = round($this->boardRepository->getCountOnOperatorForDuration($period, $operator->getId()), BaseEntity::PRECISION_FOR_FLOAT);
-            }
-        }
-        $chartData = [];
-        foreach ($labels as $date) {
-            foreach ($operators as $operator) {
-                if ($data[$operator->getId()][$date] ?? null)
-                    $chartData[$operator->getId()][$date] = round(array_sum($data[$operator->getId()][$date]), BaseEntity::PRECISION_FOR_FLOAT);
-                else
-                    $chartData[$operator->getId()][$date] = 0;
-
-                unset($data[$operator->getId()][$date]);
+                $count = $this->boardRepository->getCountOnOperatorForDuration($periodWork, $operator->getId());
+                $datasets[$operator->getId()]->appendData($count);
             }
         }
 
-        foreach ($datasets as $key => $dataset) {
-            $dataset->setData(array_values($chartData[$key]));
-        }
         $chart = new Chart($labels, $datasets);
-        $chart->addOption('responsive', false);
-        $chart->addOption('elements', ['bar' => ['borderWidth' => 1]]);
-        $chart->addOption('maintainAspectRatio', false);
         return $this->json($chart->__serialize());
     }
 

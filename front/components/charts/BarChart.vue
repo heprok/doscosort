@@ -1,5 +1,5 @@
 <template>
-    <apexchart type="bar" ref="chart" :options="options" :series="series" />
+  <apexchart type="bar" ref="chart" :options="options" :series="series" />
 </template>
 
 <script>
@@ -13,15 +13,13 @@ export default {
       options: {
         chart: {
           type: "bar",
+          stacked: self.stacked,
+          stackType: "100%",
         },
         plotOptions: {
           bar: {
             barHeight: "80%",
-            distributed: true,
             horizontal: self.horizontal,
-            dataLabels: {
-              position: "center",
-            },
           },
         },
         legend: {
@@ -35,7 +33,7 @@ export default {
             fontSize: "14px",
           },
           formatter: function (val, opt) {
-            return val + self.suffix;
+            return val == 0 ? '' : Math.round(val) + '%';
           },
           offsetX: 0,
           dropShadow: {
@@ -43,10 +41,10 @@ export default {
           },
         },
         tooltip: {
-          y: {
-            title: {
-              formatter: function () {
-                return "";
+          tooltip: {
+            y: {
+              formatter: function (val) {
+                return val + self.suffix;
               },
             },
           },
@@ -74,21 +72,25 @@ export default {
       type: Boolean,
       default: false,
     },
+    stacked: {
+      type: Boolean,
+      default: false,
+    },
   },
   methods: {
     async setup() {
       try {
         this.loading = false;
-        const { data } = await this.$axios.get(this.urlApi, {params: this.query});
-        const values = data.datasets.map((dataset) => dataset.data[0]);
+        const { data } = await this.$axios.get(this.urlApi, {
+          params: this.query,
+        });
+        const values = data.datasets;
         this.$refs.chart.updateOptions({
           xaxis: {
             categories: data.labels,
           },
         });
-        this.$refs.chart.updateSeries(
-          data.length === 0 ? [{}] : [{ data: values }]
-        );
+        this.$refs.chart.updateSeries(values);
         this.loading = true;
         this.$emit("update-chart");
       } catch (e) {

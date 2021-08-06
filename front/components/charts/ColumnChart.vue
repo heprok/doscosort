@@ -92,7 +92,7 @@ export default {
         },
         yaxis: {
           title: {
-            text: "м³ (Объём)",
+            text: "Объём м³ ",
           },
           labels: {
             style: {

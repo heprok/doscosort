@@ -22,7 +22,6 @@
         <ChartCard
           title="Распределение качеств"
           @update-query="(query) => queryChartQualities = query"
-          subtitle="Текущая смена"
           ref="chartCardQualitites"
         >
           <BarChart
@@ -31,6 +30,7 @@
             @open-menu-period="$refs.chartCardQualitites.openMenuPeriod()"
             @update-chart="$refs.chartCardQualitites.refreshUpdate()"
             :query="queryChartQualities"
+            stacked
             :minuteUpdate="5"
             showDialogPeriod
             horizontal
@@ -41,7 +41,6 @@
       <v-col cols="6" lg="6" sm="12">
         <ChartCard
           @update-query="(query) => queryAreaChartVolume = query"
-          subtitle="За неделю"
           title="Выработка по операторам"
           ref="areaChartCardVolume"
         >
