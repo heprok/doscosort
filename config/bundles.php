@@ -16,4 +16,5 @@ return [
     ApiPlatform\Core\Bridge\Symfony\Bundle\ApiPlatformBundle::class => ['all' => true],
     Tlc\ReportBundle\ReportBundle::class => ['all' => true],
     Tlc\ManualBundle\ManualBundle::class => ['all' => true],
+    Qipsius\TCPDFBundle\QipsiusTCPDFBundle::class => ['all' => true],
 ];
