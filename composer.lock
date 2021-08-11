@@ -1453,16 +1453,16 @@
         },
         {
             "name": "doctrine/persistence",
-            "version": "2.2.1",
+            "version": "2.2.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/doctrine/persistence.git",
-                "reference": "d138f3ab5f761055cab1054070377cfd3222e368"
+                "reference": "4ce4712e6dc84a156176a0fbbb11954a25c93103"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/doctrine/persistence/zipball/d138f3ab5f761055cab1054070377cfd3222e368",
-                "reference": "d138f3ab5f761055cab1054070377cfd3222e368",
+                "url": "https://api.github.com/repos/doctrine/persistence/zipball/4ce4712e6dc84a156176a0fbbb11954a25c93103",
+                "reference": "4ce4712e6dc84a156176a0fbbb11954a25c93103",
                 "shasum": ""
             },
             "require": {
@@ -1534,9 +1534,9 @@
             ],
             "support": {
                 "issues": "https://github.com/doctrine/persistence/issues",
-                "source": "https://github.com/doctrine/persistence/tree/2.2.1"
+                "source": "https://github.com/doctrine/persistence/tree/2.2.2"
             },
-            "time": "2021-05-19T07:07:01+00:00"
+            "time": "2021-08-10T19:01:29+00:00"
         },
         {
             "name": "doctrine/sql-formatter",
@@ -6846,18 +6846,18 @@
             "source": {
                 "type": "git",
                 "url": "git@github.com:technolescom/ManualBundle.git",
-                "reference": "ee94b58f57b94423486dd43d439a7f3d989f1235"
+                "reference": "71ce39927e92d76a7bee2d6fa3ad5c4c3eacd820"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/technolescom/ManualBundle/zipball/ee94b58f57b94423486dd43d439a7f3d989f1235",
-                "reference": "ee94b58f57b94423486dd43d439a7f3d989f1235",
+                "url": "https://api.github.com/repos/technolescom/ManualBundle/zipball/71ce39927e92d76a7bee2d6fa3ad5c4c3eacd820",
+                "reference": "71ce39927e92d76a7bee2d6fa3ad5c4c3eacd820",
                 "shasum": ""
             },
             "require": {
                 "php": ">=7.4",
                 "symfony/orm-pack": "^2.1",
-                "tlc/report-bundle": "*"
+                "tlc/report-bundle": "dev-master"
             },
             "default-branch": true,
             "type": "symfony-bundle",
@@ -6890,7 +6890,7 @@
                 "source": "https://github.com/technolescom/ManualBundle/tree/master",
                 "issues": "https://github.com/technolescom/ManualBundle/issues"
             },
-            "time": "2021-08-09T13:23:19+00:00"
+            "time": "2021-08-11T06:02:44+00:00"
         },
         {
             "name": "tlc/report-bundle",
