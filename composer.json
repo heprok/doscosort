@@ -4,15 +4,15 @@
     "repositories": [
         {
             "type": "vcs",
-            "url": "git@github.com:technolescom/DoctrineExtensions.git"
+            "url": "git@github.com:heprok/DoctrineExtensions.git"
         },
         {
             "type": "vcs",
-            "url": "git@github.com:technolescom/ReportBundle.git"
+            "url": "git@github.com:heprok/ReportBundle.git"
         },
         {
             "type": "vcs",
-            "url": "git@github.com:technolescom/ManualBundle.git"
+            "url": "git@github.com:heprok/ManualBundle.git"
         }
     ],
     "require": {
